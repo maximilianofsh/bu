@@ -140,8 +140,8 @@ button, select { font: inherit; color: inherit; }
 .pie-acceso { justify-self: center; border: 0; background: none; padding: .4rem .8rem; font-size: .75rem; color: var(--suave); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .insp { display: grid; gap: .9rem; }
 .insp h2 { font-family: var(--serif); font-size: 1.15rem; color: var(--primario); }
-.campo { display: grid; gap: .3rem; font-size: .85rem; font-weight: 600; color: var(--suave); }
-.campo input, .campo textarea { width: 100%; font: inherit; font-size: 1.05rem; font-weight: 400; color: var(--tinta); padding: .75rem .9rem; border: 1px solid var(--linea); border-radius: 12px; background: var(--papel); }
+.campo { display: grid; gap: .3rem; min-width: 0; font-size: .85rem; font-weight: 600; color: var(--suave); }
+.campo input, .campo textarea { width: 100%; min-width: 0; font: inherit; font-size: 1.05rem; font-weight: 400; color: var(--tinta); padding: .75rem .9rem; border: 1px solid var(--linea); border-radius: 12px; background: var(--papel); }
 .campo textarea { min-height: 7.5rem; resize: vertical; line-height: 1.45; }
 .campo input:focus, .campo textarea:focus { outline: 3px solid color-mix(in srgb, var(--acento) 60%, transparent); border-color: var(--acento); }
 .niveles { display: grid; grid-template-columns: repeat(3, 1fr); gap: .4rem; }
@@ -174,7 +174,8 @@ button, select { font: inherit; color: inherit; }
 .mc p { color: var(--suave); }
 .mc__opciones { display: grid; gap: .6rem; margin-top: .3rem; }
 .mc__codigo { font-size: 1.6rem; letter-spacing: .4em; text-align: center; font-weight: 700; }
-.mc__dos { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+.mc__dos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
+@media (max-width: 430px) { .mc__dos { grid-template-columns: minmax(0, 1fr); } }
 .mc__quien { display: flex; justify-content: space-between; align-items: center; gap: .8rem; margin-bottom: 1rem; }
 .mc__quien small { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--suave); }
 .mc__quien strong { display: block; font-family: var(--serif); font-size: 1.3rem; color: var(--primario); }
