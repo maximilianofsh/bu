@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es" class="no-js" data-page="emergencias">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Seguridad: solo se cargan scripts del propio sitio (ver SEGURIDAD.md) -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self' https:; frame-src https://maps.google.com https://www.google.com; connect-src 'self' https://*.workers.dev; object-src 'none'; base-uri 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Emergencias y tsunami | Colegio San Martín Iquique</title>
+  <meta name="description" content="Qué hacer ante un sismo fuerte o una alerta de tsunami: zona de seguridad, punto de encuentro y retiro de estudiantes del Colegio San Martín de Iquique.">
+  <link rel="canonical" href="https://colegiosm.cl/emergencias/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Colegio San Martín Iquique">
+  <meta property="og:locale" content="es_CL">
+  <meta property="og:url" content="https://colegiosm.cl/emergencias/">
+  <meta property="og:title" content="Emergencias y tsunami | Colegio San Martín Iquique">
+  <meta property="og:description" content="Qué hacer ante un sismo fuerte o una alerta de tsunami: zona de seguridad, punto de encuentro y retiro de estudiantes del Colegio San Martín de Iquique.">
+  <meta property="og:image" content="https://colegiosm.cl/img/compartir.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="32x32" href="../img/logo/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../img/logo/favicon-192.png">
+  <link rel="apple-touch-icon" href="../img/logo/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/estilos.css">
+  <link rel="stylesheet" href="../css/colores.css">
+  <link rel="stylesheet" href="../css/paginas/emergencias.css">
+  <script src="../js/estilo.js"></script>
+</head>
+<body data-page="emergencias" id="top">
+  <script src="../js/layout.js"></script>
+
+  <main id="contenido">
+
+    <section class="page-hero page-hero--alerta">
+      <div class="hero__pattern" aria-hidden="true"></div>
+      <div class="container page-hero__inner">
+        <nav aria-label="Ruta"><ol class="crumbs"><li><a href="../">Inicio</a></li><li><a href="../colegio/">Colegio</a></li><li aria-current="page">Emergencias y tsunami</li></ol></nav>
+        <h1>Emergencias y tsunami</h1>
+        <p>Qué hacer ante un sismo fuerte o una alerta de tsunami, dónde está la zona de seguridad del colegio y cómo se retira a los estudiantes.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container emerg">
+        <div class="emerg__regla reveal" role="note">
+          <span class="emerg__regla-ico" aria-hidden="true">!</span>
+          <p><strong>Si un sismo te impide mantenerte en pie, evacúa de inmediato a la zona de seguridad.</strong> No esperes la alarma ni la alerta oficial: en la costa, un sismo así es la señal para evacuar.</p>
+        </div>
+
+        <div class="emerg__grid">
+          <article class="emerg__card reveal">
+            <p class="eyebrow">Ante un sismo fuerte</p>
+            <h2 class="title title--sm">Qué hacer</h2>
+            <ol class="emerg__pasos">
+              <li><strong>Protégete durante el sismo.</strong> Agáchate, cúbrete y afírmate, lejos de ventanas y objetos que puedan caer.</li>
+              <li><strong>Evacúa a pie</strong> hacia una zona sobre los 30 metros sobre el nivel del mar (cota 30), por las vías de evacuación señalizadas. No uses el auto: bloquea las calles.</li>
+              <li><strong>Quédate en la zona de seguridad</strong> hasta que la autoridad informe que terminó la alerta. Las olas pueden seguir llegando durante horas.</li>
+              <li><strong>Infórmate por canales oficiales</strong> (SENAPRED, radio) y no difundas rumores.</li>
+            </ol>
+          </article>
+
+          <article class="emerg__card emerg__card--colegio reveal" id="emergZona">
+            <p class="eyebrow">Si estamos en clases</p>
+            <h2 class="title title--sm">Zona de seguridad del colegio</h2>
+            <div id="emergZonaDatos"><p class="emerg__pendiente">El colegio publicará aquí su zona de seguridad y su punto de encuentro.</p></div>
+          </article>
+        </div>
+
+        <article class="emerg__bloque reveal" id="emergRetiro" hidden>
+          <h2 class="title title--sm">Retiro de estudiantes después de una evacuación</h2>
+          <div id="emergRetiroTexto"></div>
+        </article>
+
+        <figure class="emerg__mapa reveal" id="emergMapa" hidden></figure>
+
+        <section class="emerg__mapas reveal" id="emergMapas" hidden aria-labelledby="emergMapasTitulo">
+          <h2 class="title title--sm" id="emergMapasTitulo">Mapas de evacuación</h2>
+          <div class="emerg__mapas-lista" id="emergMapasLista"></div>
+        </section>
+
+        <article class="emerg__bloque reveal" id="emergProtocolo" hidden>
+          <h2 class="title title--sm">Protocolo del colegio</h2>
+          <div id="emergProtocoloTexto"></div>
+        </article>
+
+        <div class="emerg__grid">
+          <article class="emerg__card reveal">
+            <h2 class="title title--sm">Teléfonos de emergencia</h2>
+            <ul class="emerg__fonos" id="emergFonos">
+              <li><a href="tel:131"><b>131</b> Ambulancia (SAMU)</a></li>
+              <li><a href="tel:132"><b>132</b> Bomberos</a></li>
+              <li><a href="tel:133"><b>133</b> Carabineros</a></li>
+              <li><a href="tel:137"><b>137</b> Emergencias marítimas (Armada)</a></li>
+              <li><a href="tel:+56572514736"><b>57 251 4736</b> Centro de Alerta Municipal (Iquique)</a></li>
+              <li><a href="tel:+56572427128"><b>57 242 7128</b> Colegio San Martín</a></li>
+            </ul>
+          </article>
+          <article class="emerg__card reveal">
+            <h2 class="title title--sm">Información oficial</h2>
+            <ul class="links">
+              <li><a href="https://senapred.cl/" target="_blank" rel="noopener">SENAPRED</a></li>
+              <li><a href="https://www.shoa.cl/" target="_blank" rel="noopener">SHOA (alertas y cartas de inundación)</a></li>
+            </ul>
+            <p class="emerg__nota">También recibirás los avisos del colegio en la <a href="../app/">app del colegio</a>, con notificación en el celular.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../js/redes.js"></script>
+  <script src="../js/texto.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>

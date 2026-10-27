@@ -1,0 +1,8 @@
+# Buscadores: pueden revisar todo el sitio público. Las secciones privadas
+# (panel, apps del equipo) tienen además la marca «noindex» en su página.
+User-agent: *
+Disallow: /admin/
+Disallow: /utp/
+Disallow: /inspectoria/
+
+Sitemap: https://colegiosm.cl/sitemap.xml

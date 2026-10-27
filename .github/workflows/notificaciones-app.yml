@@ -1,0 +1,63 @@
+# Cuando se publica un aviso encendido en el panel, pide al servidor de notificaciones
+# (Cloudflare, ver servidor/GUIA.md) que avise a los celulares con la app.
+# El servidor también revisa solo cada minuto; esta acción solo lo hace más rápido.
+# No usa claves: el servidor lee el aviso del sitio publicado y nunca envía dos veces el mismo.
+name: Notificaciones de la app
+
+on:
+  push:
+    branches: [main]
+    paths: [data/sitio.json]
+  workflow_run:
+    workflows: ["Cambios del panel"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: notificaciones-app
+  cancel-in-progress: false
+
+jobs:
+  avisar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - name: Avisar a los celulares
+        run: |
+          node - <<'JS'
+          const fs = require("fs");
+          const d = JSON.parse(fs.readFileSync("data/sitio.json", "utf8"));
+          const a = d.aviso || {};
+          const servidor = String((d.app && d.app.servidor) || "").trim().replace(/\/+$/, "");
+          const dominio = fs.existsSync("CNAME") ? fs.readFileSync("CNAME", "utf8").trim() : "";
+          const espera = (ms) => new Promise((r) => setTimeout(r, ms));
+          const clave = (x) => JSON.stringify([x && x.activo, x && x.nivel, x && x.titulo, x && x.texto, x && x.hasta]);
+          (async () => {
+            if (!/^https:\/\/[a-z0-9.-]+\.workers\.dev$/i.test(servidor)) return console.log("Sin servidor de notificaciones configurado.");
+            if (!a.activo || a.notificar === false || !(a.titulo || a.texto)) return console.log("No hay un aviso para notificar.");
+            // Espera a que el sitio publicado muestre este aviso (GitHub Pages tarda un poco)
+            if (dominio) {
+              for (let i = 0; i < 40; i++) {
+                try {
+                  const pub = await (await fetch(`https://${dominio}/data/sitio.json?t=${Date.now()}`)).json();
+                  if (clave(pub.aviso) === clave(a)) break;
+                } catch (e) { /* reintenta */ }
+                if (i === 39) return console.log("El sitio aún no muestra el aviso; el servidor lo enviará solo al publicarse.");
+                await espera(15000);
+              }
+            }
+            for (let i = 0; i < 200; i++) {
+              const r = await fetch(servidor + "/enviar", { method: "POST" });
+              const j = await r.json().catch(() => ({}));
+              console.log(r.status, JSON.stringify(j));
+              if (!r.ok || !j.quedan) break;
+              if (j.ocupado) await espera(1000);
+            }
+          })();
+          JS

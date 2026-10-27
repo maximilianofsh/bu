@@ -1,0 +1,3950 @@
+{
+  "colores": {
+    "primario": "#3b0d18",
+    "secundario": "#7a1f35",
+    "acento": "#e0b45c"
+  },
+  "directivos": [
+    {
+      "foto": "",
+      "grupo": "sostenedor",
+      "cargo": "Representante Legal · Administración, Finanzas y RR.HH.",
+      "nombre": "Rodolfo Barrera San Martín",
+      "descripcion": "Representante legal de la Corporación Educacional Colegio San Martín. Dirige la gestión administrativa, financiera y de recursos humanos.",
+      "iniciales": "RB",
+      "correo": "finanzas@colegiosm.cl",
+      "telefono": ""
+    },
+    {
+      "foto": "",
+      "grupo": "direccion",
+      "cargo": "Coordinadora de Gestión Estratégica",
+      "nombre": "Carol Molina Soto",
+      "descripcion": "Planificación y seguimiento de la gestión institucional.",
+      "iniciales": "CM",
+      "correo": "cmolina@colegiosm.cl",
+      "telefono": ""
+    },
+    {
+      "cargo": "Directora (s)",
+      "nombre": "Rosa Castillo Gallardo",
+      "descripcion": "Liderazgo del proyecto educativo institucional.",
+      "iniciales": "RC",
+      "foto": "",
+      "correo": "rcastillo@colegiosm.cl",
+      "telefono": "(57) 226 6257",
+      "grupo": "direccion"
+    },
+    {
+      "cargo": "Asistente de Dirección",
+      "nombre": "Ximena San Martín Alfaro",
+      "descripcion": "Apoyo a la gestión de Dirección.",
+      "iniciales": "XS",
+      "foto": "",
+      "correo": "xsanmartin@colegiosm.cl",
+      "telefono": "(57) 226 9375",
+      "grupo": "direccion"
+    },
+    {
+      "foto": "",
+      "grupo": "gestion",
+      "cargo": "Supervisora Pedagógica",
+      "nombre": "Sonia Contreras Paz",
+      "descripcion": "Acompañamiento y supervisión del trabajo docente en el aula.",
+      "iniciales": "SC",
+      "correo": "scontreras@colegiosm.cl",
+      "telefono": ""
+    },
+    {
+      "cargo": "Coordinadora Académica 1° Ciclo",
+      "nombre": "Mª Cristina Claude Viveros",
+      "descripcion": "Coordinación técnico-pedagógica del primer ciclo.",
+      "iniciales": "CC",
+      "foto": "",
+      "correo": "cclaude@colegiosm.cl",
+      "telefono": "(57) 226 6150",
+      "grupo": "gestion"
+    },
+    {
+      "cargo": "Coordinador Académico 2° Ciclo",
+      "nombre": "Fabián Hernández Hams",
+      "descripcion": "Coordinación técnico-pedagógica del segundo ciclo y enseñanza media.",
+      "iniciales": "FH",
+      "foto": "",
+      "correo": "fahernandez@colegiosm.cl",
+      "telefono": "",
+      "grupo": "gestion"
+    },
+    {
+      "cargo": "Inspectora General",
+      "nombre": "Teresa Monroy Cáceres",
+      "descripcion": "Orden, seguridad y disciplina escolar.",
+      "iniciales": "TM",
+      "foto": "",
+      "correo": "tmonroy@colegiosm.cl",
+      "telefono": "(57) 241 5343",
+      "grupo": "gestion"
+    },
+    {
+      "cargo": "Coordinador de Convivencia Educativa",
+      "nombre": "Pablo Jiménez Zubieta",
+      "descripcion": "Buen trato y sana convivencia. Coordina a psicólogos, trabajo social y orientación.",
+      "iniciales": "PJ",
+      "foto": "",
+      "correo": "pjimenez@colegiosm.cl",
+      "telefono": "(57) 226 7754",
+      "grupo": "gestion"
+    },
+    {
+      "cargo": "Coordinadora de Apoyo",
+      "nombre": "Constanza Riquelme San Martín",
+      "descripcion": "Educadora diferencial. Coordina a psicopedagogas y fonoaudióloga en el acompañamiento a la diversidad de aprendizajes.",
+      "iniciales": "CR",
+      "foto": "",
+      "correo": "cjriquelme@colegiosm.cl",
+      "telefono": "(57) 252 3762",
+      "grupo": "gestion"
+    }
+  ],
+  "departamentos": [
+    {
+      "id": "primer-ciclo",
+      "tipo": "academico",
+      "nombre": "Departamento de Primer Ciclo",
+      "descripcion": "Profesoras jefe de 1° a 4° básico: acompañan a sus cursos en todas las asignaturas durante los primeros años de aprendizaje.",
+      "encargado": "",
+      "correo": "",
+      "imagen": "",
+      "formato": "foto"
+    },
+    {
+      "id": "lenguaje",
+      "tipo": "academico",
+      "nombre": "Departamento de Lenguaje",
+      "descripcion": "Lectura, escritura y comunicación oral: formamos lectores críticos y estudiantes que se expresan con claridad.",
+      "encargado": "",
+      "correo": "",
+      "imagen": "",
+      "formato": "foto"
+    },
+    {
+      "id": "matematica",
+      "tipo": "academico",
+      "nombre": "Departamento de Matemática",
+      "descripcion": "Razonamiento, resolución de problemas y pensamiento lógico desde 1° básico hasta 4° medio.",
+      "encargado": "",
+      "correo": "",
+      "imagen": "",
+      "formato": "foto"
+    },
+    {
+      "id": "historia",
+      "tipo": "academico",
+      "nombre": "Departamento de Historia y Ciencias Sociales",
+      "descripcion": "Historia, geografía y formación ciudadana para comprender el mundo y participar en él.",
+      "encargado": "",
+      "correo": "",
+      "imagen": "",
+      "formato": "foto"
+    },
+    {
+      "id": "ciencias",
+      "tipo": "academico",
+      "nombre": "Departamento de Ciencias",
+      "descripcion": "Ciencias naturales, biología, química, física y tecnología, con foco en la indagación y el trabajo práctico.",
+      "encargado": "",
+      "correo": "",
+      "imagen": "",
+      "formato": "foto"
+    },
+    {
+      "id": "ingles",
+      "tipo": "academico",
+      "nombre": "Departamento de Inglés",
+      "descripcion": "Inglés como lengua extranjera, con énfasis en la comunicación y la comprensión.",
+      "encargado": "",
+      "correo": "",
+      "imagen": "",
+      "formato": "foto"
+    },
+    {
+      "id": "artes",
+      "tipo": "academico",
+      "nombre": "Departamento de Artes y Música",
+      "descripcion": "Artes visuales y música para desarrollar la creatividad y la expresión.",
+      "encargado": "",
+      "correo": "",
+      "imagen": "",
+      "formato": "foto"
+    },
+    {
+      "id": "educacion-fisica",
+      "tipo": "academico",
+      "nombre": "Departamento de Educación Física",
+      "descripcion": "Actividad física, deporte y vida saludable.",
+      "encargado": "",
+      "correo": "",
+      "imagen": "",
+      "formato": "foto"
+    },
+    {
+      "id": "religion-filosofia",
+      "tipo": "academico",
+      "nombre": "Departamento de Religión y Filosofía",
+      "descripcion": "Formación valórica, reflexión y pensamiento filosófico.",
+      "encargado": "",
+      "correo": "",
+      "imagen": "",
+      "formato": "foto"
+    },
+    {
+      "id": "contabilidad-y-finanzas",
+      "tipo": "apoyo",
+      "nombre": "Contabilidad y Finanzas",
+      "descripcion": "Gestión administrativa y financiera del establecimiento.",
+      "encargado": "Rodolfo Barrera San Martín",
+      "correo": "finanzas@colegiosm.cl"
+    },
+    {
+      "id": "convivencia-educativa",
+      "tipo": "apoyo",
+      "nombre": "Convivencia Educativa",
+      "descripcion": "Promueve el buen trato y la sana convivencia. Acompaña a estudiantes y familias con psicólogos educacionales, apoyo psicosocial en terreno, trabajo social y orientación.",
+      "encargado": "Pablo Jiménez Zubieta",
+      "correo": "pjimenez@colegiosm.cl"
+    },
+    {
+      "id": "apoyo-pedagogico",
+      "tipo": "apoyo",
+      "nombre": "Departamento de Apoyo Pedagógico",
+      "descripcion": "Apoya a estudiantes con necesidades educativas, en coordinación con docentes y familias.",
+      "encargado": "Constanza Riquelme San Martín",
+      "correo": "cjriquelme@colegiosm.cl"
+    }
+  ],
+  "personal": [
+    {
+      "nombre": "Sonia Contreras Paz",
+      "cargo": "Supervisora Docente",
+      "area": "Docentes Primer Ciclo",
+      "tipo": "docente",
+      "correo": "scontreras@colegiosm.cl",
+      "telefono": "(57) 252 3762"
+    },
+    {
+      "nombre": "María José Flores Ulloa",
+      "cargo": "Profesora jefe 1° básico A",
+      "area": "Docentes Primer Ciclo",
+      "tipo": "docente",
+      "correo": "mjflores@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "primer-ciclo"
+      ]
+    },
+    {
+      "nombre": "Natacha Arenas",
+      "cargo": "Profesora jefe 1° básico B",
+      "area": "Docentes Primer Ciclo",
+      "tipo": "docente",
+      "correo": "narenas@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "primer-ciclo"
+      ]
+    },
+    {
+      "nombre": "Saraeli Pacheco Salcedo",
+      "cargo": "Profesora jefe 2° básico A",
+      "area": "Docentes Primer Ciclo",
+      "tipo": "docente",
+      "correo": "spacheco@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "primer-ciclo"
+      ]
+    },
+    {
+      "nombre": "Rosa Guisa Guisa",
+      "cargo": "Profesora jefe 2° básico B",
+      "area": "Docentes Primer Ciclo",
+      "tipo": "docente",
+      "correo": "rguisa@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "primer-ciclo"
+      ]
+    },
+    {
+      "nombre": "Carmen Huidobro González",
+      "cargo": "Profesora jefe 3° básico A",
+      "area": "Docentes Primer Ciclo",
+      "tipo": "docente",
+      "correo": "chuidobro@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "primer-ciclo"
+      ]
+    },
+    {
+      "nombre": "Jazmín Alejos Ampuero",
+      "cargo": "Profesora jefe 3° básico B",
+      "area": "Docentes Primer Ciclo",
+      "tipo": "docente",
+      "correo": "jalejo@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "primer-ciclo"
+      ]
+    },
+    {
+      "nombre": "Yessica Villalobos Santander",
+      "cargo": "Profesora jefe 4° básico A",
+      "area": "Docentes Primer Ciclo",
+      "tipo": "docente",
+      "correo": "yvillalobos@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "primer-ciclo"
+      ]
+    },
+    {
+      "nombre": "Alejandro Ayavire",
+      "cargo": "Educación Física",
+      "area": "Docentes Primer Ciclo",
+      "tipo": "docente",
+      "correo": "aayavire@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "educacion-fisica"
+      ]
+    },
+    {
+      "nombre": "Rosa Toro",
+      "cargo": "Inglés, 1° y 2° básico",
+      "area": "Docentes Primer Ciclo",
+      "tipo": "docente",
+      "correo": "rtoro@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "ingles"
+      ]
+    },
+    {
+      "nombre": "Stefany Seura",
+      "cargo": "Matemática",
+      "area": "Docentes Segundo Ciclo",
+      "tipo": "docente",
+      "correo": "sseura@colegiosm.cl",
+      "telefono": "",
+      "foto": "",
+      "departamentos": [
+        "matematica"
+      ]
+    },
+    {
+      "nombre": "Daniela Cayo Ugalde",
+      "cargo": "Inglés (3° y 4° básico y segundo ciclo)",
+      "area": "Docentes Segundo Ciclo",
+      "tipo": "docente",
+      "correo": "dcayo@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "ingles"
+      ]
+    },
+    {
+      "nombre": "Verónica García Ocaranza",
+      "cargo": "Lenguaje",
+      "area": "Docentes Segundo Ciclo",
+      "tipo": "docente",
+      "correo": "vgarcia@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "lenguaje"
+      ]
+    },
+    {
+      "nombre": "Elisa Alcón Castro",
+      "cargo": "Historia y Geografía",
+      "area": "Docentes Segundo Ciclo",
+      "tipo": "docente",
+      "correo": "ealcon@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "historia"
+      ]
+    },
+    {
+      "nombre": "Fabián Hernández Hams",
+      "cargo": "Lenguaje y Comunicación",
+      "area": "Docentes Segundo Ciclo",
+      "tipo": "docente",
+      "correo": "fahernandez@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "lenguaje"
+      ]
+    },
+    {
+      "nombre": "Sofía Grau",
+      "cargo": "Ciencias Naturales",
+      "area": "Docentes Segundo Ciclo",
+      "tipo": "docente",
+      "correo": "sgrau@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "ciencias"
+      ]
+    },
+    {
+      "nombre": "Álvaro Flores Chila",
+      "cargo": "Matemática y Física",
+      "area": "Docentes Segundo Ciclo",
+      "tipo": "docente",
+      "correo": "aflores@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "matematica",
+        "ciencias"
+      ]
+    },
+    {
+      "nombre": "Rossana Ibáñez Zamorano",
+      "cargo": "Religión",
+      "area": "Docentes Segundo Ciclo",
+      "tipo": "docente",
+      "correo": "ribanez@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "religion-filosofia"
+      ]
+    },
+    {
+      "nombre": "Maximiliano Salinas Hanshing",
+      "cargo": "Tecnología y Ciencias (básica y media)",
+      "area": "Docentes Segundo Ciclo",
+      "tipo": "docente",
+      "correo": "msalinas@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "ciencias"
+      ]
+    },
+    {
+      "nombre": "Erika Cid Díaz",
+      "cargo": "Matemáticas (media)",
+      "area": "Docentes Segundo Ciclo",
+      "tipo": "docente",
+      "correo": "ecid@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "matematica",
+        "ciencias"
+      ]
+    },
+    {
+      "nombre": "Eileen Rivera Rojas",
+      "cargo": "Inglés (básica y media)",
+      "area": "Docentes Segundo Ciclo",
+      "tipo": "docente",
+      "correo": "erivera@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "ingles"
+      ]
+    },
+    {
+      "nombre": "Francesco Vivero Dodero",
+      "cargo": "Historia y Ciencias Sociales (media)",
+      "area": "Docentes Segundo Ciclo",
+      "tipo": "docente",
+      "correo": "fvivero@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "historia"
+      ]
+    },
+    {
+      "nombre": "Jacqueline Tapia",
+      "cargo": "Lenguaje y Comunicación (media)",
+      "area": "Docentes Segundo Ciclo",
+      "tipo": "docente",
+      "correo": "jtapia@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "lenguaje"
+      ]
+    },
+    {
+      "nombre": "Belman Michael Godoy",
+      "cargo": "Química y Biología (media)",
+      "area": "Docentes Segundo Ciclo",
+      "tipo": "docente",
+      "correo": "bmichael@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "ciencias"
+      ]
+    },
+    {
+      "nombre": "Deydree Alegre González",
+      "cargo": "Filosofía (media)",
+      "area": "Docentes Segundo Ciclo",
+      "tipo": "docente",
+      "correo": "dalegre@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "religion-filosofia"
+      ]
+    },
+    {
+      "nombre": "Ivar Cáceres Benavides",
+      "cargo": "Educación Física (básica y media)",
+      "area": "Docentes Segundo Ciclo",
+      "tipo": "docente",
+      "correo": "icaceres@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "educacion-fisica"
+      ]
+    },
+    {
+      "nombre": "Orlando Astorga Torres",
+      "cargo": "Música (básica y media)",
+      "area": "Docentes Segundo Ciclo",
+      "tipo": "docente",
+      "correo": "oastorga@colegiosm.cl",
+      "telefono": "",
+      "departamentos": [
+        "artes"
+      ]
+    },
+    {
+      "nombre": "Constanza Riquelme San Martín",
+      "cargo": "Coordinadora de Apoyo, educadora diferencial",
+      "area": "Departamento de Apoyo Pedagógico",
+      "tipo": "equipo",
+      "correo": "cjriquelme@colegiosm.cl",
+      "telefono": "(57) 252 3762",
+      "lider": "si"
+    },
+    {
+      "nombre": "Alexandra Yori Alarcón",
+      "cargo": "Fonoaudióloga, primer ciclo",
+      "area": "Departamento de Apoyo Pedagógico",
+      "tipo": "equipo",
+      "correo": "ayori@colegiosm.cl",
+      "telefono": ""
+    },
+    {
+      "nombre": "Katherine Valderrama Jiménez",
+      "cargo": "Psicopedagoga, primer ciclo",
+      "area": "Departamento de Apoyo Pedagógico",
+      "tipo": "equipo",
+      "correo": "kvalderrama@colegiosm.cl",
+      "telefono": ""
+    },
+    {
+      "nombre": "Carla Rojas Astorga",
+      "cargo": "Psicopedagoga, primer ciclo",
+      "area": "Departamento de Apoyo Pedagógico",
+      "tipo": "equipo",
+      "correo": "crojas@colegiosm.cl",
+      "telefono": ""
+    },
+    {
+      "nombre": "Bárbara Varas del Canto",
+      "cargo": "Psicopedagoga, segundo ciclo",
+      "area": "Departamento de Apoyo Pedagógico",
+      "tipo": "equipo",
+      "correo": "bvaras@colegiosm.cl",
+      "telefono": ""
+    },
+    {
+      "nombre": "Pablo Jiménez Zubieta",
+      "cargo": "Coordinador de Convivencia Educativa",
+      "area": "Convivencia Educativa",
+      "tipo": "equipo",
+      "lider": "si",
+      "correo": "pjimenez@colegiosm.cl",
+      "telefono": "(57) 226 7754"
+    },
+    {
+      "nombre": "Samuel García Vásquez",
+      "cargo": "Psicólogo educacional, primer ciclo",
+      "area": "Convivencia Educativa",
+      "tipo": "equipo",
+      "correo": "sgarcia@colegiosm.cl",
+      "telefono": "(57) 226 9376"
+    },
+    {
+      "nombre": "Camila Castro Navarrete",
+      "cargo": "Psicóloga educacional, primer ciclo",
+      "area": "Convivencia Educativa",
+      "tipo": "equipo",
+      "correo": "ccastro@colegiosm.cl",
+      "telefono": "(57) 226 7754"
+    },
+    {
+      "nombre": "Nercy Jara Alcorce",
+      "cargo": "Docente, encargada de asuntos estudiantiles",
+      "area": "Convivencia Educativa",
+      "tipo": "equipo",
+      "correo": "njara@colegiosm.cl",
+      "telefono": "(57) 226 9376"
+    },
+    {
+      "nombre": "Teresa Monroy Cáceres",
+      "cargo": "Inspectora General",
+      "area": "Inspectoría",
+      "tipo": "equipo",
+      "lider": "si",
+      "correo": "tmonroy@colegiosm.cl",
+      "telefono": "(57) 241 5343"
+    },
+    {
+      "nombre": "Carla Riquelme San Martín",
+      "cargo": "Inspectora encargada SAE y PAE",
+      "area": "Inspectoría",
+      "tipo": "equipo",
+      "correo": "cariquelme@colegiosm.cl",
+      "telefono": "(57) 247 1256"
+    },
+    {
+      "nombre": "María Isabel Marroquín",
+      "cargo": "Inspectora primer ciclo",
+      "area": "Inspectoría",
+      "tipo": "equipo",
+      "correo": "mmarroquin@colegiosm.cl",
+      "telefono": "(57) 242 7128"
+    },
+    {
+      "nombre": "Mónica Núñez Romero",
+      "cargo": "Inspectora segundo ciclo",
+      "area": "Inspectoría",
+      "tipo": "equipo",
+      "correo": "mnunez@colegiosm.cl",
+      "telefono": "(57) 247 1256"
+    },
+    {
+      "nombre": "Mª Cristina Claude Viveros",
+      "cargo": "Coordinadora Académica 1° Ciclo",
+      "area": "Asistentes de aula",
+      "tipo": "equipo",
+      "lider": "si",
+      "correo": "cclaude@colegiosm.cl",
+      "telefono": "(57) 226 6150"
+    },
+    {
+      "nombre": "Fabián Hernández Hams",
+      "cargo": "Coordinador Académico 2° Ciclo",
+      "area": "Asistentes de aula",
+      "tipo": "equipo",
+      "lider": "si",
+      "correo": "fahernandez@colegiosm.cl",
+      "telefono": ""
+    },
+    {
+      "nombre": "Anali López Leguatt",
+      "cargo": "Asistente de aula 1° básico A",
+      "area": "Asistentes de aula",
+      "tipo": "equipo",
+      "correo": "alopez@colegiosm.cl",
+      "telefono": ""
+    },
+    {
+      "nombre": "Valentina Jiménez Abarca",
+      "cargo": "Asistente de aula 1° básico B",
+      "area": "Asistentes de aula",
+      "tipo": "equipo",
+      "correo": "vjimenez@colegiosm.cl",
+      "telefono": ""
+    },
+    {
+      "nombre": "Carmen Cáceres Cruz",
+      "cargo": "Asistente de aula 1° básico A y B",
+      "area": "Asistentes de aula",
+      "tipo": "equipo",
+      "correo": "ccaceres@colegiosm.cl",
+      "telefono": ""
+    },
+    {
+      "nombre": "Edith Torres",
+      "cargo": "Asistente de aula 2° básico A y B",
+      "area": "Asistentes de aula",
+      "tipo": "equipo",
+      "correo": "",
+      "telefono": ""
+    },
+    {
+      "nombre": "Paola Zárate Zárate",
+      "cargo": "Asistente de aula segundo ciclo",
+      "area": "Asistentes de aula",
+      "tipo": "equipo",
+      "correo": "pzarate@colegiosm.cl",
+      "telefono": ""
+    },
+    {
+      "nombre": "Mª Cristina Claude Viveros",
+      "cargo": "Coordinadora Académica 1° Ciclo",
+      "area": "Biblioteca CRA",
+      "tipo": "equipo",
+      "lider": "si",
+      "correo": "cclaude@colegiosm.cl",
+      "telefono": "(57) 226 6150"
+    },
+    {
+      "nombre": "Fabián Hernández Hams",
+      "cargo": "Coordinador Académico 2° Ciclo",
+      "area": "Biblioteca CRA",
+      "tipo": "equipo",
+      "lider": "si",
+      "correo": "fahernandez@colegiosm.cl",
+      "telefono": ""
+    },
+    {
+      "nombre": "Viviana Correa Jiménez",
+      "cargo": "Encargada de CRA",
+      "area": "Biblioteca CRA",
+      "tipo": "equipo",
+      "correo": "biblioteca@colegiosm.cl",
+      "telefono": ""
+    },
+    {
+      "nombre": "Rodolfo Barrera San Martín",
+      "cargo": "Depto. de Administración, Finanzas y RR.HH.",
+      "area": "Administración",
+      "tipo": "equipo",
+      "lider": "si",
+      "correo": "finanzas@colegiosm.cl",
+      "telefono": ""
+    },
+    {
+      "nombre": "Leonardo Flores Rivera",
+      "cargo": "Encargado informático y RR.HH.",
+      "area": "Administración",
+      "tipo": "equipo",
+      "correo": "lflores@colegiosm.cl",
+      "telefono": "(57) 252 3762"
+    },
+    {
+      "nombre": "Rodolfo Barrera San Martín",
+      "cargo": "Encargado de Administración y Finanzas",
+      "area": "Contabilidad y Finanzas",
+      "tipo": "equipo",
+      "correo": "",
+      "telefono": "(57) 247 1256",
+      "lider": "si"
+    },
+    {
+      "nombre": "Rodolfo Barrera Rojas",
+      "cargo": "Contador",
+      "area": "Contabilidad y Finanzas",
+      "tipo": "equipo",
+      "correo": "finanzas@colegiosm.cl",
+      "telefono": "(57) 247 1256"
+    },
+    {
+      "nombre": "Teresa Monroy Cáceres",
+      "cargo": "Inspectora General",
+      "area": "Auxiliares, aseo y mantención",
+      "tipo": "equipo",
+      "lider": "si",
+      "correo": "tmonroy@colegiosm.cl",
+      "telefono": "(57) 241 5343"
+    },
+    {
+      "nombre": "Carlos Devia Ballon",
+      "cargo": "Portería y recepción",
+      "area": "Auxiliares, aseo y mantención",
+      "tipo": "equipo",
+      "correo": "cdevia@colegiosm.cl",
+      "telefono": ""
+    },
+    {
+      "nombre": "Carlos Carrillo Ríos",
+      "cargo": "Encargado de mantención",
+      "area": "Auxiliares, aseo y mantención",
+      "tipo": "equipo",
+      "correo": "",
+      "telefono": ""
+    },
+    {
+      "nombre": "Zoila Cárdenas Chávez",
+      "cargo": "Auxiliar de aseo",
+      "area": "Auxiliares, aseo y mantención",
+      "tipo": "equipo",
+      "correo": "",
+      "telefono": ""
+    },
+    {
+      "nombre": "Víctor Pulgar Valle",
+      "cargo": "Auxiliar de aseo",
+      "area": "Auxiliares, aseo y mantención",
+      "tipo": "equipo",
+      "correo": "",
+      "telefono": ""
+    },
+    {
+      "nombre": "Fabiola Pérez",
+      "cargo": "Presidenta",
+      "area": "Centro de Padres y Apoderados",
+      "tipo": "comunidad",
+      "correo": "",
+      "telefono": ""
+    },
+    {
+      "nombre": "Mariana Peña",
+      "cargo": "Secretaria",
+      "area": "Centro de Padres y Apoderados",
+      "tipo": "comunidad",
+      "correo": "",
+      "telefono": ""
+    },
+    {
+      "nombre": "Tamara Vergara",
+      "cargo": "Tesorera",
+      "area": "Centro de Padres y Apoderados",
+      "tipo": "comunidad",
+      "correo": "",
+      "telefono": ""
+    },
+    {
+      "nombre": "Dickson Rojas",
+      "cargo": "Presidente CEAL",
+      "area": "Centro de Estudiantes (CEAL)",
+      "tipo": "comunidad",
+      "correo": "",
+      "telefono": "",
+      "foto": ""
+    }
+  ],
+  "noticias": [
+    {
+      "fecha": "2026-10-26",
+      "tipo": "comunidad",
+      "titulo": "Nuestro estudiante Edilson Beltrán gana medalla de oro en el Campeonato Internacional Gigante de Tarapacá",
+      "resumen": "El 24 de octubre, Edilson Beltrán, estudiante de cuarto medio, se quedó con la medalla de oro en el 6° Campeonato Internacional Gigante de Tarapacá de taekwondo, realizado en la Casa del Deportista.",
+      "url": "",
+      "imagen": "img/noticias/mvpjcisw-img-8887.jpg",
+      "cuerpo": "Nos complace anunciar que Edilson llegó a la final y la ganó en un combate muy parejo frente a un competidor de Rancagua.\n\nEse oro no salió de la nada: Edilson entrena cinco veces por semana, y ya está preparando su próximo desafío, un torneo internacional en Tacna, Perú, el 7 de noviembre.\n\nFelicitamos a Edilson y a su familia, y como comunidad le enviamos el mayor de los éxitos para su **próximo desafío en la ciudad de Tacna.**",
+      "id": "2026-10-26-nuestro-estudiante-edilson-beltran-gana-medalla-de-oro-en-e"
+    },
+    {
+      "fecha": "2026-10-24",
+      "tipo": "comunicado",
+      "titulo": "Nuestras niñas y niños de quinto y sexto básico fueron al teatro a ver \"Ada\"",
+      "resumen": "El viernes 23 de octubre, nuestros cursos de quinto y sexto básico asistieron a las 11:00 horas al Teatro Municipal de Iquique para ver la obra \"Ada\", de la Compañía O'ryan Lab.\n\n",
+      "url": "",
+      "imagen": "img/noticias/mvmez6lp-12.jpg",
+      "departamentos": [
+        "lenguaje",
+        "matematica",
+        "historia",
+        "ingles",
+        "artes"
+      ],
+      "cuerpo": "Como colegio organizamos esta salida para que nuestras niñas y niños pudieran disfrutar del teatro fuera de la sala de clases. Los acompañaron sus profesoras Stefany Seura, de quinto básico A; Daniela Cayo, de quinto básico B; Verónica García, de sexto básico A, y Elisa Alcon, de sexto básico B, junto al inspector de ciclo Ricardo Valdivia y las asistentes del ciclo.\n\nLa función fue parte del Festival Internacional de Teatro y Danza FINTDAZ 2026, financiado por el Ministerio de las Culturas, las Artes y el Patrimonio, el Fondo Nacional de Desarrollo Regional de Cultura del Gobierno Regional y el Consejo Regional de Tarapacá. Agradecemos a FINTDAZ y a Antifaz Cultura por invitarnos y por tener siempre presente a nuestro colegio.\n\nNos alegra contar que nuestras niñas y niños tuvieron un comportamiento ejemplar, con mucho entusiasmo y respeto durante toda la jornada. Gracias a sus profesoras y al equipo del ciclo por acompañarlos con tanto compromiso.\n\n![](img/noticias/mvmexof2-2.jpg)\n\n![](img/noticias/mvmexqll-3.jpg)\n\n![](img/noticias/mvmexs47-4.jpg)\n![](img/noticias/mvmexttm-5.jpg)\n\n![](img/noticias/mvmexvce-6.jpg)\n\n![](img/noticias/mvmexwr7-7.jpg)\n\n![](img/noticias/mvmexyem-8.jpg)\n\n![](img/noticias/mvmexzoq-9.jpg)\n\n![](img/noticias/mvmey1cr-10.jpg)\n\n![](img/noticias/mvmey3px-11.jpg)\n\n![](img/noticias/mvmey6ig-12.jpg)\n\n![](img/noticias/mvmey8sz-whatsapp-image-2026-10-23-at-14.30.36.jpg)\n\n",
+      "id": "2026-10-24-nuestras-ninas-y-ninos-de-quinto-y-sexto-basico-fueron-al-t"
+    },
+    {
+      "fecha": "2026-10-23",
+      "tipo": "comunicado",
+      "titulo": "Semana de museo: humanistas de 3° y 4° medio conocen los inicios del salitre",
+      "resumen": "Esta semana nuestros estudiantes del plan humanista tuvieron dos salidas pedagógicas a la Sala de Arte Casa Collahuasi.",
+      "url": "",
+      "imagen": "img/noticias/mvl5ibin-whatsapp-image-2026-10-23-at-11.52.27.jpg",
+      "cuerpo": "El lunes fue el turno de 4° medio del electivo Economía y Sociedad, y este viernes de 3° medio del electivo Comprensión Histórica del Presente. En ambas salidas los acompañó su profesor de Historia y de electivos, Francesco Vivero.\n\nAllí conocieron las paradas salitreras, los primeros sistemas artesanales con que se trabajaba el salitre en la Pampa del Tamarugal, mucho antes de las grandes oficinas. Recorrieron fotografías antiguas, maquetas, obras de arte y piezas de la época, y pudieron ver de cerca una parte de la historia de nuestra propia región que hasta ahora conocían por los libros.\n\n![](img/noticias/mvl4fbmh-3.jpg)\n\n![](img/noticias/mvl4fdg6-4.jpg)\n![](img/noticias/mvl4feyy-5.jpg)\n\n\n![](img/noticias/mvl4flhv-8.jpg)\n![](img/noticias/mvl4fnrl-9.jpg)\n\n![](img/noticias/mvl4fptd-10.jpg)\n\n\n![](img/noticias/mvl4ftep-whatsapp-image-2026-10-23-at-11.52.27.jpg)\n\n![](img/noticias/mvl4fhhn-7.jpg)\n\n\n![](img/noticias/mvl4frkf-whatsapp-image-2026-10-23-at-11.51.33.jpg)\n\n\n",
+      "departamentos": [
+        "historia"
+      ],
+      "id": "2026-10-23-semana-de-museo-humanistas-de-3-y-4-medio-conocen-los-inici"
+    },
+    {
+      "fecha": "2026-10-23",
+      "tipo": "comunicado",
+      "titulo": "FUAS 2027",
+      "resumen": "Estimada comunidad Colegio San Martín, queremos que ningún estudiante de 4° medio se quede fuera de las oportunidades para seguir estudiando. Si aún tienen dudas o no saben por dónde empezar, los esperamos en el colegio…",
+      "cuerpo": "![](img/noticias/mvl4s7tk-afiche-fuas-4x5.jpg)\n\nEstimada comunidad Colegio San Martín, queremos que ningún estudiante de 4° medio se quede fuera de las oportunidades para seguir estudiando. Si aún tienen dudas o no saben por dónde empezar, los esperamos en el colegio para acompañarlos paso a paso. ¡Todavía hay tiempo!",
+      "imagen": "img/noticias/mvl4s7tk-afiche-fuas-4x5.jpg",
+      "url": "",
+      "flyer": true,
+      "departamentos": [
+        "convivencia-educativa"
+      ],
+      "id": "2026-10-23-fuas-2027"
+    },
+    {
+      "fecha": "2026-10-23",
+      "tipo": "comunicado",
+      "titulo": "Encuesta IVE Junaeb para Primero Básico, Quinto Básico y Primero Medio",
+      "resumen": "Estimada comunidad Colegio San Martín, les pedimos unos minutos de su tiempo para responder esta encuesta. Sus respuestas ayudan a que nuestras niñas, niños y jóvenes reciban los apoyos que necesitan durante el año.…",
+      "cuerpo": "![](img/noticias/mvl4qusd-afiche-ive-4x5.jpg)\n\nEstimada comunidad Colegio San Martín, les pedimos unos minutos de su tiempo para responder esta encuesta. Sus respuestas ayudan a que nuestras niñas, niños y jóvenes reciban los apoyos que necesitan durante el año. ¡Muchas gracias por su compromiso!",
+      "imagen": "img/noticias/mvl4qusd-afiche-ive-4x5.jpg",
+      "url": "",
+      "flyer": true,
+      "departamentos": [
+        "convivencia-educativa"
+      ],
+      "id": "2026-10-23-encuesta-ive-junaeb-para-primero-basico-quinto-basico-y-pri"
+    },
+    {
+      "fecha": "2026-10-23",
+      "tipo": "comunicado",
+      "titulo": "Flexibilización del uniforme escolar por altas temperaturas",
+      "resumen": "Junto con saludar cordialmente, y considerando las altas temperaturas que ya se registran en nuestra región, informamos que a partir del lunes 26 de octubre se permitirá flexibilizar el uso del uniforme escolar, con las…",
+      "cuerpo": "![](img/noticias/mvl2ueh8-comunicado-2026-10-23.jpg)\n\n## Flexibilización del uniforme escolar por altas temperaturas\n\n**Estimados padres, madres y apoderados:**\n\nJunto con saludar cordialmente, y considerando las altas temperaturas que ya se registran en nuestra región, informamos que a partir del lunes 26 de octubre se permitirá flexibilizar el uso del uniforme escolar, con las siguientes alternativas:\n**Damas: Polera institucional**.\n\n- Como alternativa al pantalón de buzo, se autoriza el uso de calza tipo biker de color azul marino, de largo sobre la rodilla, según imagen de referencia adjunta. No se permitirá el uso de calzas más cortas.\n\n**Varones: Polera institucional.**\n\n- Como alternativa al pantalón de buzo, se autoriza el uso de short institucional de color azul, según imagen de referencia adjunta.\n\nRecordamos que estas alternativas deben ajustarse a las características señaladas, siendo responsabilidad de los padres y apoderados velar por el cumplimiento de las disposiciones relativas al uniforme escolar.\nAgradecemos su colaboración y compromiso con las normas de nuestro establecimiento.\nAtentamente,\nInspectoría General\n\nAtentamente,\n\n**Inspectoría General**\nColegio San Martín",
+      "imagen": "img/noticias/mvl2ueh8-comunicado-2026-10-23.jpg",
+      "url": "",
+      "comunicado": true,
+      "id": "2026-10-23-flexibilizacion-del-uniforme-escolar-por-altas-temperaturas"
+    },
+    {
+      "fecha": "2026-10-22",
+      "tipo": "comunidad",
+      "titulo": "Nuestra estudiante Antonia Medina participa en el Gran Nacional de Judo",
+      "resumen": "Antonia Medina Pérez, estudiante de segundo medio, viajó a Vicuña para competir en el Gran Nacional de Judo, en la categoría Juvenil +70 kilos.",
+      "url": "",
+      "imagen": "img/noticias/mvjye1ek-1000178584.jpg",
+      "cuerpo": "En Vicuña, Antonia se mide con judokas de todo Chile en una de las competencias más importantes del país para su categoría. Llegar hasta ahí no es poca cosa: detrás hay muchas horas de entrenamiento, constancia y ganas, que ella ha sabido sostener junto a sus estudios.\nDesde Iquique la acompañamos como comunidad y le enviamos todo nuestro cariño.\n\n![](img/noticias/mvjyg6zc-1000178586.jpg)\n\n\n![](img/noticias/mvjyegj5-1000178544.jpg)\n\n\n",
+      "id": "2026-10-22-nuestra-estudiante-antonia-medina-participa-en-el-gran-naci"
+    },
+    {
+      "fecha": "2026-10-21",
+      "tipo": "pedagogia",
+      "titulo": "Estudiantes del Colegio San Martín vivieron una enriquecedora jornada cultural con la iniciativa \"Vamos al Teatro\"",
+      "resumen": "En el marco del Festival Internacional de Teatro y Danza Antifaz (FINTDAZ 2026), parte de nuestra comunidad educativa, entre estudiantes de 2° Medio  y 3° Medio y docentes  asistieron al Salón Tarapacá para presenciar la obra “Los Héroes de nuestro país” de La Contagiosa Compañía. Una enriquecedora salida pedagógica que culminó con un espacio de conversación y mediación artística con los actores.\n",
+      "url": "",
+      "imagen": "img/noticias/mvii7a3j-teatro4.jpg",
+      "cuerpo": "\n\n\n\n\n## Una enriquecedora experiencia de aprendizaje fuera del aula.\n\n\nHoy 21 de octubre, las aulas del Colegio San Martín se trasladaron al emblemático Salón Tarapacá de Iquique. En una jornada marcada por la cultura, la reflexión y las artes, las comunidades de los cursos 2° Medio y 3° Medio participaron en la Salida pedagógica \"Vamos al Teatro\" junto a sus profesoras Jacqueline Tapia de Lengua y Literatura y Josefa Gavilán de Filosofía.\n\n![](img/noticias/mviefm0e-02217716-f125-4f31-a339-95fc3f578d80.jpg)\n\nLa delegación de nuestro establecimiento disfrutó de la puesta en escena de la obra “Los Héroes de nuestro país”, interpretada por la destacada agrupación La Contagiosa Compañía.\n\n## Mediación y diálogo: El arte como herramienta formativa\n\n\nMás allá de la representación artística, la jornada ofreció un importante valor pedagógico a través de una instancia de mediación y conversatorio al finalizar la función. En este espacio, las y los estudiantes pudieron dialogar directamente con los artistas, formular preguntas sobre el proceso creativo, profundizar en los contenidos de la obra y analizar críticamente los lenguajes teatrales.\n\nEsta experiencia no solo fortalece el desarrollo del pensamiento crítico y la apreciación artística, sino que complementa los objetivos de aprendizaje transversal del currículum escolar, promoviendo la empatía, el análisis histórico-social y el trabajo en equipo.\n\n## Alianzas culturales para la educación\n\n\nEsta salida pedagógica se enmarcó en la programación de la versión 2026 del Festival Internacional de Teatro y Danza Antifaz (FINTDAZ), organizado por la Compañía de Teatro Profesional Antifaz.\n\n![](img/noticias/mvihvc8f-teatro4.jpg)\n\n\nAgradecemos sinceramente a las instituciones que hacen posible este acceso democratizador a las artes: el Ministerio de las Culturas, las Artes y el Patrimonio, a través del Programa de Apoyo a Organizaciones Culturales Colaboradoras y el Fondo Nacional de Fomento y Desarrollo de las Artes Escénicas (Línea Festivales y Ferias de Trayectoria, Convocatoria 2026), la Ley de Donaciones Culturales, así como el Gobierno Regional y Consejo Regional de Tarapacá a través del FNDR de Cultura.\n\nComo Colegio San Martín, reafirmamos nuestro compromiso con una educación integral que trasciende las paredes de la sala de clases y acerca a nuestros estudiantes al patrimonio cultural y artístico de nuestra región.\n\n![](img/noticias/mvii3js9-teatro5.jpg)\n\n![](img/noticias/mvii6pmp-teatrus3m.jpg)\n\n\n\n\n\n\n\n\n\n",
+      "departamentos": [
+        "lenguaje",
+        "religion-filosofia"
+      ],
+      "id": "2026-10-21-estudiantes-del-colegio-san-martin-vivieron-una-enriquecedo"
+    },
+    {
+      "fecha": "2026-10-21",
+      "tipo": "comunidad",
+      "titulo": "Cuatro estudiantes de cuarto medio fueron reconocidos por la Universidad de Tarapacá",
+      "resumen": "Fabiana Nieto, Gabriel Ceballos, Giany Coa y Andrés Aguilera fueron distinguidos por la Universidad de Tarapacá, que cada año reconoce a los estudiantes de cuarto año medio con un desempeño escolar de excelencia.",
+      "url": "",
+      "imagen": "img/noticias/mviaaj48-whatsapp-image-2026-10-21-at-12.17.16.jpg",
+      "cuerpo": "Con mucha alegría y orgullo, como Colegio San Martín compartimos que cuatro de nuestros estudiantes de cuarto año medio recibieron el reconocimiento que entrega la Universidad de Tarapacá a los mejores estudiantes de su generación. En esta ocasión, fueron acompañados por su orientadora, Nercy Jara, quien ha estado presente guiándolos en este proceso tan importante.\nFabiana, Gabriel, Giany y Andrés están por terminar su etapa en el colegio, y este reconocimiento es una linda forma de cerrarla. Como comunidad los felicitamos con mucho cariño, junto a sus familias y profesores, y les deseamos todo el éxito en esta nueva etapa que comienza. \n\n![](img/noticias/mviaaops-whatsapp-image-2026-10-21-at-12.16.42.jpg)\n\n![](img/noticias/mviaaqv4-whatsapp-image-2026-10-21-at-12.17.16.jpg)\n\n![](img/noticias/mviexyld-1000178194.jpg)\n![](img/noticias/mviey0ls-1000178195.jpg)\n\n",
+      "departamento": "convivencia-educativa",
+      "id": "2026-10-21-cuatro-estudiantes-de-cuarto-medio-fueron-reconocidos-por-l"
+    },
+    {
+      "fecha": "2026-10-19",
+      "tipo": "pedagogia",
+      "titulo": "Nuestras niñas y niños de segundo y tercero básico fueron al teatro",
+      "resumen": "Nuestras niñas y niños de segundo básico A y B y de tercero básico A vivieron una linda salida al teatro. El lunes 19 de octubre asistieron al Teatro Municipal de Iquique para ver la obra \"Mi Nuevo Hogar: Una aventura de Tico y sus amigos\", de la compañía Proyectico.",
+      "url": "",
+      "imagen": "img/noticias/mvijkhhd-teatrobasica.jpg",
+      "departamentos": [
+        "primer-ciclo"
+      ],
+      "cuerpo": "\nComo colegio preparamos esta salida para que nuestros cursos más pequeños pudieran vivir el teatro de cerca, aprovechando las funciones del Festival Internacional de Teatro y Danza Antifaz, FINTDAZ 2026. Durante toda la jornada, las niñas y niños estuvieron acompañados por sus profesoras Saraeli Pacheco, de segundo básico A; Rosa Gúisa, de segundo básico B, y Carmen Huidobro, de tercero básico A.\n\nEn la obra, Tico es un conejo que viaja a visitar a sus amigos a Isla Paradise y, por algo inesperado, no puede volver a casa, así que tiene que aprender a vivir en un lugar nuevo. Con títeres y música original, la historia habla de lo que significa migrar y empezar de nuevo, con un mensaje de esperanza.\n\nAl terminar la función, las profesoras llevaron a los cursos a la Plaza Prat, donde las niñas y niños compartieron su colación antes de cerrar la salida.\n\n![](img/noticias/mvijyd2v-teatroninossara.jpg)\n\n\n\nAgradecemos a sus profesoras por el cariño y la dedicación con que acompañaron a nuestras niñas y niños en esta salida.\n\n![](img/noticias/mvijg5iv-teatro10.jpg)\n\n![](img/noticias/mvijj4i4-teatroninos.jpg)\n\n![](img/noticias/mvijj776-teatroninos2.jpg)\n\n![](img/noticias/mvijyuxh-teatrosara.jpg)\n\n![](img/noticias/mvijywo8-teatrosara2.jpg)\n\n![](img/noticias/mvijyyoz-teatrosara3.jpg)\n\n\n\n\n",
+      "id": "2026-10-19-nuestras-ninas-y-ninos-de-segundo-y-tercero-basico-fueron-a"
+    },
+    {
+      "fecha": "2026-10-16",
+      "tipo": "comunidad",
+      "titulo": "Celebramos a quienes son un pilar fundamental de nuestra comunidad educativa",
+      "resumen": "La Corporación Educacional Colegio San Martín celebró a sus profesores/as y asistentes de la educación con un almuerzo dedicado a agradecer su vocación, compromiso y aporte a la formación y bienestar de nuestros/as estudiantes.",
+      "url": "",
+      "imagen": "img/noticias/mvbd7lvz-docentes.jpg",
+      "cuerpo": "\nEl encuentro se realizó el jueves 15 de octubre en el restaurante Medinas, elegido por los/as colaboradores/as con más del 80 % de las preferencias. Incorporar su elección fue parte del propósito de hacer de esta celebración un espacio cercano y participativo.\n\nTras un año de importantes desafíos, la jornada permitió compartir, fortalecer vínculos y reconocer el trabajo de quienes, desde sus distintas funciones, sostienen diariamente la tarea educativa.\n\nUno de los momentos más significativos fue la entrega de los reconocimientos a Nercy Jara Alcorce, orientadora, como Asistente de la Educación Destacada 2026, y a Natacha Arenas Díaz, profesora de primero básico B, como Docente Destacada 2026.\n\nEste año se aplicó por primera vez el Protocolo de Reconocimiento al Colaborador/a Destacado/a. El proceso incorporó la votación del personal para conformar las ternas y la posterior aplicación de las pautas de evaluación por el equipo de gestión, dando respuesta al interés de los/as colaboradores/as por participar.\n\nAmbas fueron distinguidas por su desempeño, compromiso  y contribución a un aprendizaje inclusivo y una convivencia respetuosa.\n\nComo Corporación, agradecemos a cada profesor/a y asistente de la educación por su trabajo y calidad humana. Su aporte se expresa en cada estudiante que aprende, en cada familia que encuentra apoyo y en cada gesto de colaboración entre compañeros/as.\n\n¡Gracias por ser un pilar fundamental del Colegio San Martín!\n\n![](img/noticias/mvbdez37-docentes.jpg)\n\n![](img/noticias/mvbdf0ke-docentes-dos.jpg)\n\n![](img/noticias/mvbdf2zy-directivos.jpg)\n\n![](img/noticias/mvbdf4r4-premiacon.jpg)\n\n![](img/noticias/mvbdf64o-premiacion-2.jpg)\n\n",
+      "id": "2026-10-16-celebramos-a-quienes-son-un-pilar-fundamental-de-nuestra-co"
+    },
+    {
+      "fecha": "2026-10-16",
+      "tipo": "comunidad",
+      "titulo": "Celebramos con cariño el Día del Profesor y del Funcionario",
+      "resumen": "Con un emotivo acto preparado y conducido por nuestros estudiantes, la comunidad del Colegio San Martín agradeció la dedicación y el compromiso de quienes acompañan día a día la formación de nuestros niños, niñas y jóvenes.\n\n",
+      "url": "",
+      "imagen": "img/noticias/mvbbwte0-locutores.jpg",
+      "cuerpo": "\nNuestro colegio vivió una jornada muy especial al celebrar el Día del Profesor y del Funcionario, una instancia para detenernos y reconocer el trabajo de cada persona que hace posible la vida escolar. Detrás de cada clase, de cada patio cuidado y de cada estudiante acompañado, hay un equipo que entrega lo mejor de sí, y esta celebración fue una forma de decirles gracias.\n\nLa ceremonia fue dirigida por los estudiantes de cuarto año medio Andrés Aguilera, Fabiana Nieto y Gabriel Ceballos, quienes guiaron cada momento con cercanía y alegría. Como muestra de gratitud, cada profesor y funcionario recibió un obsequio en reconocimiento a su labor y cariño hacia nuestra comunidad.\n\nUno de los momentos más emotivos llegó con las conmovedoras palabras de Elizabeth Cuello, de tercero básico B, que emocionaron a todos los presentes. Asimismo, Gabriel Curado, del cuarto básico B, cautivó al público con su poema “Maestro de mi corazón”, un hermoso gesto que reflejó el aprecio de nuestros estudiantes por quienes los acompañan en su camino.\n\nPara finalizar la ceremonia, los estudiantes de tercero medio Dickson Rojas, Felipe Subiabre y Leonardo Alpire ofrecieron una presentación musical, acompañados en la batería por el profesor Ivar Cáceres. Su interpretación puso el broche de oro a una mañana llena de emoción y compañerismo.\n\n![](img/noticias/mvbbx9pl-imagenprimerciclo.jpg)\n\n![](img/noticias/mvbby8z5-premio-segundociclo2.jpg)\n\n![](img/noticias/mvbbyb44-premio-media2.jpg)\n\n",
+      "id": "2026-10-16-celebramos-con-carino-el-dia-del-profesor-y-del-funcionario"
+    },
+    {
+      "fecha": "2026-10-09",
+      "tipo": "comunidad",
+      "titulo": "Jornada de salud mental",
+      "resumen": "En el marco del Día de la Salud Mental vivimos una linda feria junto a diversas instituciones que trabajan en nuestro colegio.",
+      "url": "",
+      "imagen": "img/noticias/mv4566hi-portadus.jpg",
+      "id": "2026-10-11",
+      "departamento": "convivencia-educativa",
+      "cuerpo": "El día viernes 9 de octubre nuestros estudiantes compartieron, jugaron y conocieron los apoyos que tienen a su alcance para cuidar su bienestar.\nLa actividad contó con la presencia de diversas organizaciones locales como Abriendo Caminos, Somos Barrio, Programa Lazos, DCE Trekan, CAAPS UTA, CAAPS UNAP y la Oficina Local de la Niñez. Agradecemos profundamente a las instituciones que aceptaron trabajar en nuestra comunidad.\n\n![](img/noticias/mv456fb3-3.jpg)\n\n![](img/noticias/mv456l3t-4.jpg)\n\n![](img/noticias/mv456nh4-6.jpg)\n\n![](img/noticias/mv4572ef-portadus.jpg)\n\n"
+    },
+    {
+      "id": "2026-09-20-bienvenidos-de-vuelta-retomamos-nuestras-clases-este-lunes",
+      "fecha": "2026-09-20",
+      "tipo": "comunicado",
+      "titulo": "¡Bienvenidos de vuelta! Retomamos nuestras clases este lunes 21 de septiembre",
+      "resumen": "Información para el regreso a clases de toda la comunidad educativa.",
+      "url": "https://colegiosanmartin.webescuela.cl/Comunicado_20sept2026",
+      "imagen": ""
+    },
+    {
+      "id": "2026-09-07-circular-informativa-plan-de-recuperacion-de-clases-organiz",
+      "fecha": "2026-09-07",
+      "tipo": "comunicado",
+      "titulo": "Circular informativa: Plan de recuperación de clases, organización de septiembre y Muestra Folclórica 2026",
+      "resumen": "Detalles del plan de recuperación y las actividades del mes de la patria.",
+      "url": "https://colegiosanmartin.webescuela.cl/Comunicado_07Septiembre2026",
+      "imagen": ""
+    },
+    {
+      "id": "2026-09-03-acompanamiento-pedagogico-aptus-fortaleciendo-el-aprendizaj",
+      "fecha": "2026-09-03",
+      "tipo": "pedagogia",
+      "titulo": "Acompañamiento pedagógico Aptus: fortaleciendo el aprendizaje docente",
+      "resumen": "Creemos que la mejora educativa se construye también a través del aprendizaje permanente de quienes educan.",
+      "url": "https://colegiosanmartin.webescuela.cl/curso_aptus2026",
+      "imagen": ""
+    },
+    {
+      "id": "2026-08-26-atencion-comunidad-san-martin",
+      "fecha": "2026-08-26",
+      "tipo": "comunidad",
+      "titulo": "Atención Comunidad San Martín",
+      "resumen": "Información relevante para estudiantes, apoderados y funcionarios.",
+      "url": "https://colegiosanmartin.webescuela.cl/new_smm",
+      "imagen": ""
+    },
+    {
+      "id": "2026-08-25-comunicado-oficial-sobre-suspension-de-clases-y-medidas-ins",
+      "fecha": "2026-08-25",
+      "tipo": "comunicado",
+      "titulo": "Comunicado oficial sobre suspensión de clases y medidas institucionales",
+      "resumen": "Descarga el comunicado oficial con las medidas adoptadas por el establecimiento.",
+      "url": "https://colegiosanmartin.webescuela.cl/Comunicacion_25Agosto2026",
+      "imagen": ""
+    },
+    {
+      "id": "2026-08-21-informacion-de-ultimo-minuto-comunicado-en-pdf",
+      "fecha": "2026-08-21",
+      "tipo": "comunicado",
+      "titulo": "Información de último minuto: comunicado en PDF",
+      "resumen": "Descarga aquí el comunicado con la información más reciente.",
+      "url": "https://colegiosanmartin.webescuela.cl/Comunicacion_21Agosto2026",
+      "imagen": ""
+    },
+    {
+      "id": "2026-08-19-trabajos-de-habilitacion-y-suspension-preventiva-para-el-ju",
+      "fecha": "2026-08-19",
+      "tipo": "comunicado",
+      "titulo": "Trabajos de habilitación y suspensión preventiva para el jueves 20 y viernes 21 de agosto",
+      "resumen": "Comunicado institucional a padres y apoderados.",
+      "url": "https://colegiosanmartin.webescuela.cl/Comunicacion_18Agosto2026",
+      "imagen": ""
+    },
+    {
+      "id": "2026-08-18-suspension-de-clases-se-extiende-para-el-miercoles-19-de-ag",
+      "fecha": "2026-08-18",
+      "tipo": "comunicado",
+      "titulo": "Suspensión de clases se extiende para el miércoles 19 de agosto",
+      "resumen": "Comunicado oficial a la comunidad educativa.",
+      "url": "https://colegiosanmartin.webescuela.cl/comunicado_19Agosto2026",
+      "imagen": ""
+    },
+    {
+      "id": "2026-08-16-suspension-preventiva-de-clases-para-el-lunes-17-de-agosto",
+      "fecha": "2026-08-16",
+      "tipo": "comunicado",
+      "titulo": "Suspensión preventiva de clases para el lunes 17 de agosto",
+      "resumen": "Comunicado dirigido a madres, padres y apoderados.",
+      "url": "https://colegiosanmartin.webescuela.cl/Comunicado_16Agosto2026",
+      "imagen": ""
+    }
+  ],
+  "redes": {
+    "titulo": "Síguenos en redes sociales",
+    "descripcion": "Entérate de las actividades, logros y avisos de nuestra comunidad en nuestras cuentas oficiales.",
+    "lista": [
+      {
+        "red": "facebook",
+        "nombre": "Colegio San Martín Iquique",
+        "url": "https://www.facebook.com/colegiosm.iqq"
+      },
+      {
+        "red": "instagram",
+        "nombre": "@colegiosm.iqq",
+        "url": "https://www.instagram.com/colegiosm.iqq"
+      },
+      {
+        "red": "facebook",
+        "nombre": "Centro de Padres",
+        "url": "https://www.facebook.com/profile.php?id=100009334550100"
+      },
+      {
+        "red": "instagram",
+        "nombre": "Centro de Alumnos",
+        "url": "http://instagram.com/ceal2026.csm"
+      }
+    ]
+  },
+  "documentos": [
+    {
+      "nombre": "Proyecto Educativo Institucional (PEI)",
+      "sigla": "PEI",
+      "url": "documentos/mv73nmnb-pei.pdf"
+    },
+    {
+      "nombre": "Reglamento Interno de Convivencia Escolar (RICE)",
+      "sigla": "RICE",
+      "url": "documentos/mv2ke6bp-rice-colegio-2026.pdf"
+    },
+    {
+      "nombre": "Reglamento de Evaluación",
+      "sigla": "REV",
+      "url": "documentos/mv73mj8d-reglamentoevaluaciones.pdf"
+    },
+    {
+      "nombre": "Listas de útiles 2026",
+      "sigla": "PDF",
+      "url": "https://colegiosanmartin.webescuela.cl/Utiles_Escolares"
+    },
+    {
+      "nombre": "Reglamento Interno Trabajadores (as) de Orden, Higiene, Seguridad, Acoso Laboral y Sexual.",
+      "sigla": "RIOHS",
+      "url": "documentos/mv73nwm1-rios-2025.pdf"
+    },
+    {
+      "nombre": "Plan de Afectividad, Sexualidad y Genero.",
+      "sigla": "PASG",
+      "url": "documentos/mv73pfaw-plan-afectividad.pdf"
+    },
+    {
+      "nombre": "Protocolo en Accidentes Escolares",
+      "sigla": "PDF",
+      "url": "documentos/mv73pzhf-accidentes.pdf"
+    },
+    {
+      "nombre": "Normas que resguardan a Alumnas Embarazadas, cambios de Estado Civil y alumnos en Riesgo Social.",
+      "sigla": "EER",
+      "url": "documentos/mv73s5qp-normasresguardo.pdf"
+    },
+    {
+      "nombre": "Plan de Gestión de Convivencia Escolar",
+      "sigla": "PGCE",
+      "url": "documentos/mv73t0wz-plangestionconv.pdf"
+    }
+  ],
+  "estilo": {
+    "global": {
+      "fondoPie": "#310712"
+    },
+    "paginas": {
+      "directivos": {
+        "btnForma": "pildora",
+        "btnTamano": "normal",
+        "btnMayus": "no",
+        "fondoPagina": "#ffffff"
+      }
+    }
+  },
+  "horarios": {
+    "colores": {
+      "Lenguaje y Comunicación": "#cfe3ff",
+      "Matemática": "#ffd9c2",
+      "Ciencias Naturales": "#d4f0d9",
+      "Inglés": "#f6d4ec",
+      "Educación Física": "#d9d4f7",
+      "Artes Visuales": "#c8eef0",
+      "Música": "#ffd3d3",
+      "Religión": "#e4ecc4",
+      "Orientación": "#f1dcc4",
+      "Tecnología": "#d0e6f5",
+      "Lengua y Literatura": "#d9f2c4",
+      "Economía y Sociedad": "#fde2b8",
+      "Comprensión Histórica del Presente": "#cde0dc",
+      "Taller de Inglés": "#f3cfd9",
+      "Historia": "#fff0b3",
+      "Taller de lectoescritura": "#ffd3d3",
+      "Educación Física y Salud": "#ecd5f2",
+      "Taller Deportivo y Recreativo": "#d4f0d9",
+      "Desarrollo Personal": "#d0e6f5",
+      "Lectura y Escritura Especializada": "#ffd9c2",
+      "Física": "#cde0dc",
+      "Ciencias para la Ciudadanía": "#d0e6f5",
+      "Geometría 3D": "#f1dcc4",
+      "Taller de Ciencias": "#ffd3d3",
+      "Seminario de Filosofía": "#fde2b8",
+      "Filosofía": "#d9d4f7",
+      "Educación Ciudadana": "#cde0dc",
+      "Biología Molecular": "#ecd5f2",
+      "Taller de Decisión Vocacional": "#ecd5f2",
+      "Química": "#e4ecc4",
+      "Biología": "#ecd5f2",
+      "Taller de Habilidades Lingüísticas": "#f3cfd9",
+      "Comprensión Histórica": "#d9f2c4",
+      "Ciencias de la Salud": "#f3cfd9",
+      "Taller de Literatura": "#fde2b8",
+      "Filosofía Política": "#d0e6f5",
+      "Pensamiento Computacional": "#f6d4ec",
+      "E.F. Salud": "#d9d4f7",
+      "Taller JEC": "#f1dcc4",
+      "E.F. Psicomotricidad": "#d4f0d9",
+      "Taller de Comprensión Lectora": "#d9d4f7"
+    },
+    "cursos": [
+      {
+        "nombre": "1° básico A",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Educación Física",
+              "Lenguaje y Comunicación",
+              "Matemática",
+              "Religión"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Educación Física",
+              "Lenguaje y Comunicación",
+              "Matemática",
+              "Religión"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Matemática",
+              "Artes Visuales",
+              "Taller de Inglés",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Matemática",
+              "Artes Visuales",
+              "Taller de Inglés",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Ciencias Naturales",
+              "Matemática",
+              "Historia",
+              "Ciencias Naturales",
+              "Música"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Historia",
+              "Matemática",
+              "Historia",
+              "Ciencias Naturales",
+              "Música"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "E.F. Salud",
+              "Taller de Lectoescritura",
+              "Tecnología",
+              "Taller JEC · Expresión artística intercultural",
+              ""
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "E.F. Psicomotricidad",
+              "Taller de Lectoescritura",
+              "Orientación",
+              "Taller JEC · Expresión artística intercultural",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "1° básico B",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Taller de Inglés",
+              "Religión",
+              "Educación Física",
+              "Historia"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Taller de Inglés",
+              "Religión",
+              "Educación Física",
+              "Historia"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Matemática",
+              "Lenguaje y Comunicación",
+              "Matemática",
+              "Lenguaje y Comunicación",
+              "Taller de Lectoescritura"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Matemática",
+              "Lenguaje y Comunicación",
+              "Matemática",
+              "Lenguaje y Comunicación",
+              "Taller de Lectoescritura"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Ciencias Naturales",
+              "Matemática",
+              "Lenguaje y Comunicación",
+              "Ciencias Naturales",
+              "Artes Visuales"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Ciencias Naturales",
+              "Matemática",
+              "Lenguaje y Comunicación",
+              "Historia",
+              "Artes Visuales"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "E.F. Psicomotricidad",
+              "Música",
+              "Taller JEC · Expresión artística intercultural",
+              "Orientación",
+              ""
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "E.F. Salud",
+              "Música",
+              "Taller JEC · Expresión artística intercultural",
+              "Tecnología",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "2° básico A",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Ciencias Naturales",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Taller JEC · Expresión artística intercultural",
+              "E.F. Salud"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Ciencias Naturales",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Taller JEC · Expresión artística intercultural",
+              "E.F. Psicomotricidad"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Tecnología · Computación",
+              "Religión",
+              "Educación Física",
+              "Lenguaje y Comunicación",
+              "Matemática"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Orientación",
+              "Religión",
+              "Educación Física",
+              "Lenguaje y Comunicación",
+              "Matemática"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Historia",
+              "Matemática",
+              "Matemática",
+              "Artes Visuales"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Historia",
+              "Matemática",
+              "Matemática",
+              "Artes Visuales"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Música",
+              "Historia",
+              "Taller de Inglés",
+              "Taller de Comprensión Lectora",
+              ""
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Música",
+              "Ciencias Naturales",
+              "Taller de Inglés",
+              "Taller de Comprensión Lectora",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "2° básico B",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Historia",
+              "Tecnología · Computación",
+              "Matemática",
+              "E.F. Psicomotricidad"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Historia",
+              "Orientación",
+              "Matemática",
+              "E.F. Salud"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Educación Física",
+              "Taller de Inglés",
+              "Religión",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Educación Física",
+              "Taller de Inglés",
+              "Religión",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Ciencias Naturales",
+              "Lenguaje y Comunicación",
+              "Matemática",
+              "Taller de Comprensión Lectora",
+              "Historia"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Ciencias Naturales",
+              "Lenguaje y Comunicación",
+              "Matemática",
+              "Taller de Comprensión Lectora",
+              "Ciencias Naturales"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Taller JEC · Expresión artística intercultural",
+              "Matemática",
+              "Artes Visuales",
+              "Música",
+              ""
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Taller JEC · Expresión artística intercultural",
+              "Matemática",
+              "Artes Visuales",
+              "Música",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "3° básico A",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Matemática",
+              "Taller de Inglés",
+              "Matemática",
+              "Ciencias Naturales"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Matemática",
+              "Taller de Inglés",
+              "Matemática",
+              "Historia"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Matemática",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Tecnología · Computación",
+              "Música"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Matemática",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Orientación",
+              "Música"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Religión",
+              "Taller de Inglés",
+              "Ciencias Naturales",
+              "Lenguaje y Comunicación",
+              "Educación Física"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Religión",
+              "Taller de Inglés",
+              "Ciencias Naturales",
+              "Lenguaje y Comunicación",
+              "Educación Física"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Taller JEC · Expresión artística intercultural",
+              "Historia",
+              "Educación Física",
+              "Artes Visuales",
+              ""
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Taller JEC · Expresión artística intercultural",
+              "Historia",
+              "Educación Física",
+              "Artes Visuales",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "3° básico B",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Matemática",
+              "Taller de Inglés",
+              "Matemática",
+              "Ciencias Naturales"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Matemática",
+              "Taller de Inglés",
+              "Matemática",
+              "Historia"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Matemática",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Taller de Inglés",
+              "Música"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Matemática",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Taller de Inglés",
+              "Música"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Educación Física",
+              "Religión",
+              "Historia",
+              "Lenguaje y Comunicación",
+              "Tecnología"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Educación Física",
+              "Religión",
+              "Historia",
+              "Lenguaje y Comunicación",
+              "Orientación"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Ciencias Naturales",
+              "Artes Visuales",
+              "Taller JEC · Expresión artística intercultural",
+              "Educación Física",
+              ""
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Ciencias Naturales",
+              "Artes Visuales",
+              "Taller JEC · Expresión artística intercultural",
+              "Educación Física",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "4° básico A",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Religión",
+              "Matemática",
+              "Matemática",
+              "Taller de Inglés",
+              "Música"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Religión",
+              "Matemática",
+              "Matemática",
+              "Taller de Inglés",
+              "Música"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Educación Física"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Educación Física"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Matemática",
+              "Historia",
+              "Educación Física",
+              "Artes Visuales",
+              "Taller JEC · Expresión artística intercultural"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Matemática",
+              "Historia",
+              "Educación Física",
+              "Artes Visuales",
+              "Taller JEC · Expresión artística intercultural"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Ciencias Naturales",
+              "Taller de Inglés",
+              "Ciencias Naturales",
+              "Tecnología",
+              ""
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Ciencias Naturales",
+              "Taller de Inglés",
+              "Historia",
+              "Orientación",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "4° básico B",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Taller de Inglés",
+              "Educación Física",
+              "Lenguaje y Comunicación",
+              "Tecnología · Computación"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Taller de Inglés",
+              "Educación Física",
+              "Lenguaje y Comunicación",
+              "Orientación"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Matemática",
+              "Matemática",
+              "Ciencias Naturales",
+              "Religión",
+              "Taller de Inglés"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Matemática",
+              "Matemática",
+              "Historia",
+              "Religión",
+              "Taller de Inglés"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Ciencias Naturales",
+              "Lenguaje y Comunicación",
+              "Matemática",
+              "Historia",
+              "Música"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Ciencias Naturales",
+              "Lenguaje y Comunicación",
+              "Matemática",
+              "Historia",
+              "Música"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Artes Visuales",
+              "Educación Física",
+              "Lenguaje y Comunicación",
+              "Taller JEC · Expresión artística intercultural",
+              ""
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Artes Visuales",
+              "Educación Física",
+              "Lenguaje y Comunicación",
+              "Taller JEC · Expresión artística intercultural",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "5° básico A",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Matemática",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Música · Taller de expresión musical",
+              "Matemática"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Matemática",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Música · Taller de expresión musical",
+              "Matemática"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Inglés",
+              "Matemática",
+              "Historia",
+              "Ciencias Naturales",
+              "Lenguaje y Comunicación"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Inglés",
+              "Matemática",
+              "Historia",
+              "Ciencias Naturales",
+              "Lenguaje y Comunicación"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Historia",
+              "Educación Física y Salud",
+              "Artes Visuales",
+              "Taller Deportivo y Recreativo",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Historia",
+              "Educación Física y Salud",
+              "Artes Visuales",
+              "Taller Deportivo y Recreativo",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Religión",
+              "Ciencias Naturales",
+              "Tecnología · Taller de informática",
+              "Taller de Inglés",
+              ""
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Religión",
+              "Ciencias Naturales",
+              "Tecnología · Taller de informática",
+              "Taller de Inglés",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "5° básico B",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Inglés",
+              "Ciencias Naturales",
+              "Historia",
+              "Lenguaje y Comunicación",
+              "Historia"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Inglés",
+              "Ciencias Naturales",
+              "Historia",
+              "Lenguaje y Comunicación",
+              "Historia"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Educación Física y Salud",
+              "Matemática",
+              "Taller Deportivo y Recreativo",
+              "Matemática"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Educación Física y Salud",
+              "Matemática",
+              "Taller Deportivo y Recreativo",
+              "Matemática"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Matemática",
+              "Lenguaje y Comunicación",
+              "Ciencias Naturales",
+              "Taller de Inglés",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Matemática",
+              "Lenguaje y Comunicación",
+              "Ciencias Naturales",
+              "Taller de Inglés",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Artes Visuales",
+              "Tecnología · Taller de informática",
+              "Religión",
+              "Música · Taller de expresión musical",
+              ""
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Artes Visuales",
+              "Tecnología · Taller de informática",
+              "Religión",
+              "Música · Taller de expresión musical",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "6° básico A",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Matemática",
+              "Matemática",
+              "Matemática",
+              "Inglés"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Lenguaje y Comunicación",
+              "Matemática",
+              "Matemática",
+              "Matemática",
+              "Inglés"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Religión",
+              "Taller de Inglés",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Historia"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Religión",
+              "Taller de Inglés",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Historia"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Ciencias Naturales",
+              "Historia",
+              "Música · Taller de expresión musical",
+              "Artes Visuales",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Ciencias Naturales",
+              "Historia",
+              "Música · Taller de expresión musical",
+              "Artes Visuales",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Tecnología · Taller de informática",
+              "Educación Física y Salud",
+              "Ciencias Naturales",
+              "Taller Deportivo y Recreativo",
+              ""
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Tecnología · Taller de informática",
+              "Educación Física y Salud",
+              "Ciencias Naturales",
+              "Taller Deportivo y Recreativo",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "6° básico B",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Historia",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Ciencias Naturales"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Historia",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Lenguaje y Comunicación",
+              "Ciencias Naturales"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Ciencias Naturales",
+              "Tecnología · Taller de informática",
+              "Taller Deportivo y Recreativo",
+              "Matemática",
+              "Música · Taller de expresión musical"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Ciencias Naturales",
+              "Tecnología · Taller de informática",
+              "Taller Deportivo y Recreativo",
+              "Matemática",
+              "Música · Taller de expresión musical"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Inglés",
+              "Matemática",
+              "Matemática",
+              "Historia",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Inglés",
+              "Matemática",
+              "Matemática",
+              "Historia",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Educación Física y Salud",
+              "Artes Visuales",
+              "Taller de Inglés",
+              "Religión",
+              ""
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Educación Física y Salud",
+              "Artes Visuales",
+              "Taller de Inglés",
+              "Religión",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "7° básico A",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Lengua y Literatura",
+              "Historia",
+              "Música · Taller de expresión musical",
+              "Tecnología · Taller de informática",
+              "Lengua y Literatura"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Lengua y Literatura",
+              "Historia",
+              "Música · Taller de expresión musical",
+              "Tecnología · Taller de informática",
+              "Lengua y Literatura"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Matemática",
+              "Ciencias Naturales",
+              "Inglés · Taller de inglés",
+              "Historia",
+              "Matemática"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Matemática",
+              "Ciencias Naturales",
+              "Inglés · Taller de inglés",
+              "Historia",
+              "Matemática"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Educación Física y Salud",
+              "Matemática",
+              "Religión",
+              "Taller Deportivo y Recreativo",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Educación Física y Salud",
+              "Matemática",
+              "Religión",
+              "Taller Deportivo y Recreativo",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Artes Visuales",
+              "Inglés",
+              "Lengua y Literatura",
+              "Ciencias Naturales",
+              ""
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Artes Visuales",
+              "Inglés",
+              "Lengua y Literatura",
+              "Ciencias Naturales",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "7° básico B",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Ciencias Naturales",
+              "Tecnología · Taller de informática",
+              "Matemática",
+              "Ciencias Naturales",
+              "Taller Deportivo y Recreativo"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Ciencias Naturales",
+              "Tecnología · Taller de informática",
+              "Matemática",
+              "Ciencias Naturales",
+              "Taller Deportivo y Recreativo"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Educación Física y Salud",
+              "Lengua y Literatura",
+              "Lengua y Literatura",
+              "Matemática",
+              "Inglés · Taller de inglés"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Educación Física y Salud",
+              "Lengua y Literatura",
+              "Lengua y Literatura",
+              "Matemática",
+              "Inglés · Taller de inglés"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Matemática",
+              "Música · Taller de expresión musical",
+              "Inglés",
+              "Lengua y Literatura",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Matemática",
+              "Música · Taller de expresión musical",
+              "Inglés",
+              "Lengua y Literatura",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Historia",
+              "Religión",
+              "Historia",
+              "Artes Visuales",
+              ""
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Historia",
+              "Religión",
+              "Historia",
+              "Artes Visuales",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "8° básico A",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Matemática",
+              "Inglés",
+              "Inglés · Taller de inglés",
+              "Educación Física y Salud",
+              "Matemática"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Matemática",
+              "Inglés",
+              "Inglés · Taller de inglés",
+              "Educación Física y Salud",
+              "Matemática"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Historia",
+              "Música · Taller de expresión musical",
+              "Ciencias Naturales",
+              "Lengua y Literatura",
+              "Taller Deportivo y Recreativo"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Historia",
+              "Música · Taller de expresión musical",
+              "Ciencias Naturales",
+              "Lengua y Literatura",
+              "Taller Deportivo y Recreativo"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Tecnología · Taller de informática",
+              "Ciencias Naturales",
+              "Matemática",
+              "Desarrollo Personal",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Tecnología · Taller de informática",
+              "Ciencias Naturales",
+              "Matemática",
+              "Desarrollo Personal",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Lengua y Literatura",
+              "Lengua y Literatura",
+              "Artes Visuales",
+              "Historia",
+              ""
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Lengua y Literatura",
+              "Lengua y Literatura",
+              "Artes Visuales",
+              "Historia",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "8° básico B",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Historia",
+              "Educación Física y Salud",
+              "Taller Deportivo y Recreativo",
+              "Matemática",
+              "Inglés · Taller de inglés"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Historia",
+              "Educación Física y Salud",
+              "Taller Deportivo y Recreativo",
+              "Matemática",
+              "Inglés · Taller de inglés"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Lengua y Literatura",
+              "Matemática",
+              "Matemática",
+              "Historia",
+              "Ciencias Naturales"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Lengua y Literatura",
+              "Matemática",
+              "Matemática",
+              "Historia",
+              "Ciencias Naturales"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Inglés",
+              "Lengua y Literatura",
+              "Lengua y Literatura",
+              "Tecnología · Taller de informática",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Inglés",
+              "Lengua y Literatura",
+              "Lengua y Literatura",
+              "Tecnología · Taller de informática",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Ciencias Naturales",
+              "Artes Visuales",
+              "Música · Taller de expresión musical",
+              "Desarrollo Personal",
+              ""
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Ciencias Naturales",
+              "Artes Visuales",
+              "Música · Taller de expresión musical",
+              "Desarrollo Personal",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "1° medio",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Lengua y Literatura",
+              "Música",
+              "Matemática",
+              "Taller de Inglés",
+              "Matemática"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Lengua y Literatura",
+              "Música",
+              "Matemática",
+              "Taller de Inglés",
+              "Matemática"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Inglés",
+              "Historia",
+              "Historia",
+              "Química",
+              "Lengua y Literatura"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Inglés",
+              "Historia",
+              "Historia",
+              "Química",
+              "Lengua y Literatura"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Desarrollo Personal",
+              "Biología",
+              "Educación Física y Salud",
+              "Lengua y Literatura",
+              "Taller Deportivo y Recreativo"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Desarrollo Personal",
+              "Biología",
+              "Educación Física y Salud",
+              "Lengua y Literatura",
+              "Taller Deportivo y Recreativo"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Matemática",
+              "Matemática · Taller de razonamiento y lógica",
+              "Taller de Habilidades Lingüísticas",
+              "Física",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Matemática",
+              "Matemática · Taller de razonamiento y lógica",
+              "Taller de Habilidades Lingüísticas",
+              "Física",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "14:45 - 15:30",
+            "celdas": [
+              "Colación",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "hora": "15:30 - 16:15",
+            "celdas": [
+              "Tecnología",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "hora": "16:15 - 17:00",
+            "celdas": [
+              "Tecnología",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "2° medio",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Tecnología · Taller de informática",
+              "Matemática",
+              "Historia",
+              "Biología",
+              "Música"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Tecnología · Taller de informática",
+              "Matemática",
+              "Historia",
+              "Biología",
+              "Música"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Lengua y Literatura",
+              "Lengua y Literatura",
+              "Lengua y Literatura",
+              "Taller de Inglés",
+              "Matemática"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Lengua y Literatura",
+              "Lengua y Literatura",
+              "Lengua y Literatura",
+              "Taller de Inglés",
+              "Matemática"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Matemática",
+              "Historia",
+              "Matemática",
+              "Taller de Habilidades Lingüísticas",
+              "Desarrollo Personal"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Matemática",
+              "Historia",
+              "Matemática",
+              "Taller de Habilidades Lingüísticas",
+              "Desarrollo Personal"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Inglés",
+              "Física",
+              "Taller Deportivo y Recreativo",
+              "Química",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Inglés",
+              "Física",
+              "Taller Deportivo y Recreativo",
+              "Química",
+              "Orientación · Taller de formación ciudadana"
+            ]
+          },
+          {
+            "hora": "14:45 - 15:30",
+            "celdas": [
+              "Colación",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "hora": "15:30 - 16:15",
+            "celdas": [
+              "Educación Física y Salud",
+              "",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "hora": "16:15 - 17:00",
+            "celdas": [
+              "Educación Física y Salud",
+              "",
+              "",
+              "",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "3° medio",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Matemática",
+              "Comprensión Histórica | Ciencias de la Salud",
+              "Taller de Decisión Vocacional",
+              "Lengua y Literatura",
+              "Taller de Literatura | Ciencias de la Salud"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Matemática",
+              "Comprensión Histórica | Ciencias de la Salud",
+              "Taller de Decisión Vocacional",
+              "Matemática",
+              "Taller de Literatura | Ciencias de la Salud"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Ciencias para la Ciudadanía",
+              "Inglés",
+              "Filosofía Política | Geometría 3D",
+              "Educación Física y Salud",
+              "Comprensión Histórica | Pensamiento Computacional"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Ciencias para la Ciudadanía",
+              "Inglés",
+              "Filosofía Política | Geometría 3D",
+              "Educación Física y Salud",
+              "Comprensión Histórica | Pensamiento Computacional"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Lengua y Literatura",
+              "Taller de Literatura | Pensamiento Computacional",
+              "Taller de Literatura | Pensamiento Computacional",
+              "Filosofía",
+              "Filosofía Política | Geometría 3D"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Lengua y Literatura",
+              "Taller de Literatura | Pensamiento Computacional",
+              "Taller de Literatura | Pensamiento Computacional",
+              "Filosofía",
+              "Filosofía Política | Geometría 3D"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Educación Ciudadana",
+              "Historia | Música",
+              "Comprensión Histórica | Ciencias de la Salud",
+              "Filosofía Política | Geometría 3D",
+              "Inglés · Taller Active Learning"
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Educación Ciudadana",
+              "Historia | Música",
+              "Comprensión Histórica | Ciencias de la Salud",
+              "Filosofía Política | Geometría 3D",
+              "Orientación"
+            ]
+          },
+          {
+            "hora": "14:45 - 15:30",
+            "celdas": [
+              "",
+              "Colación",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "hora": "15:30 - 16:15",
+            "celdas": [
+              "",
+              "Taller de Ciencias",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "hora": "16:15 - 17:00",
+            "celdas": [
+              "",
+              "Taller de Ciencias",
+              "",
+              "",
+              ""
+            ]
+          }
+        ]
+      },
+      {
+        "nombre": "4° medio",
+        "filas": [
+          {
+            "hora": "08:00 - 08:45",
+            "celdas": [
+              "Inglés",
+              "Lectura y Escritura Especializada | Física",
+              "Lengua y Literatura",
+              "Matemática",
+              "Ciencias para la Ciudadanía"
+            ]
+          },
+          {
+            "hora": "08:45 - 09:30",
+            "celdas": [
+              "Inglés",
+              "Lectura y Escritura Especializada | Física",
+              "Lengua y Literatura",
+              "Lengua y Literatura",
+              "Ciencias para la Ciudadanía"
+            ]
+          },
+          {
+            "hora": "09:30 - 09:45",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "09:45 - 10:30",
+            "celdas": [
+              "Economía y Sociedad | Geometría 3D",
+              "Matemática",
+              "Taller de Ciencias",
+              "Seminario de Filosofía | Geometría 3D",
+              "Filosofía"
+            ]
+          },
+          {
+            "hora": "10:30 - 11:15",
+            "celdas": [
+              "Economía y Sociedad | Geometría 3D",
+              "Matemática",
+              "Taller de Ciencias",
+              "Seminario de Filosofía | Geometría 3D",
+              "Filosofía"
+            ]
+          },
+          {
+            "hora": "11:15 - 11:30",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "11:30 - 12:15",
+            "celdas": [
+              "Educación Ciudadana",
+              "Seminario de Filosofía | Geometría 3D",
+              "Economía y Sociedad | Biología Molecular",
+              "Historia | Música",
+              "Lectura y Escritura Especializada | Biología Molecular"
+            ]
+          },
+          {
+            "hora": "12:15 - 13:00",
+            "celdas": [
+              "Educación Ciudadana",
+              "Seminario de Filosofía | Geometría 3D",
+              "Economía y Sociedad | Biología Molecular",
+              "Historia | Música",
+              "Lectura y Escritura Especializada | Biología Molecular"
+            ]
+          },
+          {
+            "hora": "13:00 - 13:15",
+            "celdas": [
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo",
+              "Recreo"
+            ]
+          },
+          {
+            "hora": "13:15 - 14:00",
+            "celdas": [
+              "Lectura y Escritura Especializada | Física",
+              "Economía y Sociedad | Biología Molecular",
+              "Seminario de Filosofía | Física",
+              "Inglés · Taller Active Learning",
+              "Taller de Decisión Vocacional"
+            ]
+          },
+          {
+            "hora": "14:00 - 14:45",
+            "celdas": [
+              "Lectura y Escritura Especializada | Física",
+              "Economía y Sociedad | Biología Molecular",
+              "Seminario de Filosofía | Física",
+              "Inglés · Taller Active Learning",
+              "Orientación"
+            ]
+          },
+          {
+            "hora": "14:45 - 15:30",
+            "celdas": [
+              "",
+              "Colación",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "hora": "15:30 - 16:15",
+            "celdas": [
+              "",
+              "Educación Física y Salud",
+              "",
+              "",
+              ""
+            ]
+          },
+          {
+            "hora": "16:15 - 17:00",
+            "celdas": [
+              "",
+              "Educación Física y Salud",
+              "",
+              "",
+              ""
+            ]
+          }
+        ]
+      }
+    ],
+    "docentes": [],
+    "asignaturas": [
+      "Economía y Sociedad",
+      "Comprensión Histórica del Presente"
+    ]
+  },
+  "logo": {
+    "imagen": "img/logo/mv119ugq-diseno-sin-titulo.png",
+    "icono": "img/logo/favicon-32.png",
+    "apple": "img/logo/apple-touch-icon.png",
+    "version": "mv11a160",
+    "ancho": 220,
+    "alto": 256,
+    "original": [
+      597,
+      627
+    ]
+  },
+  "organizaciones": [
+    {
+      "sigla": "CGPA",
+      "nombre": "Centro General de Padres y Apoderados",
+      "area": "Centro de Padres y Apoderados",
+      "descripcion": "Organización que representa a las familias y colabora con las actividades del colegio.",
+      "correo": "cegepa@colegiosm.cl",
+      "instagram": "https://instagram.com/centro.general_de_padres"
+    },
+    {
+      "sigla": "CEAL",
+      "nombre": "Centro de Estudiantes",
+      "area": "Centro de Estudiantes (CEAL)",
+      "descripcion": "Organización que representa a los estudiantes, canaliza sus inquietudes y organiza actividades para toda la comunidad.",
+      "correo": "",
+      "instagram": "https://instagram.com/ceal2026.csm"
+    }
+  ],
+  "pilares": [
+    {
+      "titulo": "Excelencia académica",
+      "texto": "Planificación por ciclos, seguimiento de aprendizajes y acompañamiento pedagógico Aptus para fortalecer las prácticas docentes.",
+      "imagen": "",
+      "formato": "icono"
+    },
+    {
+      "titulo": "Apoyo integral",
+      "texto": "Equipos de Apoyo Pedagógico y de Convivencia Educativa que acompañan a cada estudiante según sus necesidades.",
+      "imagen": "",
+      "formato": "icono"
+    },
+    {
+      "titulo": "Convivencia escolar",
+      "texto": "Un ambiente seguro y de buen trato, con Inspectoría General y un equipo de Convivencia Escolar dedicado.",
+      "imagen": "",
+      "formato": "icono"
+    },
+    {
+      "titulo": "Cultura y comunidad",
+      "texto": "Biblioteca CRA, Muestra Folclórica y un Centro de Padres activo que da vida al colegio durante todo el año.",
+      "imagen": "",
+      "formato": "icono"
+    }
+  ],
+  "lema": "Aprender, crecer y convivir con sentido.",
+  "portada": {
+    "imagen": "img/portada/mv45jd3j-8.jpg",
+    "dias": {
+      "0": {
+        "imagen": "img/portada/mv45wzhh-amogus2.jpg"
+      },
+      "3": {
+        "imagen": "img/portada/mv45wtxf-amogus.jpg"
+      }
+    }
+  },
+  "eventos": [
+    {
+      "titulo": "SIMCE 6° básico: Matemática",
+      "fecha": "2026-10-28",
+      "tipo": "evaluacion",
+      "descripcion": "Incluye el cuestionario para estudiantes. Es importante que los estudiantes asistan.",
+      "enlace": "https://www.agenciaeducacion.cl/agencia-informa-el-calendario-de-evaluaciones-nacionales-2026/",
+      "recordar": true
+    },
+    {
+      "titulo": "SIMCE 6° básico: Lectura",
+      "fecha": "2026-10-29",
+      "tipo": "evaluacion",
+      "enlace": "https://www.agenciaeducacion.cl/agencia-informa-el-calendario-de-evaluaciones-nacionales-2026/",
+      "recordar": true
+    },
+    {
+      "titulo": "Día de las Iglesias Evangélicas y Protestantes",
+      "fecha": "2026-10-31",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "Día de Todos los Santos",
+      "fecha": "2026-11-01",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "SIMCE 4° básico: Matemática",
+      "fecha": "2026-11-04",
+      "tipo": "evaluacion",
+      "descripcion": "Incluye el cuestionario para estudiantes. Es importante que los estudiantes asistan.",
+      "enlace": "https://www.agenciaeducacion.cl/agencia-informa-el-calendario-de-evaluaciones-nacionales-2026/",
+      "recordar": true
+    },
+    {
+      "titulo": "SIMCE 4° básico: Lectura",
+      "fecha": "2026-11-05",
+      "tipo": "evaluacion",
+      "enlace": "https://www.agenciaeducacion.cl/agencia-informa-el-calendario-de-evaluaciones-nacionales-2026/",
+      "recordar": true
+    },
+    {
+      "titulo": "SIMCE II medio: Matemática",
+      "fecha": "2026-11-11",
+      "tipo": "evaluacion",
+      "descripcion": "Incluye el cuestionario para estudiantes. Es importante que los estudiantes asistan.",
+      "enlace": "https://www.agenciaeducacion.cl/agencia-informa-el-calendario-de-evaluaciones-nacionales-2026/",
+      "recordar": true
+    },
+    {
+      "titulo": "SIMCE II medio: Lectura",
+      "fecha": "2026-11-12",
+      "tipo": "evaluacion",
+      "enlace": "https://www.agenciaeducacion.cl/agencia-informa-el-calendario-de-evaluaciones-nacionales-2026/",
+      "recordar": true
+    },
+    {
+      "titulo": "Evaluación Impulso Lector 2° básico",
+      "fecha": "2026-11-16",
+      "tipo": "evaluacion",
+      "fin": "2026-12-04",
+      "descripcion": "Evaluación nacional de lectura en 2 días dentro de este período. El colegio informará los días exactos.",
+      "enlace": "https://www.agenciaeducacion.cl/agencia-informa-el-calendario-de-evaluaciones-nacionales-2026/",
+      "recordar": true
+    },
+    {
+      "titulo": "Día del Salitre y del Patrimonio de Tarapacá",
+      "fecha": "2026-11-17",
+      "tipo": "evento",
+      "descripcion": "Efeméride regional."
+    },
+    {
+      "titulo": "Cierre del año escolar de 4° medio",
+      "fecha": "2026-11-20",
+      "tipo": "evento",
+      "descripcion": "Último día del calendario escolar regional para 4° medio.",
+      "recordar": true
+    },
+    {
+      "titulo": "PAES Regular (Admisión 2027)",
+      "fecha": "2026-11-30",
+      "tipo": "evaluacion",
+      "fin": "2026-12-02",
+      "descripcion": "Lunes 30: Matemática 2 (M2). Martes 1: Competencia Lectora y Ciencias. Miércoles 2: Matemática 1 (M1) e Historia y Ciencias Sociales.",
+      "enlace": "https://demre.cl/paes/regular/rendicion/los-dias-de-la-prueba/fechas-horarios",
+      "recordar": true
+    },
+    {
+      "titulo": "Inmaculada Concepción",
+      "fecha": "2026-12-08",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "Conmemoración de la Escuela Santa María de Iquique",
+      "fecha": "2026-12-21",
+      "tipo": "evento",
+      "descripcion": "Efeméride regional (21 de diciembre de 1907)."
+    },
+    {
+      "titulo": "Navidad",
+      "fecha": "2026-12-25",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "Año Nuevo",
+      "fecha": "2027-01-01",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "Resultados PAES Regular",
+      "fecha": "2027-01-04",
+      "tipo": "evento",
+      "descripcion": "Publicación de puntajes en demre.cl.",
+      "enlace": "https://demre.cl"
+    },
+    {
+      "titulo": "Viernes Santo",
+      "fecha": "2027-03-26",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "Sábado Santo",
+      "fecha": "2027-03-27",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "Día del Trabajo",
+      "fecha": "2027-05-01",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "Día de las Glorias Navales",
+      "fecha": "2027-05-21",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "Día de los Pueblos Indígenas",
+      "fecha": "2027-06-21",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "San Pedro y San Pablo",
+      "fecha": "2027-06-28",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional. Se traslada del martes 29 al lunes 28 de junio.",
+      "recordar": true
+    },
+    {
+      "titulo": "Virgen del Carmen",
+      "fecha": "2027-07-16",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "Asunción de la Virgen",
+      "fecha": "2027-08-15",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "Feriado adicional de Fiestas Patrias",
+      "fecha": "2027-09-17",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "Fiestas Patrias: Independencia Nacional",
+      "fecha": "2027-09-18",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "Día de las Glorias del Ejército",
+      "fecha": "2027-09-19",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "Encuentro de Dos Mundos",
+      "fecha": "2027-10-11",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional. Se traslada del martes 12 al lunes 11 de octubre.",
+      "recordar": true
+    },
+    {
+      "titulo": "Día de las Iglesias Evangélicas y Protestantes",
+      "fecha": "2027-10-31",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "Día de Todos los Santos",
+      "fecha": "2027-11-01",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "Inmaculada Concepción",
+      "fecha": "2027-12-08",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    },
+    {
+      "titulo": "Navidad",
+      "fecha": "2027-12-25",
+      "tipo": "feriado",
+      "descripcion": "Feriado nacional.",
+      "recordar": true
+    }
+  ],
+  "galeria": [],
+  "aviso": {
+    "activo": false,
+    "nivel": "importante",
+    "titulo": "ESTO ES SOLO UNA PRUEBA",
+    "texto": "ESTO ES SOLO UNA PRUEBA 2",
+    "notificar": true
+  },
+  "app": {
+    "servidor": "https://avisos-colegio.colegiosmiqq.workers.dev"
+  },
+  "emergencia": {
+    "mapas": [
+      {
+        "tipo": "aluvion",
+        "titulo": "Plano de prevención aluvional de Iquique",
+        "imagen": "img/emergencias/plano-prevencion-aluvional-iquique.jpg",
+        "descripcion": "Zonas de riesgo por bajada de agua, puntos de encuentro (PE) y dirección de evacuación en cada quebrada. Fuente: Ilustre Municipalidad de Iquique. Centro de Alerta Municipal: 57 2 514736.",
+        "pendiente": "Pronto publicaremos la vía de evacuación del colegio en caso de aluvión."
+      }
+    ]
+  }
+}

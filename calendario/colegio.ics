@@ -1,0 +1,381 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Colegio San Martin Iquique//Calendario escolar//ES
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Colegio San Martín Iquique
+X-WR-CALDESC:Calendario escolar: reuniones\, evaluaciones\, actos y feriado
+ s.
+X-WR-TIMEZONE:America/Santiago
+REFRESH-INTERVAL;VALUE=DURATION:PT12H
+X-PUBLISHED-TTL:PT12H
+BEGIN:VEVENT
+UID:2026-10-28-1umwua@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20261028
+DTEND;VALUE=DATE:20261029
+SUMMARY:SIMCE 6° básico: Matemática
+DESCRIPTION:Evaluación\nIncluye el cuestionario para estudiantes. Es impor
+ tante que los estudiantes asistan.\nMás información: https://www.agencia
+ educacion.cl/agencia-informa-el-calendario-de-evaluaciones-nacionales-2026
+ /
+URL:https://www.agenciaeducacion.cl/agencia-informa-el-calendario-de-evalua
+ ciones-nacionales-2026/
+CATEGORIES:Evaluación
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-10-29-18jnu1h@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20261029
+DTEND;VALUE=DATE:20261030
+SUMMARY:SIMCE 6° básico: Lectura
+DESCRIPTION:Evaluación\nMás información: https://www.agenciaeducacion.cl
+ /agencia-informa-el-calendario-de-evaluaciones-nacionales-2026/
+URL:https://www.agenciaeducacion.cl/agencia-informa-el-calendario-de-evalua
+ ciones-nacionales-2026/
+CATEGORIES:Evaluación
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-10-31-2cxiz1@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20261031
+DTEND;VALUE=DATE:20261101
+SUMMARY:Día de las Iglesias Evangélicas y Protestantes
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-11-01-juvmb4@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20261101
+DTEND;VALUE=DATE:20261102
+SUMMARY:Día de Todos los Santos
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-11-04-1skaawf@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20261104
+DTEND;VALUE=DATE:20261105
+SUMMARY:SIMCE 4° básico: Matemática
+DESCRIPTION:Evaluación\nIncluye el cuestionario para estudiantes. Es impor
+ tante que los estudiantes asistan.\nMás información: https://www.agencia
+ educacion.cl/agencia-informa-el-calendario-de-evaluaciones-nacionales-2026
+ /
+URL:https://www.agenciaeducacion.cl/agencia-informa-el-calendario-de-evalua
+ ciones-nacionales-2026/
+CATEGORIES:Evaluación
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-11-05-gi4j6g@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20261105
+DTEND;VALUE=DATE:20261106
+SUMMARY:SIMCE 4° básico: Lectura
+DESCRIPTION:Evaluación\nMás información: https://www.agenciaeducacion.cl
+ /agencia-informa-el-calendario-de-evaluaciones-nacionales-2026/
+URL:https://www.agenciaeducacion.cl/agencia-informa-el-calendario-de-evalua
+ ciones-nacionales-2026/
+CATEGORIES:Evaluación
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-11-11-18caoeo@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20261111
+DTEND;VALUE=DATE:20261112
+SUMMARY:SIMCE II medio: Matemática
+DESCRIPTION:Evaluación\nIncluye el cuestionario para estudiantes. Es impor
+ tante que los estudiantes asistan.\nMás información: https://www.agencia
+ educacion.cl/agencia-informa-el-calendario-de-evaluaciones-nacionales-2026
+ /
+URL:https://www.agenciaeducacion.cl/agencia-informa-el-calendario-de-evalua
+ ciones-nacionales-2026/
+CATEGORIES:Evaluación
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-11-12-3511k5@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20261112
+DTEND;VALUE=DATE:20261113
+SUMMARY:SIMCE II medio: Lectura
+DESCRIPTION:Evaluación\nMás información: https://www.agenciaeducacion.cl
+ /agencia-informa-el-calendario-de-evaluaciones-nacionales-2026/
+URL:https://www.agenciaeducacion.cl/agencia-informa-el-calendario-de-evalua
+ ciones-nacionales-2026/
+CATEGORIES:Evaluación
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-11-16-1tmpveo@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20261116
+DTEND;VALUE=DATE:20261205
+SUMMARY:Evaluación Impulso Lector 2° básico
+DESCRIPTION:Evaluación\nEvaluación nacional de lectura en 2 días dentro 
+ de este período. El colegio informará los días exactos.\nMás informaci
+ ón: https://www.agenciaeducacion.cl/agencia-informa-el-calendario-de-eval
+ uaciones-nacionales-2026/
+URL:https://www.agenciaeducacion.cl/agencia-informa-el-calendario-de-evalua
+ ciones-nacionales-2026/
+CATEGORIES:Evaluación
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-11-17-if5db0@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20261117
+DTEND;VALUE=DATE:20261118
+SUMMARY:Día del Salitre y del Patrimonio de Tarapacá
+DESCRIPTION:Actividad\nEfeméride regional.
+CATEGORIES:Actividad
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-11-20-1clbyi7@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20261120
+DTEND;VALUE=DATE:20261121
+SUMMARY:Cierre del año escolar de 4° medio
+DESCRIPTION:Actividad\nÚltimo día del calendario escolar regional para 4
+ ° medio.
+CATEGORIES:Actividad
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-11-30-1iyoan5@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20261130
+DTEND;VALUE=DATE:20261203
+SUMMARY:PAES Regular (Admisión 2027)
+DESCRIPTION:Evaluación\nLunes 30: Matemática 2 (M2). Martes 1: Competenci
+ a Lectora y Ciencias. Miércoles 2: Matemática 1 (M1) e Historia y Cienci
+ as Sociales.\nMás información: https://demre.cl/paes/regular/rendicion/l
+ os-dias-de-la-prueba/fechas-horarios
+URL:https://demre.cl/paes/regular/rendicion/los-dias-de-la-prueba/fechas-ho
+ rarios
+CATEGORIES:Evaluación
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-12-08-1ppj3mq@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20261208
+DTEND;VALUE=DATE:20261209
+SUMMARY:Inmaculada Concepción
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-12-21-4ul27c@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20261221
+DTEND;VALUE=DATE:20261222
+SUMMARY:Conmemoración de la Escuela Santa María de Iquique
+DESCRIPTION:Actividad\nEfeméride regional (21 de diciembre de 1907).
+CATEGORIES:Actividad
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-12-25-158oega@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20261225
+DTEND;VALUE=DATE:20261226
+SUMMARY:Navidad
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-01-01-73c1hi@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20270101
+DTEND;VALUE=DATE:20270102
+SUMMARY:Año Nuevo
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-01-04-gb3hh2@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20270104
+DTEND;VALUE=DATE:20270105
+SUMMARY:Resultados PAES Regular
+DESCRIPTION:Actividad\nPublicación de puntajes en demre.cl.\nMás informac
+ ión: https://demre.cl
+URL:https://demre.cl
+CATEGORIES:Actividad
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-03-26-qm1c1a@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20270326
+DTEND;VALUE=DATE:20270327
+SUMMARY:Viernes Santo
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-03-27-5j15k5@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20270327
+DTEND;VALUE=DATE:20270328
+SUMMARY:Sábado Santo
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-05-01-5y6zz2@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20270501
+DTEND;VALUE=DATE:20270502
+SUMMARY:Día del Trabajo
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-05-21-sdphfk@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20270521
+DTEND;VALUE=DATE:20270522
+SUMMARY:Día de las Glorias Navales
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-06-21-1qv8cio@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20270621
+DTEND;VALUE=DATE:20270622
+SUMMARY:Día de los Pueblos Indígenas
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-06-28-1o1lf7b@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20270628
+DTEND;VALUE=DATE:20270629
+SUMMARY:San Pedro y San Pablo
+DESCRIPTION:Feriado\nFeriado nacional. Se traslada del martes 29 al lunes 2
+ 8 de junio.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-07-16-x1aoro@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20270716
+DTEND;VALUE=DATE:20270717
+SUMMARY:Virgen del Carmen
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-08-15-129uzk1@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20270815
+DTEND;VALUE=DATE:20270816
+SUMMARY:Asunción de la Virgen
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-09-17-12pxa57@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20270917
+DTEND;VALUE=DATE:20270918
+SUMMARY:Feriado adicional de Fiestas Patrias
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-09-18-1ptich3@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20270918
+DTEND;VALUE=DATE:20270919
+SUMMARY:Fiestas Patrias: Independencia Nacional
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-09-19-1p8r18t@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20270919
+DTEND;VALUE=DATE:20270920
+SUMMARY:Día de las Glorias del Ejército
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-10-11-1hssspj@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20271011
+DTEND;VALUE=DATE:20271012
+SUMMARY:Encuentro de Dos Mundos
+DESCRIPTION:Feriado\nFeriado nacional. Se traslada del martes 12 al lunes 1
+ 1 de octubre.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-10-31-2ajp64@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20271031
+DTEND;VALUE=DATE:20271101
+SUMMARY:Día de las Iglesias Evangélicas y Protestantes
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-11-01-17dosdt@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20271101
+DTEND;VALUE=DATE:20271102
+SUMMARY:Día de Todos los Santos
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-12-08-7ltfz7@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20271208
+DTEND;VALUE=DATE:20271209
+SUMMARY:Inmaculada Concepción
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:2027-12-25-puprfv@colegiosm.cl
+DTSTAMP:20261017T130420Z
+DTSTART;VALUE=DATE:20271225
+DTEND;VALUE=DATE:20271226
+SUMMARY:Navidad
+DESCRIPTION:Feriado\nFeriado nacional.
+CATEGORIES:Feriado
+TRANSP:TRANSPARENT
+END:VEVENT
+END:VCALENDAR

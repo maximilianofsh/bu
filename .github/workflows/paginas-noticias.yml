@@ -1,0 +1,66 @@
+# Crea una página fija por noticia (noticia/<id>/) para que al compartirla por WhatsApp o
+# Facebook se vea su título, resumen y foto. Ver .github/scripts/paginas-noticias.js
+# También escribe css/colores.css con los colores del panel (ver .github/scripts/colores-sitio.js),
+# el calendario para suscribirse en el celular (calendario/colegio.ics, ver calendario-ics.js)
+# y el mapa del sitio para Google (sitemap.xml, ver mapa-sitio.js)
+# y, cada media hora, crea las páginas de las noticias programadas cuya hora ya llegó.
+name: Páginas para compartir noticias
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - data/sitio.json
+      - noticia/index.html
+      - CNAME
+      - .github/scripts/paginas-noticias.js
+      - .github/scripts/colores-sitio.js
+      - .github/scripts/calendario-ics.js
+      - .github/scripts/mapa-sitio.js
+      - js/ics.js
+      - js/estilo.js
+  # Los cambios que publica la acción del panel (funcionarios) no generan un «push» que active esta acción
+  workflow_run:
+    workflows: ["Cambios del panel"]
+    types: [completed]
+  workflow_dispatch:
+  schedule:
+    - cron: "7,37 * * * *"
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: paginas-noticias
+  cancel-in-progress: false
+
+jobs:
+  generar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # Siempre la rama principal, nunca código de una solicitud de cambios
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - name: Generar páginas
+        run: |
+          node .github/scripts/paginas-noticias.js
+          node .github/scripts/colores-sitio.js
+          node .github/scripts/calendario-ics.js
+          node .github/scripts/mapa-sitio.js
+      - name: Publicar si hubo cambios
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add -A noticia css/colores.css calendario/colegio.ics sitemap.xml
+          if git diff --cached --quiet; then echo "Sin cambios."; exit 0; fi
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "Actualizar páginas de noticias, colores, calendario y mapa del sitio"
+          for i in 1 2 3 4; do
+            git pull -q --rebase origin "${{ github.event.repository.default_branch }}" && git push -q origin HEAD:"${{ github.event.repository.default_branch }}" && break
+            sleep $((i * 3))
+          done
+          # GitHub Pages no siempre se reconstruye con commits hechos por una acción: se lo pedimos
+          gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds" >/dev/null || echo "No se pudo pedir la reconstrucción de Pages."

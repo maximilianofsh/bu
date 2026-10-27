@@ -1,0 +1,33 @@
+/* Estilos propios de la página /emergencias/
+   Se aplican después de css/estilos.css, así que aquí puedes sobrescribir cualquier regla
+   solo para esta página. Edítalo desde el panel: Editor de página → CSS. */
+.emerg { display: grid; gap: 1.5rem; max-width: 1040px; }
+.emerg__regla { display: flex; gap: 1rem; align-items: flex-start; padding: 1.2rem 1.4rem; border-radius: var(--radius); background: #b3261e; color: #fff; box-shadow: var(--shadow); }
+.emerg__regla p { margin: 0; font-size: 1.08rem; line-height: 1.5; }
+.emerg__regla-ico { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.2); font-weight: 800; font-size: 1.3rem; }
+.emerg__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
+.emerg__card, .emerg__bloque { background: var(--paper, #fff); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.6rem 1.7rem; box-shadow: var(--shadow); }
+.emerg__card--colegio { border-top: 4px solid var(--gold); }
+.emerg__pasos { margin: 0; padding-left: 1.2rem; display: grid; gap: .7rem; }
+.emerg__pasos li::marker { font-weight: 700; color: var(--navy-900); }
+.emerg__dato { margin: 0 0 .8rem; }
+.emerg__dato span { display: block; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-dark); }
+.emerg__dato strong { font-size: 1.1rem; }
+.emerg__pendiente { color: var(--muted); font-style: italic; }
+.emerg__mapa { margin: 0; }
+.emerg__mapa img { width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--line); }
+.emerg__mapa figcaption { margin-top: .5rem; font-size: .9rem; color: var(--muted); }
+.emerg__fonos { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
+.emerg__fonos a { display: flex; gap: .8rem; align-items: baseline; padding: .55rem .8rem; border-radius: 10px; background: var(--cream); color: var(--ink); }
+.emerg__fonos b { min-width: 6.5rem; font-size: 1.05rem; color: var(--navy-900); }
+.emerg__nota { margin: 1rem 0 0; font-size: .92rem; color: var(--muted); }
+@media (max-width: 760px) { .emerg__grid { grid-template-columns: 1fr; } .emerg__card, .emerg__bloque { padding: 1.3rem; } }
+
+/* Mapas de evacuación (aluvión, terremoto, tsunami…) */
+.emerg__mapas-lista { display: grid; gap: 1.5rem; }
+.emerg__mapa-item { margin: 0; padding: 1.1rem; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); }
+.emerg__mapa-item h3 { margin: .1rem 0 .8rem; font-size: 1.15rem; }
+.emerg__mapa-tipo { margin: 0; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--navy-700); }
+.emerg__mapa-item img { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--line); }
+.emerg__mapa-item figcaption { margin-top: .6rem; font-size: .9rem; color: var(--muted); }
+.emerg__mapa-item figcaption a { font-weight: 600; color: var(--navy-700); white-space: nowrap; }

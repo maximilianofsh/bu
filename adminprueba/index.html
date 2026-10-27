@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; worker-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Prueba: listas de curso desde PDF | Colegio San Martín</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="../img/logo/favicon-32.png">
+  <link rel="stylesheet" href="../admin/admin.css">
+  <link rel="stylesheet" href="prueba.css">
+</head>
+<body>
+  <main class="prueba">
+    <p class="prueba__etiqueta">Página de prueba · no cambia nada del panel ni de «Mi curso»</p>
+    <h1>Listas de curso desde PDF</h1>
+    <p class="prueba__intro">Sube la lista de curso en PDF (la que tiene N°, Run, A.P, A.M y Nombres). Se arma la tabla con el nombre y el correo institucional
+      de cada estudiante: <strong>apellido1.apellido2.primernombre@colegiosm.cl</strong>, en minúsculas, sin tildes y con ñ como n.
+      El PDF se lee solo en este equipo: no se sube a ningún lado.</p>
+
+    <section class="panel">
+      <label class="prueba__subir" id="zona">
+        <input type="file" id="archivos" accept="application/pdf,.pdf" multiple>
+        <strong>Elegir PDF de listas de curso</strong>
+        <span>o arrástralos aquí. Puedes subir varios cursos a la vez.</span>
+      </label>
+      <p class="prueba__estado" id="estado" role="status"></p>
+    </section>
+
+    <section class="panel" id="resultado" hidden>
+      <div class="prueba__cab">
+        <h2 id="resumen"></h2>
+        <div class="prueba__botones">
+          <button type="button" class="btn btn--primary btn--sm" id="bajar">Descargar Excel</button>
+          <button type="button" class="btn btn--ghost btn--sm" id="copiar">Copiar tabla</button>
+          <button type="button" class="btn btn--ghost btn--sm" id="limpiar">Empezar de nuevo</button>
+        </div>
+      </div>
+      <p class="panel__help">Puedes corregir el nombre o el correo escribiendo en la tabla. Las filas en amarillo conviene revisarlas.
+        El Excel sale con Nombre, Correo, Curso y RUT: súbelo tal cual en «Mi curso (app)» → «Agregar o actualizar».</p>
+      <div class="prueba__tabla"><table>
+        <thead><tr><th>N°</th><th>Nombre y apellido</th><th>Correo institucional</th><th>RUN</th><th>Curso</th><th>Revisar</th></tr></thead>
+        <tbody id="filas"></tbody>
+      </table></div>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="../admin/vendor/xlsx/xlsx.core.min.js"></script>
+  <script src="listas-pdf.js"></script>
+  <script type="module" src="prueba.js"></script>
+</body>
+</html>
