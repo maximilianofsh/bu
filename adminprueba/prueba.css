@@ -1,0 +1,27 @@
+.prueba { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+.prueba h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
+.prueba__etiqueta { display: inline-block; margin: 0 0 .6rem; padding: .2rem .7rem; border-radius: 999px; background: #fff4d6; color: #7a5a12; font-size: .8rem; font-weight: 600; }
+.prueba__intro { color: var(--muted); max-width: 70ch; }
+.prueba .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 1.2rem; margin-top: 1.2rem; }
+.prueba__subir { display: grid; gap: .3rem; place-items: center; text-align: center; padding: 2rem 1rem; border: 2px dashed var(--line); border-radius: 14px; cursor: pointer; color: var(--muted); }
+.prueba__subir strong { color: var(--navy); font-size: 1.05rem; }
+.prueba__subir.is-encima, .prueba__subir:hover { border-color: var(--gold); background: #fffaf0; }
+.prueba__subir input { position: absolute; opacity: 0; pointer-events: none; width: 1px; }
+.prueba__estado { margin: .8rem 0 0; color: var(--muted); }
+.prueba__estado.is-error { color: var(--danger); }
+.prueba__cab { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; justify-content: space-between; }
+.prueba__cab h2 { font-size: 1.25rem; }
+.prueba__botones { display: flex; flex-wrap: wrap; gap: .5rem; }
+.prueba__tabla { overflow-x: auto; margin-top: .8rem; border: 1px solid var(--line); border-radius: 12px; }
+.prueba table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+.prueba th { text-align: left; background: #f7f5ef; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); padding: .55rem .6rem; white-space: nowrap; }
+.prueba td { border-top: 1px solid var(--line); padding: .3rem .6rem; vertical-align: middle; }
+.prueba td input { width: 100%; min-width: 14rem; border: 1px solid transparent; border-radius: 8px; padding: .35rem .45rem; font: inherit; background: transparent; }
+.prueba td input:hover, .prueba td input:focus { border-color: var(--line); background: #fff; }
+.prueba td.prueba__n, .prueba td.prueba__rut { white-space: nowrap; color: var(--muted); }
+.prueba td.prueba__curso { white-space: nowrap; }
+.prueba tr.is-revisar td { background: #fff8e1; }
+.prueba td.prueba__aviso { color: #7a5a12; font-size: .82rem; min-width: 12rem; }
+.prueba td.prueba__aviso.is-ok { color: var(--ok); }
+.prueba__intro strong { overflow-wrap: anywhere; }
+.prueba td input { field-sizing: content; min-width: 16rem; }

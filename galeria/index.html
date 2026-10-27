@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es" class="no-js" data-page="galeria">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Seguridad: solo se cargan scripts del propio sitio (ver SEGURIDAD.md) -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self' https:; frame-src https://maps.google.com https://www.google.com; connect-src 'self' https://*.workers.dev; object-src 'none'; base-uri 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Galería de fotos | Colegio San Martín Iquique</title>
+  <meta name="description" content="Galería de fotos de las actividades del Colegio San Martín de Iquique.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Colegio San Martín Iquique">
+  <meta property="og:locale" content="es_CL">
+  <meta property="og:url" content="https://colegiosm.cl/galeria/">
+  <meta property="og:title" content="Galería de fotos | Colegio San Martín Iquique">
+  <meta property="og:description" content="Galería de fotos de las actividades del Colegio San Martín de Iquique.">
+  <meta property="og:image" content="https://colegiosm.cl/img/compartir.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="32x32" href="../img/logo/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../img/logo/favicon-192.png">
+  <link rel="apple-touch-icon" href="../img/logo/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/estilos.css">
+  <link rel="stylesheet" href="../css/colores.css">
+  <link rel="stylesheet" href="../css/paginas/galeria.css">
+  <script src="../js/estilo.js"></script>
+</head>
+<body data-page="galeria" id="top">
+  <script src="../js/layout.js"></script>
+
+  <main id="contenido">
+
+    <section class="page-hero" id="galHero">
+      <div class="hero__pattern" aria-hidden="true"></div>
+      <div class="container page-hero__inner">
+        <nav aria-label="Ruta"><ol class="crumbs" id="galCrumbs"><li><a href="../">Inicio</a></li><li aria-current="page">Galería de fotos</li></ol></nav>
+        <h1 id="galTitulo">Galería de fotos</h1>
+        <p id="galLead">Momentos de nuestras actividades, actos y salidas pedagógicas.</p>
+      </div>
+    </section>
+
+    <!-- Galería: álbumes desde data/sitio.json (galeria); ?a=álbum muestra sus fotos -->
+    <section class="section">
+      <div class="container" id="galeria"><p class="empty-note">Cargando la galería…</p></div>
+    </section>
+
+  </main>
+
+  <script src="../js/redes.js"></script>
+  <script src="../js/texto.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="../js/galeria.js"></script>
+</body>
+</html>

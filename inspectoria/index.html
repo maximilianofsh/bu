@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Seguridad: solo se cargan scripts del propio sitio (ver SEGURIDAD.md) -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Inspectoría | Colegio San Martín</title>
+  <meta name="theme-color" content="#3b0d18">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Inspectoría">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="icono-192.png">
+  <link rel="apple-touch-icon" href="icono-apple-180.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../app/app.css">
+  <link rel="stylesheet" href="../utp/utp.css">
+</head>
+<body class="sin-tabs">
+  <header class="barra">
+    <img class="barra__logo" src="icono-192.png" alt="" width="36" height="36">
+    <div class="barra__texto">
+      <strong>Inspectoría</strong>
+      <span>Avisos del colegio</span>
+    </div>
+    <span class="barra__red" id="sinRed" hidden>Sin conexión</span>
+  </header>
+
+  <main class="contenido">
+    <div class="vista">
+      <div class="tarjeta instalar" id="instalar" hidden></div>
+      <div id="insp"></div>
+    </div>
+  </main>
+
+  <script src="../js/instalar.js"></script>
+  <script src="inspectoria.js"></script>
+</body>
+</html>

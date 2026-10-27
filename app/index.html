@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Seguridad: solo se cargan scripts del propio sitio (ver SEGURIDAD.md) -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.workers.dev; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>App Colegio San Martín</title>
+  <meta name="description" content="App del Colegio San Martín de Iquique: avisos importantes, horarios de clases y calendario escolar.">
+  <link rel="canonical" href="https://colegiosm.cl/app/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Colegio San Martín Iquique">
+  <meta property="og:locale" content="es_CL">
+  <meta property="og:url" content="https://colegiosm.cl/app/">
+  <meta property="og:title" content="App Colegio San Martín">
+  <meta property="og:description" content="App del Colegio San Martín de Iquique: avisos importantes, horarios de clases y calendario escolar.">
+  <meta property="og:image" content="https://colegiosm.cl/img/compartir.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#3b0d18">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="San Martín">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="icono-v2-192.png">
+  <link rel="apple-touch-icon" href="icono-v2-apple-180.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header class="barra">
+    <img class="barra__logo" src="icono-v2-192.png" alt="" width="36" height="36">
+    <div class="barra__texto">
+      <strong>Colegio San Martín</strong>
+      <span id="barraTitulo">Avisos</span>
+    </div>
+    <span class="barra__red" id="sinRed" hidden>Sin conexión</span>
+  </header>
+
+  <main class="contenido">
+    <!-- Avisos: la alerta que se activa en el panel (sección «Aviso urgente») -->
+    <section class="vista" id="vista-avisos" data-titulo="Avisos">
+      <div id="instalar" class="tarjeta instalar" hidden></div>
+      <div id="avisoActual"></div>
+      <div id="notificaciones" class="tarjeta notif" hidden></div>
+      <h2 class="subtitulo">Próximos días</h2>
+      <div id="proximos" class="eventos"></div>
+      <p class="pie-nota" id="actualizado"></p>
+      <button type="button" class="pie-acceso" data-ir-insp>Acceso Inspectoría</button>
+    </section>
+
+    <!-- Horarios de cada curso -->
+    <section class="vista" id="vista-horarios" data-titulo="Horarios" hidden>
+      <label class="selector">
+        <span>Curso</span>
+        <select id="curso"></select>
+      </label>
+      <div class="dias" id="dias" role="group" aria-label="Día"></div>
+      <ol class="bloques" id="bloques"></ol>
+    </section>
+
+    <!-- Inspectoría: publicar o apagar el aviso con una clave (la revisa el servidor de notificaciones) -->
+    <section class="vista" id="vista-inspectoria" data-titulo="Inspectoría" hidden>
+      <div id="insp"></div>
+    </section>
+
+    <!-- Mi curso: calendario de cada curso, solo para su comunidad (ver app/micurso.js) -->
+    <section class="vista" id="vista-micurso" data-titulo="Mi curso" hidden>
+      <div id="micurso"></div>
+    </section>
+
+    <!-- Calendario escolar -->
+    <section class="vista" id="vista-calendario" data-titulo="Calendario" hidden>
+      <div id="calendario" class="eventos"></div>
+    </section>
+  </main>
+
+  <nav class="tabs" aria-label="Secciones">
+    <button type="button" class="tab is-active" data-vista="avisos">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg>
+      <span>Avisos</span><i class="tab__punto" id="puntoAviso" hidden></i>
+    </button>
+    <button type="button" class="tab" data-vista="horarios">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm.75-13h-1.5v6l5.2 3.12.75-1.23-4.45-2.64V7Z"/></svg>
+      <span>Horarios</span>
+    </button>
+    <button type="button" class="tab" data-vista="calendario">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H5V9h14v11ZM7 11h5v5H7v-5Z"/></svg>
+      <span>Calendario</span>
+    </button>
+    <button type="button" class="tab" data-vista="micurso">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 1 9l11 6 9-4.91V17h2V9L12 3Zm-6.82 9.5L5 16.18 12 20l7-3.82v-3.68L12 16.5l-6.82-4Z"/></svg>
+      <span>Mi curso</span>
+    </button>
+    <button type="button" class="tab" data-vista="inspectoria" id="tabInsp" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10v4h3l5 5V5L6 10H3Zm13.5 2A4.5 4.5 0 0 0 14 7.97v8.05A4.5 4.5 0 0 0 16.5 12ZM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06A9 9 0 0 0 14 3.23Z"/></svg>
+      <span>Publicar</span>
+    </button>
+  </nav>
+
+  <script src="../js/horarios.js"></script>
+  <script src="micurso.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

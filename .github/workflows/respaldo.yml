@@ -1,0 +1,51 @@
+# Copia de seguridad semanal del contenido del panel (data/sitio.json y data/roles.json).
+# Se guarda en la rama «respaldos» (no se publica en el sitio), una carpeta por fecha,
+# y se conservan las últimas 52 semanas. Se restaura desde el panel: «Copias de seguridad».
+name: Copia de seguridad semanal
+
+on:
+  schedule:
+    - cron: "0 7 * * 0" # domingos, 3 o 4 de la mañana en Chile
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: respaldo
+  cancel-in-progress: false
+
+jobs:
+  respaldar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 1
+      - name: Guardar la copia en la rama «respaldos»
+        run: |
+          set -e
+          fecha=$(TZ=America/Santiago date +%F)
+          tmp=$(mktemp -d)
+          cp data/sitio.json "$tmp/"
+          [ -f data/roles.json ] && cp data/roles.json "$tmp/"
+          if git ls-remote --exit-code --heads origin respaldos >/dev/null; then
+            git fetch -q --depth=1 origin respaldos
+            git checkout -q -B respaldos FETCH_HEAD
+          else
+            git checkout -q --orphan respaldos
+            git rm -rq --cached . && git clean -fdxq
+            printf '# Copias de seguridad\n\nUna carpeta por semana con el contenido del panel. Se restauran desde el panel: «Copias de seguridad».\n' > README.md
+          fi
+          mkdir -p "respaldos/$fecha"
+          cp "$tmp"/*.json "respaldos/$fecha/"
+          # Solo las últimas 52 copias
+          ls -1d respaldos/*/ | sort | head -n -52 | xargs -r git rm -rq
+          git add -A README.md respaldos
+          if git diff --cached --quiet; then echo "Sin cambios."; exit 0; fi
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "Copia de seguridad del $fecha"
+          git push -q origin HEAD:respaldos
+          echo "Copia guardada: respaldos/$fecha"
