@@ -10,6 +10,7 @@ Propuesta de rediseño del sitio del Colegio San Martín de Iquique, hecha con H
 
 - `data/sitio.json`: contenido editable (colores, directivos, departamentos, personal, horarios, noticias, redes sociales y documentos)
 - `admin/`: panel de administración (contenido, editor HTML/CSS por página y estilo visual)
+- `imprimir/`: dirección corta (colegiosm.cl/imprimir) que abre la app en «Enviar prueba o guía», para los profesores
 - `css/paginas/`: estilos propios de cada página, que se aplican encima de `css/estilos.css`
 - `js/horarios.js`: reglas de los horarios (colores por asignatura, recreos, bloques administrativos que no se publican)
 - `admin/vendor/`: CodeMirror (editor de código) y SheetJS (lectura y escritura de Excel, licencia Apache 2.0)

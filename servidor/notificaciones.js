@@ -47,6 +47,7 @@
      POST /inspectoria/entrar    { clave }            entrega una sesión para ese celular
      POST /inspectoria/publicar  { sesion, aviso }    publica o apaga el aviso
      POST /visita      { p }               suma una visita a la página p (lo envía cada página del sitio)
+     POST /notif/personal { endpoint }     mensaje pendiente solo para ese celular (avisos de pruebas a los profesores)
      GET  /estadisticas?dias=30            visitas por día y por página
      POST /contacto    { nombre, email, motivo, mensaje }   mensaje del formulario de Contacto
      GET  /mensajes    (token del panel)   mensajes recibidos; POST /mensajes/leido y /mensajes/borrar { id },
@@ -55,7 +56,8 @@
      POST /utp/entrar  { usuario, clave }  sesión de la app «Noticias UTP»; con { sesion }: /utp/noticias,
                        /utp/guardar, /utp/borrar, /utp/subir, /utp/borradores, /utp/borrador, /utp/borrador/borrar
      POST /curso/codigo { quien, id } · /curso/verificar { quien, id, codigo } · /curso/entrar { correo, clave }
-                       «Mi curso»; con { sesion }: /curso/yo, /curso/fechas, /curso/fecha, /curso/fecha/borrar, /curso/clave
+                       «Mi curso»; con { sesion }: /curso/yo, /curso/fechas, /curso/fecha, /curso/fecha/borrar, /curso/clave,
+                       /curso/notificaciones { endpoint, activar } (profesores: avisos de sus pruebas en ese celular)
                        Apoderados: /curso/codigo y /curso/verificar con quien «apoderado» o /curso/colegio { codigo } dan un «pase»
                        del estudiante; /curso/apoderado/correo { pase, correo } · /curso/apoderado/registrar { pase, correo, codigo }
                        · /curso/apoderado/agregar { sesion, pase } · /curso/apoderado/codigo { correo } · /curso/apoderado/entrar { correo, codigo }
@@ -74,7 +76,7 @@
    ========================================================== */
 
 // Versión de este código (se ve en /estado para saber si ya se pegó la última en Cloudflare)
-const VERSION = "2026-10-28-pruebas-faciles";
+const VERSION = "2026-10-28-avisos-profes";
 // Sitio del colegio: de aquí se lee el aviso
 const SITIO = "https://colegiosm.cl/";
 // Páginas que pueden usar este servidor
@@ -124,6 +126,9 @@ async function preparar(db) {
     db.prepare("CREATE TABLE IF NOT EXISTS apoderados (rut TEXT PRIMARY KEY, correo TEXT NOT NULL, creado TEXT, via TEXT)"),
     db.prepare("CREATE INDEX IF NOT EXISTS apoderados_correo ON apoderados (correo)"),
     db.prepare("CREATE TABLE IF NOT EXISTS codigos_colegio (rut TEXT PRIMARY KEY, hash TEXT NOT NULL, vence INTEGER NOT NULL, creado TEXT)"),
+    db.prepare("CREATE TABLE IF NOT EXISTS subs_profes (endpoint TEXT PRIMARY KEY, correo TEXT NOT NULL, t TEXT)"),
+    db.prepare("CREATE TABLE IF NOT EXISTS notif_personales (id INTEGER PRIMARY KEY AUTOINCREMENT, endpoint TEXT NOT NULL, titulo TEXT, cuerpo TEXT, url TEXT, t INTEGER NOT NULL)"),
+    db.prepare("CREATE INDEX IF NOT EXISTS notif_personales_endpoint ON notif_personales (endpoint)"),
     db.prepare("CREATE TABLE IF NOT EXISTS fechas_curso (id INTEGER PRIMARY KEY AUTOINCREMENT, curso TEXT NOT NULL, fecha TEXT NOT NULL, fin TEXT, hora TEXT, titulo TEXT NOT NULL, tipo TEXT, descripcion TEXT, autor TEXT, creado TEXT)"),
   ]);
 }
@@ -707,6 +712,14 @@ const filaPrueba = (r) => ({ id: r.id, correo: r.correo, nombre: r.nombre, curso
   fecha: r.fecha, tipo: r.tipo, comentario: r.comentario || "", archivo: r.archivo, tam: r.tam, copias: r.copias, estado: r.estado, motivo: r.motivo || "",
   t: r.t, revisor: r.revisor || "", tRevision: r.t_rev || "", impresor: r.impresor || "", tImpresa: r.t_imp || "", habiles: r.habiles, conArchivo: r.partes > 0 });
 const fechaLarga = (f) => { const [y, m, d] = String(f).split("-"); return `${+d}-${+m}-${y}`; };
+// «jueves 5 de noviembre» (para las notificaciones, que se leen rápido)
+const fechaTexto = (f) => {
+  const [y, m, d] = String(f).split("-").map(Number);
+  if (!y) return String(f);
+  const dias = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+  const meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  return `${dias[new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay()]} ${d} de ${meses[m - 1]}`;
+};
 const resumenPrueba = (p) => `${TIPOS_PRUEBA[p.tipo] || "Prueba"} de ${p.asignatura} · ${p.cursos.join(", ")} · evaluación el ${fechaLarga(p.fecha)}`;
 
 // Correo a las cuentas del panel que tienen un permiso (UTP: solo las de su ciclo, si las hay)
@@ -719,6 +732,20 @@ async function avisarPermiso(db, env, permiso, cursos, asunto, cuerpo) {
   let n = 0;
   for (const f of delCiclo.length ? delCiclo : cuentas) if (await llamarCorreo(db, env, { tipo: "mensaje", para: f.correo, asunto: asunto.slice(0, 150), cuerpo })) n++;
   return n;
+}
+
+// Notificación a los celulares de un profesor (los que activó en «Mi curso»). Como los avisos, llega sin texto:
+// el celular lo pide en /notif/personal. Si falla, igual le llega el correo.
+async function avisarProfe(db, correo, titulo, cuerpo) {
+  try {
+    const subs = (await db.prepare("SELECT p.endpoint FROM subs_profes p JOIN subs s ON s.endpoint = p.endpoint WHERE p.correo = ? LIMIT 5").bind(correo).all()).results;
+    if (!subs.length) return 0;
+    const t = Date.now();
+    await db.batch(subs.map((s) => db.prepare("INSERT INTO notif_personales (endpoint, titulo, cuerpo, url, t) VALUES (?, ?, ?, ?, ?)").bind(s.endpoint, titulo.slice(0, 120), cuerpo.slice(0, 240), "./#micurso", t)));
+    const g = await llaves(db), firmas = {};
+    const res = await Promise.all(subs.map((s) => empujar(g, firmas, s.endpoint).catch(() => null)));
+    return res.filter((r) => r && r.ok).length;
+  } catch (e) { return 0; }
 }
 
 // Rutas del profesor (sesión de «Mi curso»)
@@ -863,6 +890,8 @@ async function rutaPruebasPanel(db, env, req, url, f, d) {
     const avisados = await avisarPermiso(db, env, "impresiones", fila.cursos, `Para imprimir: ${copias} copias · ${fila.asignatura} · ${fila.cursos.join(", ")}`,
       `UTP aprobó una ${TIPOS_PRUEBA[p.tipo].toLowerCase()} para imprimir:\n\n${resumenPrueba(fila)}\nCopias: ${copias}\nDocente: ${p.nombre || p.correo}\n` +
       (p.comentario ? `Indicaciones: ${p.comentario}\n` : "") + `\nDescárgala en el Panel SM (${SITIO}admin/) → «Pruebas y guías» → «Para imprimir», y márcala como impresa al terminar.`);
+    await avisarProfe(db, p.correo, `UTP aprobó tu ${TIPOS_PRUEBA[p.tipo].toLowerCase()} de ${fila.asignatura}`,
+      `${fila.cursos.join(", ")}: se imprimirán ${copias} copias para la evaluación del ${fechaTexto(fila.fecha)}.`);
     await alProfe(`Aprobada: ${fila.asignatura} · ${fila.cursos.join(", ")}`,
       `Hola${p.nombre ? " " + p.nombre.split(" ")[0] : ""}:\n\nUTP aprobó tu ${TIPOS_PRUEBA[p.tipo].toLowerCase()} (${resumenPrueba(fila)}) y la envió a impresión (${copias} copias).\n\nColegio San Martín`);
     return { ok: true, avisados };
@@ -872,6 +901,7 @@ async function rutaPruebasPanel(db, env, req, url, f, d) {
     const motivo = String(d.motivo || "").trim().slice(0, 1000) || "Necesita algunos cambios.";
     await db.prepare("UPDATE pruebas SET estado = 'devuelta', motivo = ?, revisor = ?, t_rev = ? WHERE id = ?").bind(motivo, quien, new Date().toISOString(), p.id).run();
     await anotar(db, f, "Devolvió con comentarios: " + resumenPrueba(fila));
+    await avisarProfe(db, p.correo, `UTP pidió un cambio en tu ${TIPOS_PRUEBA[p.tipo].toLowerCase()} de ${fila.asignatura}`, motivo.slice(0, 180));
     const avisado = await alProfe(`Con comentarios de UTP: ${fila.asignatura} · ${fila.cursos.join(", ")}`,
       `Hola${p.nombre ? " " + p.nombre.split(" ")[0] : ""}:\n\nUTP revisó tu ${TIPOS_PRUEBA[p.tipo].toLowerCase()} (${resumenPrueba(fila)}) y pide cambios antes de imprimirla:\n\n${motivo}\n\nCorrígela en la app del colegio (${SITIO}app/) → «Mi curso» → «Pruebas para imprimir» → «Corregir y reenviar».\n\nColegio San Martín`);
     return { ok: true, avisado };
@@ -880,6 +910,8 @@ async function rutaPruebasPanel(db, env, req, url, f, d) {
     if (!["aprobada", "impresa"].includes(p.estado)) return { error: "Esa prueba aún no está aprobada.", estado: 409 };
     const lista = d.impresa !== false;
     await db.prepare("UPDATE pruebas SET estado = ?, impresor = ?, t_imp = ? WHERE id = ?").bind(lista ? "impresa" : "aprobada", lista ? quien : null, lista ? new Date().toISOString() : null, p.id).run();
+    if (lista && p.estado !== "impresa") await avisarProfe(db, p.correo, `Tu ${TIPOS_PRUEBA[p.tipo].toLowerCase()} de ${fila.asignatura} está impresa`,
+      `${p.copias} copias listas para la evaluación del ${fechaTexto(fila.fecha)} (${fila.cursos.join(", ")}).`);
     return { ok: true };
   }
   if (url.pathname === "/panel/pruebas/anular") {
@@ -1569,6 +1601,20 @@ async function rutaCurso(db, env, req, url) {
         : { rol: "profe", nombre: q.profe.nombre, cursos: q.profe.cursos, conClave: q.profe.conClave };
     case "/curso/fechas":
       return { fechas: await fechasDe(db, q.apoderado ? [...new Set(q.hijos.map((h) => h.curso))] : q.rol === "familia" ? [q.estudiante.curso] : q.profe.cursos), hoy: hoyChile() };
+    // El profesor recibe en este celular los avisos de sus pruebas (aprobada, devuelta, impresa)
+    case "/curso/notificaciones": {
+      if (q.rol !== "profe") return { error: "No permitido.", estado: 403 };
+      const ep = String(d.endpoint || "");
+      if (!SERVICIOS.test(ep)) return { error: "Suscripción no válida.", estado: 400 };
+      if (d.activar === false) {
+        await db.prepare("DELETE FROM subs_profes WHERE endpoint = ? AND correo = ?").bind(ep, q.profe.correo).run();
+        return { ok: true };
+      }
+      if (!(await db.prepare("SELECT id FROM subs WHERE endpoint = ?").bind(ep).first())) return { error: "Activa primero las notificaciones de la app en este celular.", estado: 400 };
+      await db.prepare("INSERT INTO subs_profes (endpoint, correo, t) VALUES (?1, ?2, ?3) ON CONFLICT(endpoint) DO UPDATE SET correo = ?2, t = ?3")
+        .bind(ep, q.profe.correo, new Date().toISOString()).run();
+      return { ok: true };
+    }
     case "/curso/clave": {
       if (q.rol !== "profe") return { error: "No permitido.", estado: 403 };
       const clave = String(d.clave || "");
@@ -2081,6 +2127,15 @@ export default {
         else if (!res.ok) await anotarErrores(db, { [new URL(ep).origin]: info });
         return respuesta({ ok: res.ok, ...info }, origen);
       }
+      // El celular de un profesor lee aquí el mensaje que le corresponde (la notificación llega sin texto)
+      if (req.method === "POST" && url.pathname === "/notif/personal") {
+        const d = await req.json().catch(() => ({}));
+        const ep = String(d.endpoint || "");
+        if (!SERVICIOS.test(ep)) return respuesta({ mensaje: null }, origen);
+        const m = await db.prepare("SELECT id, titulo, cuerpo, url FROM notif_personales WHERE endpoint = ? AND t > ? ORDER BY id LIMIT 1").bind(ep, Date.now() - 2 * 864e5).first();
+        if (m) await db.prepare("DELETE FROM notif_personales WHERE id = ?").bind(m.id).run();
+        return respuesta({ mensaje: m ? { titulo: m.titulo, cuerpo: m.cuerpo, url: m.url } : null }, origen);
+      }
       if (req.method === "POST" && url.pathname === "/enviar") return respuesta(await enviar(db), origen);
       if (req.method === "POST" && url.pathname === "/visita") {
         if (origen) await visita(db, req).catch(() => {});
@@ -2180,6 +2235,8 @@ export default {
     if (new Date(evento.scheduledTime || Date.now()).getUTCHours() === 6 && new Date(evento.scheduledTime || Date.now()).getUTCMinutes() === 0) {
       ctx.waitUntil(env.DB.batch([
         env.DB.prepare("DELETE FROM visitas WHERE dia < ?").bind(new Date(Date.now() - 400 * 864e5).toISOString().slice(0, 10)),
+        env.DB.prepare("DELETE FROM notif_personales WHERE t < ?").bind(Date.now() - 3 * 864e5),
+        env.DB.prepare("DELETE FROM subs_profes WHERE endpoint NOT IN (SELECT endpoint FROM subs)"),
         env.DB.prepare("DELETE FROM mensajes WHERE fecha < ?").bind(new Date(Date.now() - 365 * 864e5).toISOString()),
         env.DB.prepare("DELETE FROM asignaciones WHERE mensaje NOT IN (SELECT id FROM mensajes)"),
         env.DB.prepare("DELETE FROM registro_panel WHERE t < ?").bind(new Date(Date.now() - 365 * 864e5).toISOString()),

@@ -137,7 +137,6 @@ button, select { font: inherit; color: inherit; }
 .notif__error { color: #b3261e !important; font-weight: 600; }
 
 /* Inspectoría */
-.pie-acceso { justify-self: center; border: 0; background: none; padding: .4rem .8rem; font-size: .75rem; color: var(--suave); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .insp { display: grid; gap: .9rem; }
 .insp h2 { font-family: var(--serif); font-size: 1.15rem; color: var(--primario); }
 .campo { display: grid; gap: .3rem; min-width: 0; font-size: .85rem; font-weight: 600; color: var(--suave); }
@@ -278,3 +277,23 @@ button, select { font: inherit; color: inherit; }
 .mc-linea .ahora b { background: var(--acento); color: var(--primario); }
 .mc-linea strong { display: block; color: var(--tinta); }
 .mc-linea small { font-size: .85rem; color: var(--suave); }
+
+/* Inicio: las clases del día del curso guardado en el celular */
+.hoy { display: grid; gap: .2rem; margin-bottom: 1rem; padding: 1rem 1.1rem .6rem; border-radius: 18px; background: var(--primario); color: #fff; box-shadow: var(--sombra); }
+.hoy small { font-size: .72rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--acento); }
+.hoy h2 { margin: .1rem 0 .4rem; font-family: var(--serif); font-size: 1.3rem; line-height: 1.2; color: #fff; }
+.hoy ol { display: grid; margin: 0; padding: 0; list-style: none; }
+.hoy li { display: flex; align-items: center; gap: .7rem; padding: .5rem 0; border-top: 1px solid rgba(255, 255, 255, .15); }
+.hoy li span { flex: none; min-width: 6.2rem; font-size: .85rem; opacity: .8; font-variant-numeric: tabular-nums; }
+.hoy li strong { flex: 1; min-width: 0; font-size: .98rem; }
+.hoy li em { flex: none; padding: .1rem .55rem; border-radius: 999px; background: var(--acento); color: var(--primario); font-size: .7rem; font-style: normal; font-weight: 800; text-transform: uppercase; }
+.hoy li.es-ahora strong { color: var(--acento); }
+.hoy .btn-texto { justify-self: start; color: var(--acento); }
+.hoy-elegir { margin-bottom: 1rem; }
+#sinAviso:not(:empty), #inicioCurso:not(:empty) { margin-bottom: 1rem; }
+.mc-invita .acciones { margin-top: .3rem; }
+
+/* Mi curso, profesor: activar avisos de sus pruebas y dirección para el computador */
+.mc-atajo { margin: -.1rem 0 0; text-align: left; }
+.mc-notif { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin-bottom: 1.2rem; }
+.mc-notif div { flex: 1 1 14rem; min-width: 0; }

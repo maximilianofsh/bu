@@ -6,7 +6,7 @@
    ========================================================== */
 "use strict";
 
-const CACHE = "csm-app-v12";
+const CACHE = "csm-app-v13";
 const APP = ["./", "index.html", "app.css", "app.js", "micurso.js", "manifest.webmanifest", "icono-v2-192.png", "icono-v2-apple-180.png", "icono-v2-notificacion.png", "../js/horarios.js"];
 const DATOS = new URL("../data/sitio.json", self.location).pathname;
 
@@ -63,6 +63,8 @@ self.addEventListener("fetch", (e) => {
 // si no alcanza, se muestra un aviso genérico.
 const NIVEL = { urgente: "Urgente", importante: "Importante", info: "Aviso" };
 const PRUEBA = new URL("__prueba", self.location).pathname;
+// La marca de «Enviar una prueba» va en un caché aparte, que no se borra al actualizar la app
+const CACHE_PRUEBA = "csm-prueba";
 const AVISO_VISTO = new URL("__aviso-visto", self.location).pathname;
 const RECORDATORIO_VISTO = new URL("__recordatorio-visto", self.location).pathname;
 const conLimite = (p, ms) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error("tiempo")), ms))]);
@@ -90,9 +92,9 @@ self.addEventListener("push", (e) => {
     let tag = "aviso", url = "./";
     try {
       // Prueba pedida desde la app en este mismo celular
-      const prueba = await (await caches.open(CACHE)).match(PRUEBA);
+      const prueba = await (await caches.open(CACHE_PRUEBA)).match(PRUEBA);
       if (prueba && Date.now() - +(await prueba.text()) < 120000) {
-        await (await caches.open(CACHE)).delete(PRUEBA);
+        await (await caches.open(CACHE_PRUEBA)).delete(PRUEBA);
         return self.registration.showNotification("Prueba recibida ✓", { body: "Las notificaciones del colegio funcionan en este celular.", icon: "icono-v2-192.png", badge: "icono-v2-notificacion.png", tag: "prueba" });
       }
       const res = await conLimite(redPrimero(new Request(DATOS)), 5000);
@@ -100,6 +102,18 @@ self.addEventListener("push", (e) => {
       let a = datos.aviso;
       // Si el aviso se publicó desde Inspectoría, el servidor lo tiene antes que el sitio
       const servidor = String((datos.app && datos.app.servidor) || "").trim().replace(/\/+$/, "");
+      // Mensaje solo para este celular: por ejemplo, a un profesor cuando UTP aprueba o devuelve su prueba
+      if (/^https:\/\/[a-z0-9.-]+$/i.test(servidor)) {
+        try {
+          const sub = await self.registration.pushManager.getSubscription();
+          const r = sub && await conLimite(fetch(servidor + "/notif/personal", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ endpoint: sub.endpoint }) }), 3000);
+          const m = r && r.ok ? (await r.json()).mensaje : null;
+          if (m && m.titulo) {
+            return self.registration.showNotification(m.titulo, { body: m.cuerpo || "", icon: "icono-v2-192.png", badge: "icono-v2-notificacion.png",
+              tag: "personal-" + Date.now(), data: { url: m.url || "./#micurso" } });
+          }
+        } catch (err) { /* sigue con el aviso del colegio */ }
+      }
       if (/^https:\/\/[a-z0-9.-]+$/i.test(servidor)) {
         try {
           const r = await conLimite(fetch(servidor + "/aviso", { cache: "no-store" }), 3000);

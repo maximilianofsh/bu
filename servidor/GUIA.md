@@ -196,8 +196,23 @@ y se borran 30 días después de la fecha de evaluación. Si el espacio de prueb
 4. Si no tiene acceso al correo institucional del estudiante: en el panel → «Mi curso (app)» → busca al estudiante →
    «Código para apoderado» y entrégaselo en persona (sirve una vez y vence en 30 días).
 
+## Pruebas más fáciles y avisos a los profesores (octubre 2026)
+
+1. Pega la versión nueva de `servidor/notificaciones.js` en Cloudflare. En `/estado` debe aparecer `"version": "2026-10-28-avisos-profes"` (o una posterior).
+   Crea solas sus tablas nuevas la primera vez; no hay secretos nuevos.
+2. Con eso:
+   - Los profesores pueden **usar de nuevo** una prueba ya enviada para otro curso, sin volver a subir el archivo.
+   - Si el profesor toca «Activar avisos» en «Mi curso», su celular recibe una **notificación** cuando UTP aprueba,
+     devuelve o marca impresa su prueba (además del correo). Si sale de «Mi curso», deja de recibirlas en ese celular.
+3. La dirección **colegiosm.cl/imprimir** abre la app directo en «Enviar prueba o guía» (sirve para guardarla en
+   favoritos del computador de la sala de profesores o ponerla en un código QR). No necesita configuración.
+
+El script de Google (`correo-contacto.gs`) no cambia en esta versión.
+
 ## Cómo funciona y qué guarda
 - Para las notificaciones, el servidor guarda solo la «dirección de notificación» anónima que entrega cada celular (Google, Apple, etc.). No guarda nombres, correos ni teléfonos.
+- Si un profesor activa los avisos de sus pruebas, el servidor une esa dirección a su correo institucional, y guarda por
+  hasta 2 días el texto del aviso (por ejemplo, «UTP aprobó tu prueba de Matemática») hasta que el celular lo lea.
 - Las estadísticas guardan solo el número de visitas por página y día. Los mensajes de Contacto sí guardan lo que la persona escribió (nombre, correo y mensaje), por un año.
 - La notificación no lleva el texto: al recibirla, el celular lee el aviso desde colegiosm.cl.
 - Cada aviso se notifica una vez. Si se cambia el texto o se apaga y vuelve a encender, se notifica de nuevo.

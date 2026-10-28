@@ -3540,6 +3540,45 @@ Al final del chat, en 3 líneas, dime qué datos debería completar yo para que 
       acciones);
   }
 
+  // «Para imprimir» por urgencia: lo que se evalúa antes va arriba
+  function gruposImprimir(lista) {
+    const hoyS = ymd(new Date());
+    let sig = masDias(hoyS, 1);
+    while ([0, 6].includes(deYmd(sig).getDay())) sig = masDias(sig, 1);
+    const semana = masDias(hoyS, 7);
+    const orden = lista.slice().sort((a, b) => a.fecha.localeCompare(b.fecha));
+    return [
+      { titulo: "Para hoy o atrasadas", urgente: true, items: orden.filter((p) => p.fecha <= hoyS) },
+      { titulo: sig === masDias(hoyS, 1) ? `Para mañana, ${diaLargo(sig)}` : `Para el ${diaLargo(sig)}`, urgente: true, items: orden.filter((p) => p.fecha > hoyS && p.fecha <= sig) },
+      { titulo: "Próximos 7 días", items: orden.filter((p) => p.fecha > sig && p.fecha <= semana) },
+      { titulo: "Más adelante", items: orden.filter((p) => p.fecha > semana) },
+    ].filter((g) => g.items.length);
+  }
+  // Una prueba aprobada, lista para imprimir: copias en grande, indicaciones a la vista y «Ya la imprimí»
+  function itemImprimir(p, j, recargar) {
+    const indicaciones = String(p.comentario || "").split(/\s*[,;]\s*/).filter(Boolean);
+    const accion = (ruta, cuerpo, ok) => async (e) => {
+      const b = e.currentTarget;
+      b.disabled = true;
+      try { await pedirServidor(ruta, cuerpo); toast(ok, "ok"); recargar(); } catch (err) { toast(err.message, "error"); b.disabled = false; }
+    };
+    return h("article", { class: "imp" },
+      h("div", { class: "imp__copias" }, h("strong", {}, p.copias == null ? "?" : String(p.copias)), h("span", {}, "copias")),
+      h("div", { class: "imp__info" },
+        h("strong", {}, `${TIPOS_PRUEBA[p.tipo] || "Prueba"} de ${p.asignatura} · ${p.cursos.join(", ")}`),
+        h("span", {}, `${p.nombre || p.correo} · evaluación el ${diaLargo(p.fecha)}`),
+        indicaciones.length ? h("div", { class: "imp__indic" }, indicaciones.map((x) => h("span", {}, x))) : null,
+        p.conArchivo ? h("span", { class: "imp__archivo" }, `${p.archivo} · ${pesoArchivo(p.tam)}`) : h("span", { class: "prb__ojo" }, "El archivo ya se borró del servidor.")),
+      h("div", { class: "imp__acc" },
+        p.conArchivo ? h("button", { type: "button", class: "btn btn--primary", onclick: accionArchivo(p, false) }, "Descargar") : null,
+        p.conArchivo && /\.pdf$/i.test(p.archivo) ? h("button", { type: "button", class: "btn btn--ghost", onclick: accionArchivo(p, true) }, "Abrir") : null,
+        h("button", { type: "button", class: "btn btn--ghost", onclick: accion("/panel/pruebas/impresa", { id: p.id, impresa: true }, "Marcada como impresa.") }, "Ya la imprimí"),
+        j.utp ? h("button", { type: "button", class: "btn btn--ghost btn--sm btn--danger", onclick: (e) => {
+          if (!confirm(`¿Anular esta ${TIPOS_PRUEBA[p.tipo].toLowerCase()}? Se borra del servidor y ya no se imprime. Avísale tú a impresiones si ya la tenían.`)) return;
+          accion("/panel/pruebas/anular", { id: p.id }, "Anulada.")(e);
+        } }, "Anular") : null));
+  }
+
   function panelMatricula() {
     const caja = h("div", {}, h("p", { class: "panel__help" }, "Cargando…"));
     const det = h("details", { class: "panel prb__matricula", ontoggle: () => { if (det.open && !det.dataset.listo) { det.dataset.listo = "1"; cargar(); } } },
@@ -3589,9 +3628,14 @@ Al final del chat, en 3 líneas, dime qué datos debería completar yo para que 
     return det;
   }
 
+  // Quien solo imprime (cargo «Encargado de impresiones») ve esta sección como «Para imprimir»
+  const soloImprime = () => state.modo === "correo" && tienePermiso("impresiones") && !tienePermiso("pruebas");
   VISTAS.pruebas = {
-    titulo: "Pruebas y guías",
-    ayuda: "Pruebas y guías que los profesores envían desde la app (Mi curso → Pruebas para imprimir). UTP las revisa y, al aprobarlas, le llegan a impresiones con la cantidad de copias. Los archivos quedan solo en el servidor del colegio y se borran 30 días después de la evaluación.",
+    get titulo() { return soloImprime() ? "Para imprimir" : "Pruebas y guías"; },
+    get ayuda() {
+      return soloImprime() ? "Lo que UTP aprobó, ordenado por la fecha de la evaluación: arriba lo más urgente. Descárgalo, imprímelo y toca «Ya la imprimí»: el profesor recibe el aviso."
+        : "Pruebas y guías que los profesores envían desde la app (Mi curso → Pruebas para imprimir). UTP las revisa y, al aprobarlas, le llegan a impresiones con la cantidad de copias. Los archivos quedan solo en el servidor del colegio y se borran 30 días después de la evaluación.";
+    },
     render: () => {
       const caja = h("div", {}, h("p", { class: "panel__help" }, "Cargando…"));
       const cargar = () => pedirServidor("/panel/pruebas").then((j) => {
@@ -3611,7 +3655,9 @@ Al final del chat, en 3 líneas, dime qué datos debería completar yo para que 
           j.utp ? h("div", { class: "panel apr" }, h("h2", {}, porRevisar.length ? `Por revisar (${porRevisar.length})` : "Por revisar"), ...lista(porRevisar, "No hay pruebas ni guías esperando revisión.")) : "",
           h("div", { class: "panel apr" }, h("h2", {}, paraImprimir.length ? `Para imprimir (${paraImprimir.length})` : "Para imprimir"),
             j.utp && j.impresiones.length ? h("p", { class: "panel__help" }, `Las ve y las marca como impresas: ${j.impresiones.join(", ")}.`) : "",
-            ...lista(paraImprimir, "No hay nada pendiente de imprimir.")),
+            ...(paraImprimir.length ? gruposImprimir(paraImprimir).map((g) => h("section", { class: "imp__grupo" + (g.urgente ? " is-urgente" : "") },
+              h("h3", {}, `${g.titulo} (${g.items.length})`), g.items.map((p) => itemImprimir(p, j, cargar))))
+              : [h("p", { class: "empty" }, "No hay nada pendiente de imprimir.")])),
           j.utp && devueltas.length ? h("details", { class: "panel apr" }, h("summary", {}, h("h2", {}, `Devueltas al profesor (${devueltas.length})`)), ...lista(devueltas, "")) : "",
           impresas.length ? h("details", { class: "panel apr" }, h("summary", {}, h("h2", {}, `Impresas (${impresas.length})`)), ...lista(impresas, "")) : "",
           j.utp ? panelMatricula() : "");
@@ -5038,6 +5084,7 @@ Al final del chat, en 3 líneas, dime qué datos debería completar yo para que 
     $("#view").replaceChildren(v.render());
     document.querySelectorAll("#sideNav button[data-view]").forEach((b) => b.classList.toggle("is-active", b.dataset.view === state.view));
     plegarMenu();
+    pintarBarraAbajo();
     document.body.classList.toggle("is-wide", ["html", "css", "estilo"].includes(state.view));
     // Las cuentas con «Noticias con aprobación» no publican: envían cada noticia con su propio botón
     $(".bar__actions").hidden = soloPropuestas() || ((["html", "css", "pruebas", "inicio"].includes(state.view) || (state.view === "aviso" && !avisoCompleto)) && !state.dirty);
@@ -5089,6 +5136,35 @@ Al final del chat, en 3 líneas, dime qué datos debería completar yo para que 
       boton.querySelector(".side__cuenta").textContent = plegado ? String(visibles.length) : "";
     });
   }
+  /* ---------- Celular: barra de abajo con lo que más usa cada cargo (y «Más» para el resto) ---------- */
+  const CORTO = { inicio: "Inicio", aviso: "Aviso", noticias: "Noticias", pruebas: "Pruebas", eventos: "Calendario", mensajes: "Mensajes", micurso: "Mi curso", galeria: "Galería" };
+  const PUNTOS = "M6 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm6 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm6 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z";
+  function pintarBarraAbajo() {
+    const barra = $("#barraAbajo");
+    if (!barra) return;
+    const principales = [...document.querySelectorAll("#sideNav button[data-view]")].filter((b) => !b.hidden && CORTO[b.dataset.view]).slice(0, 3);
+    document.body.classList.toggle("con-barra", principales.length > 0);
+    barra.hidden = !principales.length;
+    if (!principales.length) return;
+    const abierto = document.body.classList.contains("menu-abierto");
+    const icono = (d) => h("span", { class: "abajo__ico", "aria-hidden": "true", html: `<svg viewBox="0 0 24 24"><path d="${d}"/></svg>` });
+    barra.replaceChildren(...principales.map((b) => {
+      const v = b.dataset.view, n = b.querySelector(".apr__badge"), activo = v === state.view && !abierto;
+      return h("button", { type: "button", "data-ir": v, class: activo ? "is-active" : "", "aria-current": activo ? "page" : null },
+        icono(ICONOS_MENU[v]), h("span", {}, v === "pruebas" && soloImprime() ? "Imprimir" : CORTO[v]), n ? h("span", { class: "abajo__n", "aria-label": n.title }, n.textContent) : null);
+    }), h("button", { type: "button", "data-mas": "1", class: abierto || !principales.some((b) => b.dataset.view === state.view) ? "is-active" : "",
+      "aria-expanded": String(abierto), "aria-controls": "sideNav" }, icono(PUNTOS), h("span", {}, "Más")));
+  }
+  $("#barraAbajo").addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    if (b.dataset.mas) { menuMovil(!document.querySelector(".side").classList.contains("is-open")); return; }
+    const nav = $(`#sideNav button[data-view="${b.dataset.ir}"]`);
+    if (nav) { menuMovil(false); nav.click(); }
+  });
+  // Los números de pendientes se agregan al menú cuando llegan: la barra los copia
+  new MutationObserver(() => pintarBarraAbajo()).observe($("#sideNav"), { subtree: true, childList: true });
+
   // Número en el menú (pendientes de una sección)
   function ponerNumero(vista, n, que) {
     const b = $(`.side__nav button[data-view=${vista}]`);
@@ -5112,6 +5188,9 @@ Al final del chat, en 3 líneas, dime qué datos debería completar yo para que 
   function aplicarRol() {
     document.querySelectorAll("#sideNav button[data-view]").forEach((b) => { b.hidden = !puede(b.dataset.view); });
     document.querySelectorAll("#sideNav .side__bloque").forEach((g) => { g.hidden = ![...g.querySelectorAll("button[data-view]")].some((b) => !b.hidden); });
+    const bp = $('#sideNav button[data-view="pruebas"]');
+    const tp = bp && [...bp.childNodes].find((n) => n.nodeType === 3 && n.textContent.trim());
+    if (tp) tp.textContent = soloImprime() ? "Para imprimir" : "Pruebas y guías";
     // «Descargar respaldo» solo para quien administra todo el sitio
     $("#exportBtn").hidden = !["dueno", "trabajador"].includes(state.rol);
     if (!puede(state.view)) state.view = state.rol === "utp" ? "noticias" : ([...document.querySelectorAll("#sideNav button[data-view]")].find((b) => !b.hidden) || { dataset: { view: "estadisticas" } }).dataset.view;
@@ -5357,6 +5436,7 @@ Al final del chat, en 3 líneas, dime qué datos debería completar yo para que 
     document.querySelector(".side").classList.toggle("is-open", abrir);
     document.body.classList.toggle("menu-abierto", abrir);
     $("#menuBtn").setAttribute("aria-expanded", String(abrir));
+    pintarBarraAbajo();
   };
   $("#menuBtn").addEventListener("click", () => menuMovil(!document.querySelector(".side").classList.contains("is-open")));
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") menuMovil(false); });
