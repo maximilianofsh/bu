@@ -35,7 +35,7 @@
     return m === m2 ? `${d} al ${d2} de ${MESES[m - 1]}` : `${d} de ${MESES[m - 1]} al ${d2} de ${MESES[m2 - 1]}`;
   };
 
-  let st = { paso: "inicio", quien: "familia", pase: null, est: null, apoCorreo: "", agregando: false, hijo: +(leer("csm-app-micurso-hijo") || 0), id: "", correo: "", msg: null, ocupado: false, verPasadas: false, filtro: "", editando: null, crearClave: false, pestana: "fechas", prueba: null, subida: "" };
+  let st = { paso: "inicio", quien: "familia", pase: null, est: null, apoCorreo: "", agregando: false, hijo: +(leer("csm-app-micurso-hijo") || 0), id: "", correo: "", msg: null, ocupado: false, verPasadas: false, filtro: "", editando: null, crearClave: false, prueba: null, enviada: null, verViejas: false };
   // Pruebas para imprimir: catálogo de cursos y asignaturas, matrícula y mis envíos
   let pr = null;
   let sesion = null;
@@ -59,7 +59,7 @@
     if (!y.apoderado) return { nombre: y.nombre, curso: y.curso };
     return y.hijos[Math.min(st.hijo, y.hijos.length - 1)] || y.hijos[0];
   };
-  const salir = () => { sesion = null; info = null; pr = null; guardar(CLAVE, null); guardar(CACHE, null); st = { ...st, paso: "inicio", editando: null, crearClave: false, pestana: "fechas", prueba: null }; render(); };
+  const salir = () => { sesion = null; info = null; pr = null; guardar(CLAVE, null); guardar(CACHE, null); st = { ...st, paso: "inicio", editando: null, crearClave: false, prueba: null, enviada: null }; render(); };
 
   // Trae quién es y sus fechas (y deja una copia para ver sin internet)
   async function cargar() {
@@ -238,7 +238,7 @@
       html += tarjeta(e, profe);
     });
     const hayPasadas = todas.some((e) => fin(e) < hoy());
-    return (html || `<p class="vacio">${profe ? "Aún no hay fechas próximas. Toca «Agregar fecha»." : "Aún no hay fechas próximas para tu curso."}</p>`) +
+    return (html || `<p class="vacio">${profe ? "Aún no hay fechas próximas. Toca «Avisar una fecha al curso»." : "Aún no hay fechas próximas para tu curso."}</p>`) +
       (hayPasadas ? `<button type="button" class="btn-texto" data-mc="pasadas">${st.verPasadas ? "Ocultar fechas pasadas" : "Ver también fechas pasadas"}</button>` : "");
   };
   const actualizado = () => (info && info.t ? `<p class="pie-nota">Actualizado el ${new Date(info.t).toLocaleDateString("es-CL", { day: "numeric", month: "long" })} a las ${new Date(info.t).toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit", hour12: false })}</p>` : "");
@@ -256,39 +256,55 @@
       <p class="pie-nota">Las fechas de todo el colegio (feriados, SIMCE, reuniones generales) están en la pestaña Calendario.</p>${actualizado()}`;
   }
 
+  // Íconos de las pantallas del profesor
+  const ICONO = {
+    impresora: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 8H5a3 3 0 0 0-3 3v6h4v4h12v-4h4v-6a3 3 0 0 0-3-3Zm-3 11H8v-5h8v5Zm3-7a1 1 0 1 1 0-2 1 1 0 0 1 0 2ZM18 3H6v4h12V3Z"/></svg>',
+    calendario: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H5V9h14v11ZM7 11h5v5H7v-5Z"/></svg>',
+    subir: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20h14v-2H5v2Zm7-18-5.5 5.5 1.42 1.42L11 5.83V16h2V5.83l3.08 3.09 1.42-1.42L12 2Z"/></svg>',
+    doc: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm-1 7V3.5L18.5 9H13Z"/></svg>',
+    listo: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>',
+  };
+
+  // Inicio del profesor: sus dos tareas como botones grandes, el estado de sus envíos y las fechas de sus cursos
   function renderProfe(c) {
     const yo = info.yo;
     const cursos = yo.cursos || [];
-    const fechas = info.fechas.filter((e) => !st.filtro || e.curso === st.filtro);
     if (st.editando) return renderFormFecha(c, cursos);
     if (st.prueba) return renderFormPrueba(c);
-    const pestanas = `<div class="mc__pestanas" role="tablist">
-        <button type="button" role="tab" aria-selected="${st.pestana === "fechas"}" data-mc="pestana-fechas">Fechas del curso</button>
-        <button type="button" role="tab" aria-selected="${st.pestana === "pruebas"}" data-mc="pestana-pruebas">Pruebas para imprimir</button>
-      </div>`;
-    const cuerpo = st.pestana === "pruebas" ? htmlPruebas()
-      : cursos.length ? `<button type="button" class="btn btn--grande" data-mc="nueva">+ Agregar fecha</button>
-      ${cursos.length > 1 ? `<label class="selector"><span>Ver</span><select id="mcFiltro"><option value="">Todos mis cursos</option>${cursos.map((x) => `<option${x === st.filtro ? " selected" : ""}>${esc(x)}</option>`).join("")}</select></label>` : ""}
-      <div class="eventos">${lista(fechas, true)}</div>` : '<p class="tarjeta">Aún no tienes cursos asignados. Pídele a UTP que te agregue en la lista de profesores.</p>';
-    c.innerHTML = `<div class="tarjeta mc__quien"><div><small>Profesor/a</small><strong>${esc(yo.nombre || "Hola")}</strong><span>${cursos.length ? esc(cursos.join(" · ")) : "Sin cursos asignados"}</span></div>
+    if (st.enviada) return renderEnviada(c);
+    if (!pr && !cargandoPr) cargarPruebas();
+    const fechas = info.fechas.filter((e) => !st.filtro || e.curso === st.filtro);
+    const nombre = String(yo.nombre || "").trim().split(/\s+/)[0];
+    c.innerHTML = `<div class="tarjeta mc__quien"><div><small>Profesor/a</small><strong>${nombre ? "Hola, " + esc(nombre) : "Hola"}</strong><span>${cursos.length ? esc(cursos.join(" · ")) : "Sin cursos asignados"}</span></div>
         <button type="button" class="btn-texto" data-mc="salir">Salir</button></div>
-      ${pestanas}
       <div id="mcMsg">${msgHtml()}</div>
-      ${cuerpo}
-      <div class="insp__pie"><button type="button" class="btn-texto" data-mc="cambiarclave">Cambiar mi contraseña</button></div>${st.pestana === "fechas" ? actualizado() : ""}`;
+      <div class="mc-acciones">
+        <button type="button" class="mc-accion" data-mc="nuevaprueba">${ICONO.impresora}<span><strong>Enviar prueba o guía a imprimir</strong><small>Sube el archivo y UTP la revisa</small></span></button>
+        ${cursos.length ? `<button type="button" class="mc-accion mc-accion--suave" data-mc="nueva">${ICONO.calendario}<span><strong>Avisar una fecha al curso</strong><small>Prueba, entrega, salida o reunión</small></span></button>` : ""}
+      </div>
+      <h2 class="mc-titulo">Mis pruebas y guías</h2>
+      ${htmlEnvios()}
+      <h2 class="mc-titulo">Fechas de tus cursos</h2>
+      ${cursos.length ? `${cursos.length > 1 ? `<label class="selector"><span>Ver</span><select id="mcFiltro"><option value="">Todos mis cursos</option>${cursos.map((x) => `<option${x === st.filtro ? " selected" : ""}>${esc(x)}</option>`).join("")}</select></label>` : ""}
+      <div class="eventos">${lista(fechas, true)}</div>` : '<p class="tarjeta">Aún no tienes cursos asignados. Pídele a UTP que te agregue en la lista de profesores.</p>'}
+      <div class="insp__pie"><button type="button" class="btn-texto" data-mc="cambiarclave">Cambiar mi contraseña</button></div>${actualizado()}`;
   }
 
   /* ---------- Pruebas y guías para imprimir ---------- */
   const TIPOS_PRUEBA = { prueba: "Prueba", guia: "Guía" };
-  const ESTADOS_PRUEBA = {
-    enviada: ["En revisión de UTP", "revision"],
-    devuelta: ["UTP pidió cambios", "devuelta"],
-    aprobada: ["Aprobada · en impresión", "aprobada"],
-    impresa: ["Impresa", "impresa"],
-  };
+  const ESTADOS_PRUEBA = { enviada: "UTP la está revisando", devuelta: "UTP pidió un cambio", aprobada: "Aprobada · en impresión", impresa: "Impresa" };
+  // Barra de avance: enviada → revisada → imprimiendo → lista
+  const AVANCE = { enviada: ["on", "ahora", "", ""], devuelta: ["on", "mal", "", ""], aprobada: ["on", "on", "ahora", ""], impresa: ["on", "on", "on", "on"] };
+  const ORDEN_ESTADO = { devuelta: 0, enviada: 1, aprobada: 2, impresa: 3 };
+  const INDICACIONES = ["Doble cara", "Una cara", "Tamaño oficio", "Corchetear"];
+  const ULTIMO = "csm-app-pruebas-ultimo";
   const PRUEBA_MAX = 15 * 1024 * 1024;
+  const ACEPTA = ".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword";
+  let cargandoPr = false;
   const fechaCorta = (f) => { const [y, m, d] = String(f).split("-").map(Number); return y ? `${DIAS_SEM[new Date(y, m - 1, d).getDay()]} ${d} de ${MESES[m - 1]}` : ""; };
   const peso = (b) => (b >= 1048576 ? (b / 1048576).toFixed(1).replace(".", ",") + " MB" : Math.max(1, Math.round(b / 1024)) + " KB");
+  const sumarDia = (f) => { const [y, m, d] = f.split("-").map(Number); const t = new Date(y, m - 1, d + 1); return `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())}`; };
+  const diaSemana = (f) => { const [y, m, d] = f.split("-").map(Number); return new Date(y, m - 1, d).getDay(); };
   // Días hábiles (lunes a viernes) entre hoy y la fecha de evaluación
   const habilesHasta = (hasta) => {
     const [y, m, d] = String(hasta || "").split("-").map(Number);
@@ -301,42 +317,49 @@
   };
 
   async function cargarPruebas() {
+    cargandoPr = true;
     try {
       const [cat, mias] = await Promise.all([pedir("/pruebas/catalogo", { sesion: sesion.sesion }), pedir("/pruebas/mias", { sesion: sesion.sesion })]);
       pr = { ...cat, mias: mias.pruebas || [] };
     } catch (e) {
-      if (e.salir) { salir(); mensaje("Tu sesión venció. Vuelve a entrar."); return; }
+      if (e.salir) { cargandoPr = false; salir(); mensaje("Tu sesión venció. Vuelve a entrar."); return; }
       // «No encontrado»: el servidor del colegio todavía no tiene esta función
       pr = pr || { error: e.message === "Failed to fetch" ? "Sin conexión. Inténtalo cuando tengas internet."
         : /^No encontrado$/.test(e.message) ? "Esta función aún no está activa en el servidor del colegio. Avísale a UTP o al encargado web." : e.message };
     }
+    cargandoPr = false;
     render();
   }
 
-  function htmlPruebas() {
+  // «Mis pruebas y guías»: primero lo que pide algo (devueltas), luego en revisión, en impresión e impresas
+  function htmlEnvios() {
     if (!pr) return '<p class="vacio">Cargando…</p>';
-    if (pr.error) return `<p class="tarjeta">${esc(pr.error)}</p><button type="button" class="btn-texto" data-mc="pestana-pruebas">Reintentar</button>`;
-    const filas = pr.mias.map((p) => {
-      const [txt, cls] = ESTADOS_PRUEBA[p.estado] || [p.estado, "revision"];
-      const [, m, d] = p.fecha.split("-").map(Number);
-      const editable = p.estado === "enviada" || p.estado === "devuelta";
-      return `<article class="evento evento--evaluacion mc__envio">
-          <div class="evento__fecha"><span>${d}</span><small>${MESES[m - 1].slice(0, 3)}</small></div>
-          <div class="evento__info">
-            <span class="mc__estado mc__estado--${cls}">${esc(txt)}</span>
-            <h3>${esc(TIPOS_PRUEBA[p.tipo] || "Prueba")} de ${esc(p.asignatura)}</h3>
-            <p class="evento__meta">${esc(p.cursos.join(" · "))} · evaluación el ${esc(fechaCorta(p.fecha))}</p>
-            <p class="evento__desc">${esc(p.archivo)}${p.copias ? ` · ${p.copias} copias` : ""}</p>
-            ${p.estado === "devuelta" ? `<p class="mc__motivo"><b>Comentario de UTP:</b> ${esc(p.motivo)}</p>` : ""}
-            ${p.estado === "aprobada" || p.estado === "impresa" ? `<p class="mc__autor">${p.estado === "impresa" ? "Impresa" : "Aprobada"}${p.revisor && p.estado === "aprobada" ? " por " + esc(p.revisor) : ""}</p>` : ""}
-            ${editable ? `<div class="acciones"><button type="button" class="btn-texto" data-corregir="${esc(p.id)}">${p.estado === "devuelta" ? "Corregir y reenviar" : "Cambiar"}</button><button type="button" class="btn-texto mc__borrar" data-retirar="${esc(p.id)}">Retirar</button></div>` : ""}
-          </div>
-        </article>`;
-    }).join("");
-    return `<button type="button" class="btn btn--grande" data-mc="nuevaprueba">+ Enviar prueba o guía</button>
-      <p class="pie-nota mc__intro">UTP la revisa y, al aprobarla, le llega a impresiones con las copias de tus cursos.${pr.anticipacion ? ` Envíala con al menos ${pr.anticipacion} ${pr.anticipacion === 1 ? "día hábil" : "días hábiles"} de anticipación.` : ""}</p>
-      <h2 class="mes">Mis envíos</h2>
-      <div class="eventos">${filas || '<p class="vacio">Aún no has enviado pruebas ni guías.</p>'}</div>`;
+    if (pr.error) return `<p class="tarjeta">${esc(pr.error)}</p><button type="button" class="btn-texto" data-mc="recargarpruebas">Reintentar</button>`;
+    const hoyS = pr.hoy || hoy();
+    const todos = pr.mias.slice().sort((a, b) => (ORDEN_ESTADO[a.estado] ?? 9) - (ORDEN_ESTADO[b.estado] ?? 9) || a.fecha.localeCompare(b.fecha));
+    const viejas = todos.filter((p) => p.estado === "impresa" && p.fecha < hoyS);
+    const ver = st.verViejas ? todos : todos.filter((p) => !viejas.includes(p));
+    return (ver.map(htmlEnvio).join("") || '<p class="vacio">Aún no has enviado pruebas ni guías.</p>')
+      + (viejas.length ? `<button type="button" class="btn-texto" data-mc="viejas">${st.verViejas ? "Ocultar las ya evaluadas" : `Ver también las ya evaluadas (${viejas.length})`}</button>` : "");
+  }
+  function htmlEnvio(p) {
+    const avance = AVANCE[p.estado] || AVANCE.enviada;
+    const paso = avance.filter((x) => x === "on").length + (avance.includes("ahora") || avance.includes("mal") ? 1 : 0);
+    const editable = p.estado === "enviada" || p.estado === "devuelta";
+    return `<article class="mc-envio mc-envio--${esc(p.estado)}">
+        <span class="mc-envio__estado">${esc(ESTADOS_PRUEBA[p.estado] || p.estado)}</span>
+        <h3>${esc(TIPOS_PRUEBA[p.tipo] || "Prueba")} de ${esc(p.asignatura)} · ${esc(p.cursos.join(", "))}</h3>
+        <p>Evaluación el ${esc(fechaCorta(p.fecha))}${p.copias ? ` · ${p.copias} copias` : ""}</p>
+        <div class="mc-avance" role="img" aria-label="Paso ${Math.min(paso, 4)} de 4: ${esc(ESTADOS_PRUEBA[p.estado] || p.estado)}">${avance.map((x) => `<i class="${x}"></i>`).join("")}</div>
+        <div class="mc-avance__txt" aria-hidden="true"><span>Enviada</span><span>Revisada</span><span>Imprimiendo</span><span>Lista</span></div>
+        ${p.estado === "devuelta" ? `<p class="mc__motivo"><b>Comentario de UTP${p.revisor ? ` (${esc(p.revisor)})` : ""}:</b> ${esc(p.motivo)}</p>` : ""}
+        <div class="acciones">
+          ${p.estado === "devuelta" ? `<button type="button" class="btn btn--chico" data-corregir="${esc(p.id)}">Corregir y reenviar</button>` : ""}
+          ${p.estado === "enviada" ? `<button type="button" class="btn-texto" data-corregir="${esc(p.id)}">Cambiar</button>` : ""}
+          ${editable ? `<button type="button" class="btn-texto mc__borrar" data-retirar="${esc(p.id)}">Retirar</button>` : ""}
+          ${!editable && pr.reusar && p.conArchivo ? `<button type="button" class="btn-texto" data-reusar="${esc(p.id)}">Usar de nuevo para otro curso</button>` : ""}
+        </div>
+      </article>`;
   }
 
   // Cursos del catálogo: primero los del profesor
@@ -352,6 +375,15 @@
     return listas[0].filter((a) => listas.every((l) => l.some((b) => b.nombre === a.nombre)))
       .map((a) => ({ nombre: a.nombre, electivo: listas.some((l) => (l.find((b) => b.nombre === a.nombre) || {}).electivo) }));
   };
+  // Las asignaturas que el profesor ya usó, de la más usada a la menos (la última elegida va primero)
+  const asignaturasUsadas = () => {
+    const n = {};
+    (pr.mias || []).forEach((p) => { n[p.asignatura] = (n[p.asignatura] || 0) + 1; });
+    let ultima = "";
+    try { ultima = (JSON.parse(leer(ULTIMO) || "{}") || {}).asignatura || ""; } catch (e) { /* nada guardado */ }
+    if (ultima) n[ultima] = (n[ultima] || 0) + 1000;
+    return Object.keys(n).sort((a, b) => n[b] - n[a]);
+  };
   const copiasDe = (p) => {
     const a = asignaturasDe(p.cursos).find((x) => x.nombre === p.asignatura);
     if (!a) return null;
@@ -363,61 +395,226 @@
     }
     return { total, alumnos, faltan, electivo: a.electivo };
   };
+  // Próximas clases de la asignatura en el curso, según el horario (sin feriados ni vacaciones del calendario)
+  const nombreCelda = (x) => (/^Taller/i.test(x) ? x : x.split(" · ")[0]);
+  function clasesDe(curso, asignatura) {
+    const filas = window.APP && APP.horario ? APP.horario(curso) : [];
+    const dias = new Set();
+    filas.forEach((f) => (f.celdas || []).forEach((celda, i) => {
+      if (String(celda || "").split(/\s*\|\s*/).map((x) => nombreCelda(x.trim())).includes(asignatura)) dias.add(i + 1);
+    }));
+    if (!dias.size) return [];
+    const libres = new Set();
+    (window.APP && APP.eventos ? APP.eventos() : []).forEach((e) => {
+      if (!/feriado|vacaciones/.test(e.tipo || "") || !/^\d{4}-\d\d-\d\d$/.test(e.fecha || "")) return;
+      const hasta = e.fin && e.fin >= e.fecha ? e.fin : e.fecha;
+      for (let f = e.fecha, i = 0; f <= hasta && i < 120; f = sumarDia(f), i++) libres.add(f);
+    });
+    const salida = [];
+    let f = (pr && pr.hoy) || hoy();
+    for (let i = 0; i < 45 && salida.length < 4; i++) {
+      f = sumarDia(f);
+      if (dias.has(diaSemana(f)) && !libres.has(f)) salida.push(f);
+    }
+    return salida;
+  }
+  // Indicaciones para imprimir: botones conocidos + texto libre (se guardan juntos en «comentario», separados por comas)
+  const sinTildes = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const comentarioDe = (p) => INDICACIONES.filter((x) => p.indic.includes(x)).concat(p.otraIndic.trim()).filter(Boolean).join(", ");
+  const leerIndicaciones = (texto) => {
+    const partes = String(texto || "").split(/\s*[,;]\s*/).map((x) => x.trim()).filter(Boolean);
+    const conocida = (y) => INDICACIONES.find((x) => sinTildes(x) === sinTildes(y));
+    return { indic: INDICACIONES.filter((x) => partes.some((y) => conocida(y) === x)), otraIndic: partes.filter((y) => !conocida(y)).join(", ") };
+  };
+  const nuevaPrueba = () => {
+    let u = {};
+    try { u = JSON.parse(leer(ULTIMO) || "{}") || {}; } catch (e) { u = {}; }
+    const mios = (info && info.yo && info.yo.cursos) || [];
+    const cursos = st.filtro ? [st.filtro] : Array.isArray(u.cursos) && u.cursos.length ? u.cursos.slice() : mios.length === 1 ? [mios[0]] : [];
+    return { paso: 1, cursos, asignatura: u.asignatura || "", tipo: TIPOS_PRUEBA[u.tipo] ? u.tipo : "prueba", fecha: "", indic: [], otraIndic: "", nuevo: null, desde: null, archivo: "" };
+  };
+  // Desde un envío anterior: para corregirlo o cambiarlo (mismo id) o para usar su archivo en otro curso (desde)
+  const pruebaDesde = (p, reusar) => ({
+    ...(reusar ? { paso: 2, desde: p.id, cursos: [], fecha: "" } : { paso: p.estado === "devuelta" ? "corregir" : 2, id: p.id, estado: p.estado, motivo: p.motivo, revisor: p.revisor, copias: p.copias, cursos: p.cursos.slice(), fecha: p.fecha }),
+    asignatura: p.asignatura, tipo: p.tipo, archivo: p.archivo, nuevo: null, ...leerIndicaciones(p.comentario),
+  });
+
+  const pasosHtml = (n) => `<ol class="mc-pasos" aria-label="Pasos">${["Archivo", "Datos", "Listo"].map((t, i) =>
+    `<li class="${i + 1 < n ? "listo" : i + 1 === n ? "on" : ""}"${i + 1 === n ? ' aria-current="step"' : ""}><b>${i + 1 < n ? "✓" : i + 1}</b>${t}</li>`).join("")}</ol>`;
+  const zonaArchivo = (titulo, ayuda, boton) => `<label class="mc-zona" id="mcZona">${ICONO.subir}<strong>${titulo}</strong><small>${ayuda}</small>
+      <span class="btn btn--grande" aria-hidden="true">${boton}</span><input id="pArchivo" type="file" accept="${ACEPTA}" class="mc-oculto"></label>`;
+  const tarjetaArchivo = (p) => `<div class="mc-archivo">${ICONO.doc}<div>${p.nuevo ? `<strong>${esc(p.nuevo.name)}</strong><small>${peso(p.nuevo.size)}</small>`
+      : `<strong>${esc(p.archivo)}</strong><small>${p.desde ? "El mismo archivo que enviaste antes" : "El archivo que ya enviaste"}</small>`}</div>
+      <label class="mc-archivo__cambiar">Cambiar<input id="pArchivo" type="file" accept="${ACEPTA}" class="mc-oculto"></label></div>`;
+  const chip = (attrs, on, texto, clase = "") => `<button type="button" class="mc-chip${clase}${on ? " on" : ""}" aria-pressed="${on}" ${attrs}>${texto}</button>`;
 
   function renderFormPrueba(c) {
     const p = st.prueba;
+    if (!pr || pr.error) {
+      if (!pr && !cargandoPr) cargarPruebas();
+      c.innerHTML = `<div class="tarjeta mc"><h2>Enviar prueba o guía</h2>${pr ? `<p>${esc(pr.error)}</p>` : '<p class="vacio">Cargando…</p>'}
+        <button type="button" class="btn-texto" data-mc="cancelarprueba">← Volver</button></div>`;
+      return;
+    }
+    if (p.paso === 1) return renderPasoArchivo(c);
+    if (p.paso === "corregir") return renderCorregir(c);
+    return renderPasoDatos(c);
+  }
+
+  // Paso 1: el archivo, que es lo que el profesor ya tiene listo (o una prueba que ya envió)
+  function renderPasoArchivo(c) {
+    const vistos = new Set();
+    const anteriores = pr.reusar ? pr.mias.filter((x) => x.conArchivo && x.estado !== "devuelta" && !vistos.has(x.archivo + x.tam) && vistos.add(x.archivo + x.tam)).slice(0, 4) : [];
+    c.innerHTML = `<div class="tarjeta mc">
+        <h2>Enviar prueba o guía</h2>${pasosHtml(1)}
+        <div id="mcMsg">${msgHtml()}</div>
+        ${zonaArchivo("Elige el archivo de tu prueba", "PDF o Word, hasta 15 MB. En el computador también puedes arrastrarlo aquí.", "Elegir archivo")}
+        ${anteriores.length ? `<p class="mc-pregunta">¿Es una que ya enviaste?<small>Úsala de nuevo para otro curso sin volver a subirla</small></p>
+          ${anteriores.map((x) => `<div class="mc-archivo mc-archivo--antes">${ICONO.doc}<div><strong>${esc(x.archivo)}</strong><small>${esc(x.asignatura)} · ${esc(x.cursos.join(", "))}</small></div>
+            <button type="button" data-reusar="${esc(x.id)}" aria-label="Usar ${esc(x.archivo)}">Usar</button></div>`).join("")}` : ""}
+        <button type="button" class="btn-texto" data-mc="cancelarprueba">Cancelar</button>
+      </div>`;
+  }
+
+  // Paso 2: cada pregunta se responde con un toque
+  function renderPasoDatos(c) {
+    const p = st.prueba;
     const { mios, otros } = cursosPrueba();
-    const casilla = (x) => `<label class="mc__curso"><input type="checkbox" name="pCurso" value="${esc(x)}"${p.cursos.includes(x) ? " checked" : ""}><span>${esc(x)}</span></label>`;
-    const abrirOtros = p.cursos.some((x) => otros.includes(x)) || !mios.length;
-    c.innerHTML = `<form class="tarjeta mc" id="mcPrueba">
+    p.cursos = p.cursos.filter((x) => mios.includes(x) || otros.includes(x));
+    const asigs = asignaturasDe(p.cursos);
+    if (p.cursos.length && p.asignatura && !asigs.some((a) => a.nombre === p.asignatura)) p.asignatura = asigs.length === 1 ? asigs[0].nombre : "";
+    if (!p.asignatura && asigs.length === 1) p.asignatura = asigs[0].nombre;
+    const usadas = asignaturasUsadas().filter((n) => asigs.some((a) => a.nombre === n));
+    const todasAsig = p.verOtrasAsig || !usadas.length || (p.asignatura && !usadas.includes(p.asignatura));
+    const asigVer = todasAsig ? usadas.concat(asigs.map((a) => a.nombre).filter((n) => !usadas.includes(n))) : usadas;
+    const electivo = (n) => (asigs.find((a) => a.nombre === n) || {}).electivo;
+    const verOtros = p.verOtrosCursos || p.cursos.some((x) => otros.includes(x)) || !mios.length;
+    const sugeridas = p.cursos.length && p.asignatura ? clasesDe(p.cursos[0], p.asignatura) : [];
+    const fechaOtra = !sugeridas.length || p.otraFecha || (p.fecha && !sugeridas.includes(p.fecha));
+    const etiquetaFecha = (f) => { const [, m, d] = f.split("-").map(Number); return `${DIAS_SEM[diaSemana(f)].slice(0, 3)}<small>${d} ${MESES[m - 1].slice(0, 3)}</small>`; };
+    c.innerHTML = `<form class="tarjeta mc" id="mcPrueba" novalidate>
         <h2>${p.id ? (p.estado === "devuelta" ? "Corregir y reenviar" : "Cambiar envío") : "Enviar prueba o guía"}</h2>
-        ${p.id && p.motivo && p.estado === "devuelta" ? `<p class="mc__motivo"><b>Comentario de UTP:</b> ${esc(p.motivo)}</p>` : ""}
-        <label class="campo">Tipo<select id="pTipo">${Object.entries(TIPOS_PRUEBA).map(([k, t]) => `<option value="${k}"${k === p.tipo ? " selected" : ""}>${t}</option>`).join("")}</select></label>
-        <fieldset class="campo mc__cursos"><legend>Curso o cursos</legend>
-          ${mios.length ? `<div class="mc__grilla">${mios.map(casilla).join("")}</div>` : ""}
-          ${otros.length ? `<details${abrirOtros ? " open" : ""}><summary>${mios.length ? "Otros cursos" : "Elige los cursos"}</summary><div class="mc__grilla">${otros.map(casilla).join("")}</div></details>` : ""}
+        ${p.id ? "" : pasosHtml(2)}
+        ${p.id && p.estado === "devuelta" && p.motivo ? `<p class="mc__motivo"><b>Comentario de UTP:</b> ${esc(p.motivo)}</p>` : ""}
+        ${tarjetaArchivo(p)}
+        <fieldset class="mc-grupo"><legend class="mc-pregunta">¿Qué es?</legend>
+          <div class="mc-seg">${Object.entries(TIPOS_PRUEBA).map(([k, t]) => chip(`data-tipo="${k}"`, p.tipo === k, t)).join("")}</div></fieldset>
+        <fieldset class="mc-grupo"><legend class="mc-pregunta">¿Para qué cursos?</legend>
+          ${mios.length ? `<div class="mc-chips">${mios.map((x) => chip(`data-curso="${esc(x)}"`, p.cursos.includes(x), esc(x))).join("")}
+            ${otros.length && !verOtros ? chip('data-mc="otroscursos"', false, "Otro curso", " mc-chip--mas") : ""}</div>` : ""}
+          ${verOtros && otros.length ? `${mios.length ? '<p class="mc-sub">Otros cursos</p>' : ""}<div class="mc-chips">${otros.map((x) => chip(`data-curso="${esc(x)}"`, p.cursos.includes(x), esc(x))).join("")}</div>` : ""}
         </fieldset>
-        <label class="campo">Asignatura<select id="pAsig" required></select></label>
-        <label class="campo">Fecha de evaluación<input id="pFecha" type="date" min="${esc(pr.hoy || hoy())}" value="${esc(p.fecha)}" required></label>
-        <label class="campo">Archivo (PDF o Word, máximo 15 MB)<input id="pArchivo" type="file" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword"${p.id ? "" : " required"}></label>
-        ${p.id ? `<p class="mc__nota">Si no eliges otro archivo, se mantiene «${esc(p.archivo)}».</p>` : ""}
-        <label class="campo">Indicaciones para imprimir (opcional)<textarea id="pComentario" maxlength="600" placeholder="Ej.: doble cara, tamaño oficio, corcheteada">${esc(p.comentario || "")}</textarea></label>
-        <div id="pCopias" class="mc__copias" aria-live="polite"></div>
+        <fieldset class="mc-grupo"><legend class="mc-pregunta">Asignatura${usadas.length && !todasAsig ? "<small>Las que ya usaste aparecen primero</small>" : ""}</legend>
+          ${!p.cursos.length ? '<p class="mc-sub">Primero elige el curso.</p>'
+            : !asigs.length ? '<p class="mc-sub">Esos cursos no comparten asignaturas: envía una por curso.</p>'
+            : `<div class="mc-chips">${asigVer.map((n) => chip(`data-asig="${esc(n)}"`, p.asignatura === n, esc(n) + (electivo(n) ? " (electivo)" : ""))).join("")}
+              ${!todasAsig ? chip('data-mc="otrasasig"', false, "Otra", " mc-chip--mas") : ""}</div>`}
+        </fieldset>
+        <fieldset class="mc-grupo"><legend class="mc-pregunta">¿Cuándo es la evaluación?${sugeridas.length ? `<small>Próximas clases de ${esc(p.asignatura)} en ${esc(p.cursos[0])}</small>` : ""}</legend>
+          ${sugeridas.length ? `<div class="mc-chips">${sugeridas.map((f) => chip(`data-fecha="${f}"`, p.fecha === f && !fechaOtra, etiquetaFecha(f), " mc-chip--fecha")).join("")}
+            ${chip('data-mc="otrafecha"', fechaOtra, "Otra<small>fecha</small>", " mc-chip--fecha mc-chip--mas")}</div>` : ""}
+          ${fechaOtra ? `<label class="campo">${sugeridas.length ? "Otra fecha" : "Fecha de evaluación"}<input id="pFecha" type="date" min="${esc(pr.hoy || hoy())}" value="${esc(p.fecha)}"></label>` : ""}
+        </fieldset>
+        <fieldset class="mc-grupo"><legend class="mc-pregunta">¿Cómo se imprime?<small>Opcional. Toca lo que corresponda.</small></legend>
+          <div class="mc-chips">${INDICACIONES.map((x) => chip(`data-indic="${x}"`, p.indic.includes(x), x)).join("")}
+            ${chip('data-mc="otraindic"', !!(p.verOtraIndic || p.otraIndic), "Otra indicación", " mc-chip--mas")}</div>
+          ${p.verOtraIndic || p.otraIndic ? `<label class="campo">Otra indicación<textarea id="pOtraIndic" maxlength="400" placeholder="Ej.: anillada, en color, la hoja 2 en tamaño carta">${esc(p.otraIndic)}</textarea></label>` : ""}
+        </fieldset>
+        <div class="mc-resumen" id="mcResumen" aria-live="polite">${resumenHtml()}</div>
         <div id="mcMsg">${msgHtml()}</div>
         <button class="btn btn--grande"${st.ocupado ? " disabled" : ""}>${p.id ? "Reenviar a UTP" : "Enviar a UTP"}</button>
         <button type="button" class="btn-texto" data-mc="cancelarprueba">Cancelar</button>
       </form>`;
-    actualizarPrueba();
   }
 
-  // Lee el formulario, ajusta las asignaturas y muestra las copias sin redibujar (así no se pierde el archivo elegido)
-  function actualizarPrueba() {
-    const p = st.prueba, f = $("mcPrueba");
-    if (!p || !f) return;
-    p.cursos = [...f.querySelectorAll('input[name="pCurso"]:checked')].map((x) => x.value);
-    p.tipo = $("pTipo").value;
-    p.fecha = $("pFecha").value;
-    p.comentario = $("pComentario").value;
-    const sel = $("pAsig");
-    const asigs = asignaturasDe(p.cursos);
-    if (sel.value) p.asignatura = sel.value;
-    if (!asigs.some((a) => a.nombre === p.asignatura)) p.asignatura = asigs.length === 1 ? asigs[0].nombre : "";
-    sel.innerHTML = !p.cursos.length ? '<option value="">Primero elige el curso</option>'
-      : !asigs.length ? '<option value="">Esos cursos no comparten asignaturas</option>'
-      : '<option value="">Elige la asignatura</option>' + asigs.map((a) => `<option value="${esc(a.nombre)}"${a.nombre === p.asignatura ? " selected" : ""}>${esc(a.nombre)}${a.electivo ? " (electivo)" : ""}</option>`).join("");
-    const caja = $("pCopias");
-    const k = p.asignatura ? copiasDe(p) : null;
-    let html = "";
-    if (k) {
-      if (k.faltan.length) html += `<p>Falta la matrícula de ${esc(k.faltan.join(", "))}${k.electivo ? " en este electivo" : ""}. UTP escribirá las copias al aprobar.</p>`;
-      else html += `<p><strong>Se imprimirán ${k.total} copias</strong> (${k.alumnos} ${k.electivo ? "estudiantes del electivo" : "estudiantes"}${pr.extra ? ` + ${pr.extra} por curso` : ""}).</p>`;
-    }
+  // Lo que va a pasar: copias, fecha y aviso si llega con poca anticipación
+  function resumenHtml() {
+    const p = st.prueba;
+    const k = p.cursos.length && p.asignatura ? copiasDe(p) : null;
+    let html = !k ? `<p>Elige ${!p.cursos.length ? "el curso" : "la asignatura"} para ver cuántas copias se imprimirán.</p>`
+      : k.faltan.length ? `<p>Falta la matrícula de ${esc(k.faltan.join(", "))}${k.electivo ? " en este electivo" : ""}: UTP escribirá las copias al aprobar.</p>`
+      : `<p>Se imprimirán <strong>${k.total} copias</strong> (${k.alumnos} ${k.electivo ? "estudiantes del electivo" : "estudiantes"}${pr.extra ? ` + ${pr.extra} por curso` : ""})${p.fecha ? ` para el <strong>${esc(fechaCorta(p.fecha))}</strong>` : ""}. UTP la revisa antes.</p>`;
     if (p.fecha) {
       const h = habilesHasta(p.fecha);
       if (pr.anticipacion && h < pr.anticipacion) html += `<p class="mc__ojo">Ojo: quedan ${h} ${h === 1 ? "día hábil" : "días hábiles"} hasta la evaluación. UTP pide enviarlas con ${pr.anticipacion} de anticipación. Puedes enviarla igual.</p>`;
     }
-    caja.innerHTML = html;
-    caja.hidden = !html;
+    return html;
+  }
+
+  // Prueba devuelta: el comentario de UTP y un solo botón para subir el archivo corregido
+  function renderCorregir(c) {
+    const p = st.prueba;
+    c.innerHTML = `<form class="tarjeta mc" id="mcPrueba" novalidate>
+        <h2>Corregir y reenviar</h2>
+        ${p.motivo ? `<p class="mc__motivo"><b>Comentario de UTP${p.revisor ? ` (${esc(p.revisor)})` : ""}:</b> ${esc(p.motivo)}</p>` : ""}
+        <p class="mc-pregunta">${esc(TIPOS_PRUEBA[p.tipo] || "Prueba")} de ${esc(p.asignatura)} · ${esc(p.cursos.join(", "))}<small>Evaluación el ${esc(fechaCorta(p.fecha))}${p.copias ? ` · ${p.copias} copias` : ""}</small></p>
+        ${p.nuevo ? tarjetaArchivo(p) : zonaArchivo("Sube el archivo corregido", "Lo demás queda igual: no tienes que llenar nada de nuevo.", "Elegir archivo corregido")}
+        <div id="mcMsg">${msgHtml()}</div>
+        ${p.nuevo ? `<button class="btn btn--grande"${st.ocupado ? " disabled" : ""}>Reenviar a UTP</button>` : ""}
+        <button type="button" class="btn-texto" data-mc="cambiardatos">Cambiar curso, fecha o indicaciones</button>
+        <button type="button" class="btn-texto" data-mc="cancelarprueba">Volver</button>
+      </form>`;
+  }
+
+  // Paso 3: confirmación y lo que sigue
+  function renderEnviada(c) {
+    const e = st.enviada;
+    const nombre = String((info.yo && info.yo.nombre) || "").trim().split(/\s+/)[0];
+    const hora = new Date().toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit", hour12: false });
+    const tipo = (TIPOS_PRUEBA[e.tipo] || "Prueba").toLowerCase();
+    c.innerHTML = `<div class="tarjeta mc">
+        ${e.corregida ? "" : pasosHtml(3)}
+        <div class="mc-ok"><span class="mc-ok__circulo">${ICONO.listo}</span><h2>¡Listo${nombre ? ", " + esc(nombre) : ""}!</h2>
+          <p>Tu ${esc(tipo)} de ${esc(e.asignatura)} ${e.corregida ? "corregida " : ""}llegó a UTP.</p></div>
+        <ol class="mc-linea">
+          <li class="on"><b>✓</b><span><strong>Enviada</strong><small>Hoy, ${hora}</small></span></li>
+          <li class="ahora"><b>2</b><span><strong>UTP la revisa</strong><small>Si pide un cambio, te llega un correo y lo verás en «Mis pruebas y guías».</small></span></li>
+          <li><b>3</b><span><strong>Se imprime</strong><small>${e.copias ? `${e.copias} copias` : "Con las copias de tus cursos"}${e.comentario ? ` · ${esc(e.comentario)}` : ""}</small></span></li>
+          <li><b>4</b><span><strong>Lista</strong><small>Antes de la evaluación del ${esc(fechaCorta(e.fecha))}</small></span></li>
+        </ol>
+        ${e.atrasada ? `<p class="mc__ojo">Llegó con menos días de anticipación de lo que pide UTP (${e.anticipacion} días hábiles). La verán igual.</p>` : ""}
+        <button type="button" class="btn btn--grande" data-mc="nuevaprueba">Enviar otra</button>
+        <button type="button" class="btn-texto" data-mc="inicio">Volver al inicio</button>
+      </div>`;
+  }
+
+  // Elegir o arrastrar el archivo
+  function elegirArchivo(f) {
+    const p = st.prueba;
+    if (!p || !f) return;
+    if (!/\.(pdf|docx?)$/i.test(f.name)) return mensaje("Sube el archivo en PDF o Word (.docx).");
+    if (f.size > PRUEBA_MAX) return mensaje(`El archivo pesa ${peso(f.size)}. El máximo es 15 MB: guárdalo como PDF o comprime las imágenes.`);
+    p.nuevo = f; p.desde = null; st.msg = null;
+    if (p.paso === 1) p.paso = 2;
+    render();
+    if (p.paso === 2) window.scrollTo(0, 0);
+  }
+
+  // Botones del formulario de la prueba: cada toque cambia una respuesta y vuelve a dibujar
+  function elegirEnPrueba(b, a) {
+    const p = st.prueba, d = b.dataset;
+    const otra = $("pOtraIndic");
+    if (otra) p.otraIndic = otra.value;
+    if (a === "otroscursos") p.verOtrosCursos = true;
+    else if (a === "otrasasig") p.verOtrasAsig = true;
+    else if (a === "otrafecha") p.otraFecha = true;
+    else if (a === "otraindic") { p.verOtraIndic = !(p.verOtraIndic || p.otraIndic); if (!p.verOtraIndic) p.otraIndic = ""; }
+    else if (a === "cambiardatos") p.paso = 2;
+    else if (d.tipo) p.tipo = d.tipo;
+    else if (d.curso) p.cursos = p.cursos.includes(d.curso) ? p.cursos.filter((x) => x !== d.curso) : p.cursos.concat(d.curso);
+    else if (d.asig) p.asignatura = d.asig;
+    else if (d.fecha) { p.fecha = d.fecha; p.otraFecha = false; }
+    else if (d.indic) {
+      const opuesta = { "Doble cara": "Una cara", "Una cara": "Doble cara" }[d.indic];
+      p.indic = p.indic.includes(d.indic) ? p.indic.filter((x) => x !== d.indic) : p.indic.filter((x) => x !== opuesta).concat(d.indic);
+    } else return;
+    st.msg = null;
+    render();
+    // El foco vuelve al mismo botón (para quien usa teclado o lector de pantalla), o al campo que se abrió
+    const k = ["tipo", "curso", "asig", "fecha", "indic"].find((x) => d[x] != null);
+    const foco = a === "otrafecha" ? $("pFecha") : a === "otraindic" && p.verOtraIndic ? $("pOtraIndic")
+      : document.querySelector(a ? `#micurso [data-mc="${a}"]` : `#micurso [data-${k}="${CSS.escape(d[k])}"]`);
+    if (foco) foco.focus({ preventScroll: true });
   }
 
   const leerArchivo = (archivo) => new Promise((ok, mal) => {
@@ -432,7 +629,7 @@
     x.open("POST", servidor() + "/pruebas/subir?m=" + encodeURIComponent(JSON.stringify(datos)));
     x.setRequestHeader("Content-Type", "text/plain");
     x.setRequestHeader("Authorization", "Curso " + sesion.sesion);
-    x.upload.onprogress = (e) => { if (e.lengthComputable) { const b = document.querySelector("#mcPrueba .btn--grande"); if (b) b.textContent = `Subiendo… ${Math.round(e.loaded / e.total * 100)} %`; } };
+    x.upload.onprogress = (e) => { if (e.lengthComputable && cuerpo) { const b = document.querySelector("#mcPrueba button.btn--grande"); if (b) b.textContent = `Subiendo… ${Math.round(e.loaded / e.total * 100)} %`; } };
     x.onload = () => {
       let j = {};
       try { j = JSON.parse(x.responseText); } catch (e) { /* sin respuesta */ }
@@ -445,25 +642,28 @@
     x.send(cuerpo);
   });
   async function enviarPrueba() {
-    actualizarPrueba();
     const p = st.prueba;
-    const archivo = ($("pArchivo").files || [])[0];
+    const otra = $("pOtraIndic");
+    if (otra) p.otraIndic = otra.value;
+    const f = $("pFecha");
+    if (f && f.value) p.fecha = f.value;
+    if (!p.nuevo && !p.desde && !p.id) return mensaje("Elige el archivo de la prueba o guía.");
     if (!p.cursos.length) return mensaje("Elige al menos un curso.");
     if (!p.asignatura) return mensaje("Elige la asignatura.");
-    if (!p.fecha) return mensaje("Escribe la fecha de evaluación.");
-    if (!archivo && !p.id) return mensaje("Adjunta el archivo de la prueba o guía.");
-    if (archivo && !/\.(pdf|docx?)$/i.test(archivo.name)) return mensaje("Sube el archivo en PDF o Word (.docx).");
-    if (archivo && archivo.size > PRUEBA_MAX) return mensaje(`El archivo pesa ${peso(archivo.size)}. El máximo es 15 MB: guárdalo como PDF o comprime las imágenes.`);
+    if (!p.fecha) return mensaje("Elige la fecha de evaluación.");
+    const comentario = comentarioDe(p);
     await trabajar(async () => {
-      const cuerpo = archivo ? await leerArchivo(archivo) : "";
-      const j = await subirPrueba({ id: p.id, cursos: p.cursos, asignatura: p.asignatura, fecha: p.fecha, tipo: p.tipo, comentario: p.comentario.trim(), archivo: archivo ? archivo.name : p.archivo }, cuerpo);
-      st.prueba = null;
+      const cuerpo = p.nuevo ? await leerArchivo(p.nuevo) : "";
+      const j = await subirPrueba({ id: p.id, desde: p.nuevo ? undefined : p.desde || undefined, cursos: p.cursos, asignatura: p.asignatura, fecha: p.fecha, tipo: p.tipo,
+        comentario, archivo: p.nuevo ? p.nuevo.name : p.archivo }, cuerpo);
+      guardar(ULTIMO, JSON.stringify({ cursos: p.cursos, asignatura: p.asignatura, tipo: p.tipo }));
       pr.mias = [j.prueba, ...pr.mias.filter((x) => x.id !== j.prueba.id)];
+      st.prueba = null;
+      st.enviada = { ...j.prueba, corregida: !!p.id, atrasada: j.atrasada, anticipacion: j.anticipacion };
       render();
       window.scrollTo(0, 0);
-      mensaje(`Enviada a UTP: ${TIPOS_PRUEBA[j.prueba.tipo]} de ${j.prueba.asignatura}. Te avisaremos por correo cuando la revisen.`, "ok");
     });
-    const b = document.querySelector("#mcPrueba .btn--grande");
+    const b = document.querySelector("#mcPrueba button.btn--grande");
     if (b) b.textContent = p.id ? "Reenviar a UTP" : "Enviar a UTP";
   }
 
@@ -538,7 +738,7 @@
   };
 
   document.addEventListener("click", (e) => {
-    const b = e.target.closest("#micurso [data-mc], #micurso [data-editar], #micurso [data-borrar], #micurso [data-corregir], #micurso [data-retirar], #micurso [data-hijo]");
+    const b = e.target.closest("#micurso [data-mc], #micurso [data-editar], #micurso [data-borrar], #micurso [data-corregir], #micurso [data-retirar], #micurso [data-hijo], #micurso [data-reusar], #mcPrueba [data-tipo], #mcPrueba [data-curso], #mcPrueba [data-asig], #mcPrueba [data-fecha], #mcPrueba [data-indic]");
     if (!b) return;
     if (b.dataset.hijo) {
       st.hijo = +b.dataset.hijo; guardar("csm-app-micurso-hijo", String(st.hijo));
@@ -563,15 +763,13 @@
     else if (a === "nueva") { const cs = info.yo.cursos || []; st.editando = { curso: st.filtro || cs[0], tipo: "prueba", titulo: "", fecha: hoy(), fin: "", hora: "", descripcion: "" }; st.msg = null; render(); window.scrollTo(0, 0); }
     else if (a === "cancelar") { st.editando = null; st.msg = null; render(); }
     else if (a === "cambiarclave") { st.crearClave = true; st.msg = null; render(); }
-    else if (a === "pestana-fechas") { st.pestana = "fechas"; st.msg = null; render(); }
-    else if (a === "pestana-pruebas") { st.pestana = "pruebas"; st.msg = null; if (pr && pr.error) pr = null; render(); cargarPruebas(); }
-    else if (a === "nuevaprueba") {
-      const { mios } = cursosPrueba();
-      st.prueba = { cursos: st.filtro && mios.includes(st.filtro) ? [st.filtro] : mios.length === 1 ? [mios[0]] : [], asignatura: "", fecha: "", tipo: "prueba", comentario: "" };
-      st.msg = null; render(); window.scrollTo(0, 0);
-    }
+    else if (a === "recargarpruebas") { pr = null; render(); }
+    else if (a === "viejas") { st.verViejas = !st.verViejas; render(); }
+    else if (a === "inicio") { st.enviada = null; st.msg = null; render(); window.scrollTo(0, 0); }
+    else if (a === "nuevaprueba") { st.enviada = null; st.prueba = nuevaPrueba(); st.msg = null; render(); window.scrollTo(0, 0); }
     else if (a === "cancelarprueba") { st.prueba = null; st.msg = null; render(); }
-    else if (b.dataset.corregir) { const p = pr && pr.mias.find((x) => x.id === b.dataset.corregir); if (p) { st.prueba = { ...p, cursos: p.cursos.slice() }; st.msg = null; render(); window.scrollTo(0, 0); } }
+    else if (b.dataset.corregir) { const p = pr && pr.mias.find((x) => x.id === b.dataset.corregir); if (p) { st.prueba = pruebaDesde(p, false); st.msg = null; render(); window.scrollTo(0, 0); } }
+    else if (b.dataset.reusar) { const p = pr && pr.mias.find((x) => x.id === b.dataset.reusar); if (p) { st.enviada = null; st.prueba = pruebaDesde(p, true); st.msg = null; render(); window.scrollTo(0, 0); } }
     else if (b.dataset.retirar) {
       const p = pr && pr.mias.find((x) => x.id === b.dataset.retirar);
       if (!p || !confirm(`¿Retirar la ${TIPOS_PRUEBA[p.tipo].toLowerCase()} de ${p.asignatura} (${p.cursos.join(", ")})? UTP ya no la verá.`)) return;
@@ -583,10 +781,22 @@
       if (!f || !confirm(`¿Borrar «${f.titulo}» de ${f.curso}?`)) return;
       trabajar(async () => { await pedir("/curso/fecha/borrar", { sesion: sesion.sesion, id: f.id }); await cargar(); mensaje("Fecha borrada.", "ok"); });
     }
+    else if (st.prueba && (a || b.closest("#mcPrueba"))) elegirEnPrueba(b, a);
   });
   document.addEventListener("change", (e) => {
     if (e.target.id === "mcFiltro") { st.filtro = e.target.value; render(); }
-    else if (e.target.closest && e.target.closest("#mcPrueba")) { if (e.target.id === "pArchivo") mensaje(""); actualizarPrueba(); }
+    else if (e.target.id === "pArchivo") elegirArchivo((e.target.files || [])[0]);
+    else if (e.target.id === "pFecha" && st.prueba) { st.prueba.fecha = e.target.value; st.prueba.otraFecha = true; const r = $("mcResumen"); if (r) r.innerHTML = resumenHtml(); }
+  });
+  document.addEventListener("input", (e) => { if (e.target.id === "pOtraIndic" && st.prueba) st.prueba.otraIndic = e.target.value; });
+  // En el computador, el archivo también se puede arrastrar a la zona
+  document.addEventListener("dragover", (e) => { const z = e.target.closest && e.target.closest("#mcZona"); if (z) { e.preventDefault(); z.classList.add("encima"); } });
+  document.addEventListener("dragleave", (e) => { const z = e.target.closest && e.target.closest("#mcZona"); if (z) z.classList.remove("encima"); });
+  document.addEventListener("drop", (e) => {
+    const z = e.target.closest && e.target.closest("#mcZona");
+    if (!z) return;
+    e.preventDefault(); z.classList.remove("encima");
+    elegirArchivo((e.dataTransfer && e.dataTransfer.files || [])[0]);
   });
   document.addEventListener("submit", (e) => {
     const f = e.target;

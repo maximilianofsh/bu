@@ -67,14 +67,14 @@
                        /panel/cuenta/borrar, /panel/invitar (correo de bienvenida), /panel/registro
      GET  /panel/propuestas, POST /panel/propuesta { noticia, id } y /panel/propuesta/retirar { id }: noticias con aprobación
      GET  /panel/aprobacion (token del dueño)  noticias por aprobar; POST /panel/aprobacion/aprobar, /rechazar { id, motivo }, /correo { correo }
-     POST /pruebas/catalogo, /pruebas/mias, /pruebas/retirar ({ sesion } de «Mi curso», profesores) y /pruebas/subir?m=… (archivo en base64, «Authorization: Curso <sesión>»)
+     POST /pruebas/catalogo, /pruebas/mias, /pruebas/retirar ({ sesion } de «Mi curso», profesores) y /pruebas/subir?m=… (archivo en base64, «Authorization: Curso <sesión>»; sin archivo y con «desde» en m, reutiliza el de otra prueba del profesor)
      GET  /panel/pruebas, /panel/pruebas/archivo?id=, /panel/matricula; POST /panel/pruebas/aprobar, /devolver, /impresa, /anular, /panel/matricula, /panel/matricula/mi-curso
      GET  /panel/kpi?desde=AAAA-MM-DD (token del dueño)  registro privado de cambios del sitio y visitas por día
      GET  /utp/cuentas (token del dueño)   cuentas UTP; POST /utp/cuentas { usuario, nombre, clave } y /utp/cuentas/borrar
    ========================================================== */
 
 // Versión de este código (se ve en /estado para saber si ya se pegó la última en Cloudflare)
-const VERSION = "2026-10-27-apoderados";
+const VERSION = "2026-10-28-pruebas-faciles";
 // Sitio del colegio: de aquí se lee el aviso
 const SITIO = "https://colegiosm.cl/";
 // Páginas que pueden usar este servidor
@@ -730,7 +730,8 @@ async function rutaPruebasProfe(db, env, req, url) {
   const p = q.profe;
   if (url.pathname === "/pruebas/catalogo") {
     const [cursos, matricula, aj] = await Promise.all([catalogoPruebas(), matriculaMapa(db), ajustesPruebas(db)]);
-    return { cursos, mios: p.cursos, matricula, extra: aj.extra, anticipacion: aj.anticipacion, hoy: hoyChile() };
+    // «reusar»: este servidor acepta enviar de nuevo el archivo de una prueba anterior (ver «desde» en /pruebas/subir)
+    return { cursos, mios: p.cursos, matricula, extra: aj.extra, anticipacion: aj.anticipacion, hoy: hoyChile(), reusar: true };
   }
   if (url.pathname === "/pruebas/mias") {
     const filas = (await db.prepare("SELECT * FROM pruebas WHERE correo = ? ORDER BY t DESC LIMIT 60").bind(p.correo).all()).results;
@@ -759,8 +760,15 @@ async function rutaPruebasProfe(db, env, req, url) {
   const previa = m.id ? await db.prepare("SELECT * FROM pruebas WHERE id = ? AND correo = ?").bind(String(m.id), p.correo).first() : null;
   if (m.id && (!previa || !["enviada", "devuelta"].includes(previa.estado))) return { error: "Ese envío ya no se puede cambiar.", estado: 409 };
   const datos = (await req.text()).trim();
+  // «desde»: sin archivo nuevo, se usa el de otra prueba del mismo profesor (la misma prueba para otro curso)
+  const origen = !datos && m.desde ? await db.prepare("SELECT id, archivo, tam, partes FROM pruebas WHERE id = ? AND correo = ? AND partes > 0").bind(String(m.desde), p.correo).first() : null;
+  if (!datos && m.desde && !origen) return { error: "Ese archivo ya no está en el servidor (se borran 30 días después de la evaluación). Súbelo de nuevo.", estado: 400 };
   let archivo = previa ? previa.archivo : "", ext = "", partes = previa ? previa.partes : 0, tam = previa ? previa.tam : 0;
-  if (datos) {
+  if (origen) {
+    ({ archivo, tam, partes } = origen);
+    const ocupado = (await db.prepare("SELECT COALESCE(SUM(tam), 0) AS n FROM pruebas WHERE partes > 0 AND id != ?").bind(String(m.id || "")).first()).n;
+    if (ocupado + tam > PRUEBAS_ESPACIO) return { error: "El espacio para pruebas del servidor está lleno. Avísale a UTP o al encargado web.", estado: 507 };
+  } else if (datos) {
     ext = (/\.([a-z]+)$/i.exec(String(m.archivo || "")) || [])[1];
     ext = ext && ext.toLowerCase();
     if (!FORMATOS_PRUEBA[ext] || !FORMATOS_PRUEBA[ext].test(datos)) return { error: "Sube el archivo en PDF o Word (.docx).", estado: 400 };
@@ -783,6 +791,9 @@ async function rutaPruebasProfe(db, env, req, url) {
   if (datos) {
     sentencias.push(db.prepare("DELETE FROM pruebas_partes WHERE id = ?").bind(id));
     for (let i = 0; i < partes; i++) sentencias.push(db.prepare("INSERT INTO pruebas_partes (id, n, datos) VALUES (?, ?, ?)").bind(id, i, datos.slice(i * TROZO, (i + 1) * TROZO)));
+  } else if (origen && origen.id !== id) {
+    sentencias.push(db.prepare("DELETE FROM pruebas_partes WHERE id = ?").bind(id));
+    sentencias.push(db.prepare("INSERT INTO pruebas_partes (id, n, datos) SELECT ?1, n, datos FROM pruebas_partes WHERE id = ?2").bind(id, origen.id));
   }
   await db.batch(sentencias);
   const fila = filaPrueba(await db.prepare("SELECT * FROM pruebas WHERE id = ?").bind(id).first());

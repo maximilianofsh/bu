@@ -62,8 +62,12 @@
   const tienePermiso = (...p) => state.permisos.includes("todo") || p.some((x) => state.permisos.includes(x));
   // El código del sitio (HTML y CSS) y los usuarios de GitHub solo se cambian entrando con el token del dueño
   const SOLO_TOKEN = ["html", "css", "limpieza"];
-  const puede = (vista) => !(state.modo === "correo" && SOLO_TOKEN.includes(vista)) && (state.rol === "dueno" || (state.rol === "trabajador" && !["usuarios", "respaldos", "limpieza"].includes(vista)) || (state.rol === "utp" && vista === "noticias")
+  const puedeVista = (vista) => !(state.modo === "correo" && SOLO_TOKEN.includes(vista)) && (state.rol === "dueno" || (state.rol === "trabajador" && !["usuarios", "respaldos", "limpieza"].includes(vista)) || (state.rol === "utp" && vista === "noticias")
     || (state.rol === "correo" && tienePermiso(...(VISTA_PERMISO[vista] || []))));
+  // «Inicio» (lo pendiente de cada cargo) aparece para quien tiene más de una tarea en el panel;
+  // quien tiene una sola (Inspectoría, Impresiones, CGPA) entra directo a esa
+  const TAREAS_INICIO = ["aviso", "noticias", "pruebas", "eventos", "galeria", "micurso", "directivos"];
+  const puede = (vista) => (vista === "inicio" ? TAREAS_INICIO.filter(puedeVista).length >= 2 : puedeVista(vista));
   // Secciones del contenido que puede guardar una cuenta con correo (igual que en el servidor)
   const SECCIONES_PERMISO = { noticias: ["noticias"], aviso: ["aviso"], eventos: ["eventos"], galeria: ["galeria"],
     contenido: ["directivos", "personal", "departamentos", "documentos", "organizaciones", "pilares", "portada", "emergencia", "redes", "horarios"] };
@@ -3890,63 +3894,360 @@ Al final del chat, en 3 líneas, dime qué datos debería completar yo para que 
     } catch (e) { toast("No se pudo cargar la copia: " + e.message, "error"); }
   }
 
+  /* ---------- Fechas para leer (Inicio y Aviso urgente) ---------- */
+  const DIAS_LARGOS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+  const MESES_LARGOS = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  const ymd = (t) => `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`;
+  const deYmd = (f) => { const [y, m, d] = String(f).split("-").map(Number); return new Date(y, m - 1, d); };
+  const masDias = (f, n) => { const t = deYmd(f); t.setDate(t.getDate() + n); return ymd(t); };
+  const diaLargo = (f) => { const t = deYmd(f); return `${DIAS_LARGOS[t.getDay()]} ${t.getDate()} de ${MESES_LARGOS[t.getMonth()]}`; };
+  const diaCorto = (f) => { const t = deYmd(f); return `${DIAS_LARGOS[t.getDay()].slice(0, 3)} ${t.getDate()}`; };
+  const fechaHoraLarga = (s) => { const t = new Date(s); return `${diaLargo(ymd(t))} a las ${String(t.getHours()).padStart(2, "0")}:${String(t.getMinutes()).padStart(2, "0")}`; };
+
+  /* ---------- Inicio: lo pendiente de cada cargo ----------
+     Tarjetas con lo que espera respuesta (pruebas por revisar, mensajes, noticias por aprobar, el aviso
+     urgente, las fechas de la semana) y atajos a lo que ese cargo más usa. Cada cargo ve solo lo suyo. */
+  const irA = (vista, despues) => {
+    state.view = vista; menuMovil(false); render(); window.scrollTo(0, 0);
+    if (despues) setTimeout(() => { const el = despues($("#view")); if (el) { if (el.tagName === "DETAILS") el.open = true; else el.click(); el.scrollIntoView({ block: "start" }); } }, 60);
+  };
+  const botonCon = (texto) => (raiz) => [...raiz.querySelectorAll("button")].find((b) => b.textContent.trim() === texto);
+  const tarjetaInicio = ({ n, titulo, texto, boton, ir, tono = "" }) => h("div", { class: "ini__tarjeta" + (tono ? " ini__tarjeta--" + tono : "") },
+    h("span", { class: "ini__n" }, String(n)), h("strong", {}, titulo), texto ? h("p", {}, texto) : null,
+    boton ? h("button", { type: "button", class: "btn btn--sm " + (tono === "urgente" ? "btn--primary" : "btn--ghost"), onclick: ir }, boton) : null);
+  const deVerdad = (a) => !!(a && a.activo && (a.titulo || a.texto));
+  function estadoAviso(a) {
+    if (!deVerdad(a)) return "apagado";
+    if (a.hasta && new Date(a.hasta) < new Date()) return "vencido";
+    if (a.desde && new Date(a.desde) > new Date()) return "programado";
+    return "publicado";
+  }
+
+  VISTAS.inicio = {
+    get titulo() { const n = String(state.nombre || "").trim().split(/\s+/)[0]; return n ? "Hola, " + n : "Inicio"; },
+    menu: "Inicio",
+    get ayuda() { return `Lo que tienes pendiente hoy, ${diaLargo(ymd(new Date()))}.`; },
+    render: () => {
+      // Un lugar por tarjeta, en orden de urgencia; las que llegan del servidor se llenan después
+      const lugares = { pruebas: h("div"), mensajes: h("div"), aprobar: h("div"), aviso: h("div"), semana: h("div") };
+      const tarjetas = h("div", { class: "ini__tarjetas" }, Object.values(lugares));
+      const poner = (k, ...ts) => { lugares[k].replaceWith(...ts.filter(Boolean)); delete lugares[k]; };
+      const s = servidorApp();
+
+      if (puede("pruebas") && s) {
+        pedirServidor("/panel/pruebas").then((j) => {
+          const ciclo = cicloPruebas == null ? j.ciclo : cicloPruebas;
+          const ver = j.pruebas.filter((p) => !ciclo || p.cursos.some((c) => (esPrimerCiclo(c) ? "1" : "2") === ciclo));
+          const de = (e) => ver.filter((p) => p.estado === e).sort((a, b) => a.fecha.localeCompare(b.fecha));
+          const revisar = de("enviada"), devueltas = de("devuelta"), imprimiendo = de("aprobada");
+          const nombre = (p) => `${p.tipo === "guia" ? "la guía" : "la prueba"} de ${p.asignatura} (${p.cursos.join(", ")})`;
+          poner("pruebas",
+            revisar.length ? tarjetaInicio({ n: revisar.length, tono: "urgente", titulo: revisar.length === 1 ? "Prueba por revisar" : "Pruebas por revisar",
+              texto: `La más urgente es ${nombre(revisar[0])}, para el ${diaLargo(revisar[0].fecha)}.`, boton: "Revisar ahora", ir: () => irA("pruebas") })
+              : tarjetaInicio({ n: "✓", tono: "ok", titulo: "Sin pruebas por revisar", texto: "Cuando un profesor envíe una, aparecerá aquí." }),
+            devueltas.length ? tarjetaInicio({ n: devueltas.length, titulo: devueltas.length === 1 ? "Devuelta al profesor" : "Devueltas a los profesores",
+              texto: devueltas.length === 1 ? `${devueltas[0].asignatura} ${devueltas[0].cursos.join(", ")}. Esperando que ${devueltas[0].nombre || "el profesor"} la corrija.` : "Esperando que las corrijan.",
+              boton: "Ver", ir: () => irA("pruebas") }) : null,
+            imprimiendo.length ? tarjetaInicio({ n: imprimiendo.length, tono: "ok", titulo: "En impresión",
+              texto: imprimiendo.length === 1 ? `${imprimiendo[0].tipo === "guia" ? "Guía" : "Prueba"} de ${imprimiendo[0].asignatura} ${imprimiendo[0].cursos.join(", ")}, aprobada. Aún no se marca como impresa.` : "Aprobadas, aún no marcadas como impresas." }) : null);
+        }).catch(() => poner("pruebas"));
+      } else poner("pruebas");
+
+      if (s) {
+        fetch(s + "/mensajes", { cache: "no-store", headers: credencial() }).then((r) => (r.ok ? r.json() : Promise.reject(r.status))).then((j) => {
+          const pendientes = (j.mensajes || []).filter((m) => (j.todos ? !m.leido : !m.miAtendido));
+          if (!pendientes.length) return poner("mensajes");
+          const m = pendientes[0];
+          const extracto = String(m.mensaje || "").replace(/\s+/g, " ").slice(0, 90);
+          poner("mensajes", tarjetaInicio({ n: pendientes.length, tono: "urgente",
+            titulo: pendientes.length === 1 ? (j.todos ? "Mensaje de contacto sin leer" : "Mensaje por atender") : (j.todos ? "Mensajes de contacto sin leer" : "Mensajes por atender"),
+            texto: `«${extracto}${String(m.mensaje || "").length > 90 ? "…" : ""}»${m.nombre ? " · " + m.nombre : ""}`, boton: j.todos ? "Leer o asignar" : "Ver", ir: () => irA("mensajes") }));
+        }).catch(() => poner("mensajes"));
+      } else poner("mensajes");
+
+      if (apruebaNoticias() && s) {
+        pedirServidor("/panel/aprobacion").then(({ pendientes }) => {
+          const n = pendientes.filter((p) => ![...porAprobar.values()].includes(p.id)).length;
+          poner("aprobar", n ? tarjetaInicio({ n, tono: "urgente", titulo: n === 1 ? "Noticia por aprobar" : "Noticias por aprobar",
+            texto: "Enviadas por CGPA, CEAL u otras cuentas con aprobación.", boton: "Revisar", ir: () => irA("noticias") }) : null);
+        }).catch(() => poner("aprobar"));
+      } else poner("aprobar");
+
+      if (puede("aviso")) {
+        const a = state.data.aviso || {};
+        const e = estadoAviso(a);
+        poner("aviso", e === "publicado" || e === "programado"
+          ? tarjetaInicio({ n: "!", tono: "alerta", titulo: e === "publicado" ? "Aviso urgente publicado" : "Aviso urgente programado",
+            texto: `«${a.titulo || a.texto}». ${e === "programado" ? `Aparece el ${fechaHoraLarga(a.desde)}.` : a.hasta ? `Se apaga solo el ${fechaHoraLarga(a.hasta)}.` : "Se muestra hasta que lo apagues."}`,
+            boton: "Ver o apagar", ir: () => irA("aviso") })
+          : tarjetaInicio({ n: "✓", tono: "ok", titulo: "Sin aviso urgente publicado", texto: "El sitio y la app muestran la jornada normal.", boton: "Publicar aviso", ir: () => irA("aviso") }));
+      } else poner("aviso");
+
+      // Fechas del calendario escolar de hoy a 7 días
+      const hoyS = ymd(new Date()), hasta = masDias(hoyS, 6);
+      const semana = (state.data.eventos || []).filter((e) => e.fecha && e.fecha <= hasta && (e.fin && e.fin >= e.fecha ? e.fin : e.fecha) >= hoyS)
+        .sort((a, b) => a.fecha.localeCompare(b.fecha));
+      poner("semana", semana.length ? tarjetaInicio({ n: semana.length, titulo: semana.length === 1 ? "Fecha esta semana" : "Fechas esta semana",
+        texto: semana.slice(0, 3).map((e) => `${e.titulo} (${diaCorto(e.fecha < hoyS ? hoyS : e.fecha)})`).join(" · ") + (semana.length > 3 ? ` y ${semana.length - 3} más.` : "."),
+        boton: puede("eventos") ? "Ver calendario" : null, ir: () => irA("eventos") }) : null);
+
+      // Atajos: lo que ese cargo más usa
+      const atajos = [
+        puede("noticias") && !soloPropuestas() && ["noticia", "Publicar noticia", () => irA("noticias", botonCon("+ Nueva noticia"))],
+        puede("noticias") && !soloPropuestas() && ["comunicado", "Generar comunicado", () => irA("noticias", (r) => r.querySelector("details.com"))],
+        puede("noticias") && !soloPropuestas() && ["flyer", "Publicar flyer", () => irA("noticias", (r) => r.querySelector("details.fly"))],
+        puede("pruebas") && ["impresora", "Pruebas y guías", () => irA("pruebas")],
+        puede("eventos") && ["calendario", "Agregar fecha al calendario", () => irA("eventos", botonCon("+ Nuevo evento"))],
+        puede("galeria") && ["foto", "Subir fotos a la galería", () => irA("galeria", botonCon("+ Nuevo álbum"))],
+        puede("micurso") && ["escuela", "Ver un curso", () => irA("micurso")],
+        puede("aviso") && ["alerta", "Aviso urgente", () => irA("aviso")],
+      ].filter(Boolean).slice(0, 6);
+      return h("div", { class: "ini" }, tarjetas,
+        atajos.length ? h("h2", { class: "ini__titulo" }, "Hacer algo rápido") : null,
+        atajos.length ? h("div", { class: "ini__atajos" }, atajos.map(([icono, texto, ir]) => h("button", { type: "button", class: "ini__atajo", onclick: ir },
+          h("span", { class: "ini__ico", html: ICONOS_INICIO[icono] }), texto))) : null);
+    },
+  };
+  const ICONOS_INICIO = Object.fromEntries(Object.entries({
+    noticia: "M20 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1Zm-9 14H6v-2h5v2Zm7-4H6v-2h12v2Zm0-4H6V7h12v2Z",
+    comunicado: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm-1 7V3.5L18.5 9H13Z",
+    flyer: "M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2ZM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5Z",
+    foto: "M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2ZM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5Z",
+    impresora: "M19 8H5a3 3 0 0 0-3 3v6h4v4h12v-4h4v-6a3 3 0 0 0-3-3Zm-3 11H8v-5h8v5Zm3-7a1 1 0 1 1 0-2 1 1 0 0 1 0 2ZM18 3H6v4h12V3Z",
+    calendario: "M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H5V9h14v11ZM7 11h5v5H7v-5Z",
+    escuela: "M12 3 1 9l11 6 9-4.91V17h2V9L12 3Zm-6.82 9.5L5 16.18 12 20l7-3.82v-3.68L12 16.5l-6.82-4Z",
+    alerta: "M1 21h22L12 2 1 21Zm12-3h-2v-2h2v2Zm0-4h-2v-4h2v4Z",
+    salir: "M10.09 15.59 11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59ZM19 3H5a2 2 0 0 0-2 2v4h2V5h14v14H5v-4H3v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Z",
+  }).map(([k, d]) => [k, `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`]));
+
+  /* ---------- Aviso urgente ----------
+     Primero se ve si hay un aviso publicado (con «Apagar aviso» a mano). Para publicar uno se elige qué avisar:
+     el texto se escribe solo con la hora o el día, se ve cómo queda y se publica con un botón.
+     «Ver todas las opciones» abre el formulario completo (enlace, programar, color). */
+  let avisoRapido = null;
+  let avisoCompleto = false;
+  const MODELOS_AVISO = {
+    retiro: { nombre: "Retiro anticipado", desc: "Los estudiantes salen antes. Escribes solo la hora.", nivel: "importante", color: "#c27d0e", icono: "salir", dia: "hoy", hora: "12:00" },
+    suspension: { nombre: "Suspensión de clases", desc: "Un día sin clases. Eliges el día y escribes el motivo.", nivel: "importante", color: "#7a1f35", icono: "escuela", dia: "manana" },
+    emergencia: { nombre: "Emergencia", desc: "Sismo, tsunami, corte de servicios. Sale en rojo.", nivel: "urgente", color: "#b3261e", icono: "alerta" },
+  };
+  const NIVEL_NOTIF = { urgente: "Urgente", importante: "Importante", info: "Aviso" };
+  // El día elegido del aviso: hoy, mañana u otro
+  const fechaAviso = (r) => (r.dia === "hoy" ? ymd(new Date()) : r.dia === "manana" ? masDias(ymd(new Date()), 1) : r.fecha);
+  // Título y texto que se escriben solos con lo elegido (hasta que se cambien a mano)
+  function textoModelo(r) {
+    const f = fechaAviso(r);
+    const larga = f ? diaLargo(f) : "______";
+    const corto = r.dia === "hoy" ? "hoy" : r.dia === "manana" ? "mañana" : f ? diaLargo(f) : "______";
+    const cuando = r.dia === "hoy" ? "Hoy " + larga : r.dia === "manana" ? "Mañana " + larga : "El " + larga;
+    const motivo = String(r.motivo || "").trim();
+    const hora = r.hora || "__:__";
+    if (r.modelo === "retiro") return { titulo: `Retiro anticipado ${corto} a las ${hora}`, texto: `${cuando} las clases terminan a las ${hora}${motivo ? " por " + motivo : ""}. Les pedimos retirar a sus hijos e hijas a esa hora.` };
+    if (r.modelo === "suspension") return { titulo: `Suspensión de clases ${corto}`, texto: `${cuando} no habrá clases${motivo ? " por " + motivo : ""}.` };
+    if (r.modelo === "emergencia") return { titulo: "Emergencia en el colegio", texto: "Los estudiantes se encuentran a resguardo junto a sus profesores. Informaremos por aquí los próximos pasos." };
+    return { titulo: r.titulo || "", texto: r.texto || "" };
+  }
+  // Retiro y suspensión se apagan solos al terminar ese día; la emergencia, cuando se apague a mano
+  const hastaAuto = (r) => (["retiro", "suspension"].includes(r.modelo) && fechaAviso(r) ? fechaAviso(r) + "T23:59" : "");
+  const nuevoAviso = (modelo) => {
+    const m = MODELOS_AVISO[modelo] || {};
+    const r = { modelo, dia: m.dia || "hoy", fecha: "", hora: m.hora || "", motivo: "", nivel: m.nivel || "importante", notificar: true, tocado: false,
+      enlace: "", textoEnlace: "", desde: "", hasta: "", hastaTocado: false };
+    Object.assign(r, textoModelo(r));
+    r.hasta = hastaAuto(r);
+    return r;
+  };
+  const vistaPreviaAviso = (a) => {
+    const nivel = a.nivel || "urgente";
+    return h("div", { class: "pv-aviso pv-aviso--" + nivel },
+      h("span", { class: "pv-aviso__ico" }, nivel === "info" ? "i" : "!"),
+      h("span", { class: "pv-aviso__txt" }, a.titulo ? h("strong", {}, a.titulo + " ") : null, a.texto || "Escribe el aviso…",
+        a.enlace ? h("u", {}, " " + (a.textoEnlace || "Más información") + " →") : null));
+  };
+  const vistaPreviaNotif = (a) => h("div", { class: "av-notif" }, h("i", { "aria-hidden": "true" }),
+    h("div", {}, h("strong", {}, `${NIVEL_NOTIF[a.nivel] || "Urgente"}: ${a.titulo || "Aviso del colegio"}`), h("span", {}, a.texto || "")));
+
+  async function publicarAviso(r, boton) {
+    const titulo = r.titulo.trim(), texto = r.texto.trim();
+    if (!titulo && !texto) return toast("Escribe el aviso antes de publicarlo.", "error");
+    if (/__/.test(titulo + texto)) return toast("Completa los espacios en blanco (__) antes de publicarlo.", "error");
+    const a = state.data.aviso || (state.data.aviso = {});
+    Object.assign(a, { activo: true, nivel: r.nivel, titulo, texto });
+    for (const k of ["enlace", "textoEnlace", "desde", "hasta"]) { const v = String(r[k] || "").trim(); if (v) a[k] = v; else delete a[k]; }
+    if (r.notificar) delete a.notificar; else a.notificar = false;
+    setDirty(true);
+    boton.disabled = true;
+    await guardar();
+    if (state.dirty) { boton.disabled = false; return; }
+    avisoRapido = null;
+    render();
+    window.scrollTo(0, 0);
+  }
+  async function apagarAviso(boton) {
+    if (!confirm("¿Apagar el aviso ahora? Deja de mostrarse en el sitio y en la app.")) return;
+    state.data.aviso.activo = false;
+    setDirty(true);
+    boton.disabled = true;
+    await guardar();
+    if (state.dirty) boton.disabled = false;
+  }
+
+  // Lo primero: ¿hay un aviso publicado?
+  function estadoAvisoTarjeta(a) {
+    const e = estadoAviso(a);
+    if (e === "publicado" || e === "programado") {
+      return h("div", { class: "av-estado av-estado--" + (a.nivel || "urgente") },
+        h("div", { class: "av-estado__cab" }, h("strong", {}, e === "publicado" ? "Hay un aviso publicado" : "Hay un aviso programado"),
+          h("span", {}, e === "programado" ? `Aparece el ${fechaHoraLarga(a.desde)}${a.notificar === false ? "" : ", con notificación a los celulares"}.`
+            : a.hasta ? `Se apaga solo el ${fechaHoraLarga(a.hasta)}.` : "Se muestra hasta que lo apagues.")),
+        vistaPreviaAviso(a),
+        h("div", { class: "av-acciones" },
+          h("button", { type: "button", class: "btn av-apagar", onclick: (ev) => apagarAviso(ev.currentTarget) }, e === "publicado" ? "Apagar aviso" : "Cancelar aviso"),
+          h("button", { type: "button", class: "btn btn--ghost", onclick: () => {
+            avisoRapido = { ...nuevoAviso("libre"), titulo: a.titulo || "", texto: a.texto || "", nivel: a.nivel || "urgente", tocado: true,
+              enlace: a.enlace || "", textoEnlace: a.textoEnlace || "", desde: a.desde || "", hasta: a.hasta || "", hastaTocado: true, editando: true,
+              // Corregir el texto de un aviso ya enviado no vuelve a notificar, salvo que se pida
+              notificar: e === "programado" ? a.notificar !== false : false };
+            render();
+          } }, "Cambiar el texto")));
+    }
+    return h("div", { class: "av-estado av-estado--ok" }, h("b", { "aria-hidden": "true" }, "✓"),
+      h("div", { class: "av-estado__cab" }, h("strong", {}, "Ahora no hay ningún aviso publicado"),
+        h("span", {}, e === "vencido" ? "El último aviso ya venció y no se muestra." : "El sitio y la app muestran «Sin avisos por ahora».")));
+  }
+
+  // Paso 2: lo propio de cada modelo, el texto, la vista previa y «Publicar ahora»
+  function formularioAvisoRapido(r) {
+    const tituloIn = h("input", { type: "text", maxlength: 80, value: r.titulo, oninput: (e) => { r.titulo = e.target.value; r.tocado = true; pintar(); } });
+    const textoIn = h("textarea", { rows: 4, oninput: (e) => { r.texto = e.target.value; r.tocado = true; pintar(); } });
+    textoIn.value = r.texto;
+    const previa = h("div"), notif = h("div"), resumen = h("p", { class: "av-resumen" });
+    const hastaIn = h("input", { type: "datetime-local", value: r.hasta, oninput: (e) => { r.hasta = e.target.value; r.hastaTocado = true; pintar(); } });
+    function pintar() {
+      if (!r.tocado) { Object.assign(r, textoModelo(r)); tituloIn.value = r.titulo; textoIn.value = r.texto; }
+      if (!r.hastaTocado) { r.hasta = hastaAuto(r); hastaIn.value = r.hasta; }
+      previa.replaceChildren(vistaPreviaAviso(r));
+      notif.replaceChildren(r.notificar ? vistaPreviaNotif(r) : h("p", { class: "panel__help" }, "No se enviará notificación a los celulares."));
+      resumen.textContent = (r.desde ? `Aparece el ${fechaHoraLarga(r.desde)}` : "Se publica al tiro en el sitio y en la app")
+        + (r.hasta ? ` y se apaga solo el ${fechaHoraLarga(r.hasta)}` : " y queda hasta que lo apagues")
+        + (r.notificar ? ". Llega una notificación a los celulares." : ".");
+    }
+    const etiqueta = (texto, control, ayuda) => h("label", { class: "field" }, h("span", { class: "av-etq" }, texto), control, ayuda ? h("small", {}, ayuda) : null);
+    const chips = (opciones, actual, elegir) => h("div", { class: "av-chips", role: "group" }, opciones.map(([v, t]) =>
+      h("button", { type: "button", class: "chip-adm" + (v === actual ? " is-active" : ""), "aria-pressed": String(v === actual), onclick: () => elegir(v) }, t)));
+    const propio = [];
+    if (r.modelo === "retiro" || r.modelo === "suspension") {
+      const opciones = r.modelo === "retiro" ? [["hoy", "Hoy"], ["manana", "Mañana"], ["otro", "Otro día"]] : [["manana", "Mañana"], ["hoy", "Hoy"], ["otro", "Otro día"]];
+      propio.push(h("div", { class: "field" }, h("span", { class: "av-etq" }, "¿Qué día?"),
+        chips(opciones, r.dia, (v) => { r.dia = v; if (v === "otro" && !r.fecha) r.fecha = masDias(ymd(new Date()), 1); render(); }),
+        r.dia === "otro" ? h("input", { type: "date", value: r.fecha, min: ymd(new Date()), "aria-label": "Día", oninput: (e) => { r.fecha = e.target.value; pintar(); } }) : null));
+      if (r.modelo === "retiro") propio.push(etiqueta("¿A qué hora salen?", h("input", { type: "time", value: r.hora, oninput: (e) => { r.hora = e.target.value; pintar(); } })));
+      propio.push(etiqueta("¿Por qué? (opcional)", h("input", { type: "text", maxlength: 80, value: r.motivo, placeholder: r.modelo === "retiro" ? "Ej.: reunión de profesores" : "Ej.: corte de agua en el sector",
+        oninput: (e) => { r.motivo = e.target.value; pintar(); } })));
+    }
+    const notificar = h("label", { class: "av-switch" }, h("input", { type: "checkbox", checked: r.notificar, onchange: (e) => { r.notificar = e.target.checked; pintar(); } }),
+      h("span", {}, "Enviar notificación a los celulares"));
+    const publicar = h("button", { type: "button", class: "btn btn--primary av-publicar", onclick: (e) => publicarAviso(r, e.currentTarget) },
+      state.modo === "revision" ? "Enviar para publicar" : r.desde ? "Programar aviso" : "Publicar ahora");
+    const mas = h("details", { class: "av-mas", open: !!(r.enlace || r.desde) },
+      h("summary", {}, "Más opciones: color, enlace, programar"),
+      h("div", { class: "grid2" },
+        etiqueta("Color", h("select", { onchange: (e) => { r.nivel = e.target.value; pintar(); } },
+          [["urgente", "Urgente (rojo)"], ["importante", "Importante (amarillo)"], ["info", "Informativo (azul)"]].map(([v, t]) => h("option", { value: v, selected: v === r.nivel }, t)))),
+        etiqueta("Enlace (opcional)", h("input", { type: "text", value: r.enlace, placeholder: "https://… o noticia/?id=…", oninput: (e) => { r.enlace = e.target.value; pintar(); } })),
+        etiqueta("Texto del enlace", h("input", { type: "text", maxlength: 40, value: r.textoEnlace, placeholder: "Más información", oninput: (e) => { r.textoEnlace = e.target.value; pintar(); } })),
+        etiqueta("Mostrar desde (para programarlo)", h("input", { type: "datetime-local", value: r.desde, oninput: (e) => { r.desde = e.target.value; publicar.textContent = state.modo === "revision" ? "Enviar para publicar" : e.target.value ? "Programar aviso" : "Publicar ahora"; pintar(); } }),
+          "Vacío: aparece al publicar."),
+        etiqueta("Se apaga solo el", hastaIn, "Vacío: queda hasta que lo apagues.")));
+    pintar();
+    const m = MODELOS_AVISO[r.modelo];
+    return h("div", { class: "av-dos" },
+      h("div", { class: "panel" }, h("h2", {}, r.editando ? "Cambiar el aviso" : m ? m.nombre : "Aviso nuevo"),
+        propio.length ? h("div", { class: "av-campos" }, propio) : null,
+        h("div", { class: "av-campos" }, etiqueta("Título", tituloIn), etiqueta("Texto del aviso", textoIn, r.tocado || !m ? null : "Se escribe solo con lo que elijas arriba. Puedes cambiarlo.")),
+        notificar, mas, resumen,
+        h("div", { class: "av-acciones" }, publicar, h("button", { type: "button", class: "btn btn--ghost", onclick: () => { avisoRapido = null; render(); } }, "Cancelar"))),
+      h("div", { class: "av-previa" }, h("h2", {}, "Así se verá"), h("p", { class: "panel__help" }, "En el sitio y en la app:"), previa,
+        h("p", { class: "panel__help" }, "En los celulares:"), notif));
+  }
+
   VISTAS.aviso = {
     titulo: "Aviso urgente",
-    ayuda: "Franja que aparece arriba de todas las páginas del sitio: suspensión de clases, cortes de servicios, alertas de tsunami o cualquier comunicado que no puede esperar. Se enciende y se apaga aquí.",
+    get ayuda() {
+      return avisoCompleto ? "Formulario completo del aviso: color, enlace, programación y notificación. Se publica con el botón de arriba."
+        : avisoRapido ? "Revisa el texto y publícalo. Sale arriba de todas las páginas del sitio, en la app y en los celulares."
+        : "Franja arriba de todas las páginas del sitio y en la app, para suspensiones, retiros o emergencias. Elige qué quieres avisar: lo demás se llena solo.";
+    },
     render: () => {
       const d = state.data;
       const a = d.aviso || (d.aviso = { activo: false, nivel: "urgente" });
-      const vista = h("div", { class: "pv-aviso" });
-      const estado = h("p", { class: "panel__help pv-hero__estado" });
-      const pintar = () => {
-        const nivel = a.nivel || "urgente";
-        vista.className = "pv-aviso pv-aviso--" + nivel;
-        vista.replaceChildren(
-          h("span", { class: "pv-aviso__ico" }, nivel === "info" ? "i" : "!"),
-          h("span", { class: "pv-aviso__txt" }, a.titulo ? h("strong", {}, a.titulo + " ") : null, a.texto || "Escribe el aviso…",
-            a.enlace ? h("u", {}, " " + (a.textoEnlace || "Más información") + " →") : null));
-        const vencido = a.hasta && new Date(a.hasta) < new Date();
-        estado.textContent = !a.activo ? "Apagado: no se muestra en el sitio."
-          : vencido ? "Venció: ya no se muestra. Cambia o borra la fecha «Mostrar hasta»."
-          : a.desde && new Date(a.desde) > new Date() ? "Programado: aparecerá en el sitio y en la app el " + new Date(a.desde).toLocaleString("es-CL", { dateStyle: "long", timeStyle: "short" }) + (a.notificar === false ? "." : ", y a esa hora se enviará la notificación.")
-          : !(a.titulo || a.texto) ? "Encendido, pero sin texto: escribe el aviso para que aparezca."
-          : "Encendido: se muestra arriba de todas las páginas" + (a.hasta ? " hasta el " + new Date(a.hasta).toLocaleString("es-CL", { dateStyle: "long", timeStyle: "short" }) : "") + ".";
-      };
-      const sel = (k) => () => pintar();
-      pintar();
-      // Modelos rápidos (los mismos de la app de Inspectoría): se completan los espacios en blanco
-      const MODELOS = [
-        { nombre: "Retiro anticipado", nivel: "importante", titulo: "Retiro anticipado de estudiantes", texto: "Hoy las clases terminan a las __:__ por ______. Les pedimos retirar a sus hijos e hijas a esa hora." },
-        { nombre: "Suspensión de clases", nivel: "importante", titulo: "Suspensión de clases", texto: "El día ______ no habrá clases por ______." },
-        { nombre: "Emergencia", nivel: "urgente", titulo: "Emergencia en el colegio", texto: "Los estudiantes se encuentran a resguardo junto a sus profesores. Informaremos por aquí los próximos pasos." },
-      ];
-      const modelos = h("div", { class: "modelos" }, h("span", {}, "Usar un modelo:"), MODELOS.map((m) => h("button", { type: "button", class: "btn btn--ghost btn--sm", onclick: () => {
-        if ((a.titulo || a.texto) && !confirm("¿Reemplazar el aviso actual por este modelo?")) return;
-        Object.assign(a, { activo: true, nivel: m.nivel, titulo: m.titulo, texto: m.texto });
-        delete a.desde; delete a.hasta; delete a.notificar;
-        setDirty(true); render();
-        toast("Completa los espacios en blanco (__) y presiona «" + textoGuardar() + "».", "ok");
-      } }, m.nombre)));
-      return h("div", {},
-        h("div", { class: "panel" }, h("h2", {}, "Aviso"), modelos,
-          h("div", { class: "grid2" },
-            campo({ k: "activo", label: "Estado", type: "select", options: [["", "Apagado"], ["si", "Encendido: mostrar en el sitio"]] },
-              { get activo() { return a.activo ? "si" : ""; }, set activo(v) { a.activo = v === "si"; } }, pintar),
-            campo({ k: "nivel", label: "Tipo", type: "select", options: [["urgente", "Urgente (rojo)"], ["importante", "Importante (amarillo)"], ["info", "Informativo (azul)"]] }, a, sel()),
-            campo({ k: "titulo", label: "Título corto", placeholder: "Ej.: Suspensión de clases", max: 80, full: true }, a, pintar),
-            campo({ k: "texto", label: "Texto", type: "textarea", full: true, placeholder: "Ej.: Mañana martes 15 no habrá clases por corte de agua. Las actividades se retoman el miércoles." }, a, pintar),
-            campo({ k: "enlace", label: "Enlace (opcional)", placeholder: "https://… o noticia/?id=…", help: "Por ejemplo, la noticia con el detalle o un documento PDF." }, a, pintar),
-            campo({ k: "textoEnlace", label: "Texto del enlace", placeholder: "Más información", max: 40 }, a, pintar),
-            campo({ k: "desde", label: "Mostrar desde (opcional)", type: "datetime-local", help: "Para programarlo: aparece solo en esta fecha y hora (hora de Chile). Vacío: se muestra al publicar." }, a, pintar),
-            campo({ k: "hasta", label: "Mostrar hasta (opcional)", type: "datetime-local", help: "Pasada esta fecha y hora, el aviso se oculta solo. Vacío: se muestra hasta que lo apagues." }, a, pintar),
-            campo({ k: "notificar", label: "Notificación a la app", type: "select", options: [["si", "Sí: enviar notificación a los celulares"], ["no", "No: solo mostrarlo"]],
-              help: "Se envía una sola vez, al publicar un aviso encendido nuevo o con otro texto. Llega en uno o dos minutos." },
-              { get notificar() { return a.notificar === false ? "no" : "si"; }, set notificar(v) { if (v === "no") a.notificar = false; else delete a.notificar; } }, pintar))),
-        h("div", { class: "panel" }, h("h2", {}, "Vista previa"), vista, estado,
-          h("p", { class: "panel__help" }, "Recuerda presionar «" + textoGuardar() + "». Quien ya tenga el sitio abierto lo verá al recargar o al cambiar de página.")),
+      if (avisoCompleto) return h("div", {},
+        h("p", {}, h("button", { type: "button", class: "btn btn--ghost btn--sm", onclick: () => { avisoCompleto = false; render(); } }, "← Volver a la vista simple")),
+        formularioAvisoCompleto(a));
+      if (avisoRapido) return formularioAvisoRapido(avisoRapido);
+      return h("div", { class: "av" }, estadoAvisoTarjeta(a),
+        h("h2", { class: "ini__titulo" }, deVerdad(a) && estadoAviso(a) !== "vencido" ? "¿Quieres avisar otra cosa?" : "¿Qué quieres avisar?"),
+        h("div", { class: "av-modelos" }, Object.entries(MODELOS_AVISO).map(([k, m]) => h("button", { type: "button", class: "av-modelo", onclick: () => { avisoRapido = nuevoAviso(k); render(); window.scrollTo(0, 0); } },
+          h("span", { class: "av-modelo__ico", style: "background:" + m.color, html: ICONOS_INICIO[m.icono] }), h("strong", {}, m.nombre), h("span", {}, m.desc)))),
+        h("div", { class: "av-acciones" },
+          h("button", { type: "button", class: "btn btn--ghost", onclick: () => { avisoRapido = { ...nuevoAviso("libre"), nivel: "importante" }; render(); } }, "Escribir otro aviso desde cero"),
+          h("button", { type: "button", class: "btn-link", onclick: () => { avisoCompleto = true; render(); } }, "Ver todas las opciones")),
         state.rol === "dueno" ? panelApp() : null);
     },
   };
+
+  // Formulario completo del aviso (todas las opciones)
+  function formularioAvisoCompleto(a) {
+    const vista = h("div", { class: "pv-aviso" });
+    const estado = h("p", { class: "panel__help pv-hero__estado" });
+    const pintar = () => {
+      const nivel = a.nivel || "urgente";
+      vista.className = "pv-aviso pv-aviso--" + nivel;
+      vista.replaceChildren(
+        h("span", { class: "pv-aviso__ico" }, nivel === "info" ? "i" : "!"),
+        h("span", { class: "pv-aviso__txt" }, a.titulo ? h("strong", {}, a.titulo + " ") : null, a.texto || "Escribe el aviso…",
+          a.enlace ? h("u", {}, " " + (a.textoEnlace || "Más información") + " →") : null));
+      const vencido = a.hasta && new Date(a.hasta) < new Date();
+      estado.textContent = !a.activo ? "Apagado: no se muestra en el sitio."
+        : vencido ? "Venció: ya no se muestra. Cambia o borra la fecha «Mostrar hasta»."
+        : a.desde && new Date(a.desde) > new Date() ? "Programado: aparecerá en el sitio y en la app el " + new Date(a.desde).toLocaleString("es-CL", { dateStyle: "long", timeStyle: "short" }) + (a.notificar === false ? "." : ", y a esa hora se enviará la notificación.")
+        : !(a.titulo || a.texto) ? "Encendido, pero sin texto: escribe el aviso para que aparezca."
+        : "Encendido: se muestra arriba de todas las páginas" + (a.hasta ? " hasta el " + new Date(a.hasta).toLocaleString("es-CL", { dateStyle: "long", timeStyle: "short" }) : "") + ".";
+    };
+    const sel = () => () => pintar();
+    pintar();
+    // Modelos rápidos (los mismos de la app de Inspectoría): se completan los espacios en blanco
+    const MODELOS = [
+      { nombre: "Retiro anticipado", nivel: "importante", titulo: "Retiro anticipado de estudiantes", texto: "Hoy las clases terminan a las __:__ por ______. Les pedimos retirar a sus hijos e hijas a esa hora." },
+      { nombre: "Suspensión de clases", nivel: "importante", titulo: "Suspensión de clases", texto: "El día ______ no habrá clases por ______." },
+      { nombre: "Emergencia", nivel: "urgente", titulo: "Emergencia en el colegio", texto: "Los estudiantes se encuentran a resguardo junto a sus profesores. Informaremos por aquí los próximos pasos." },
+    ];
+    const modelos = h("div", { class: "modelos" }, h("span", {}, "Usar un modelo:"), MODELOS.map((m) => h("button", { type: "button", class: "btn btn--ghost btn--sm", onclick: () => {
+      if ((a.titulo || a.texto) && !confirm("¿Reemplazar el aviso actual por este modelo?")) return;
+      Object.assign(a, { activo: true, nivel: m.nivel, titulo: m.titulo, texto: m.texto });
+      delete a.desde; delete a.hasta; delete a.notificar;
+      setDirty(true); render();
+      toast("Completa los espacios en blanco (__) y presiona «" + textoGuardar() + "».", "ok");
+    } }, m.nombre)));
+    return h("div", {},
+      h("div", { class: "panel" }, h("h2", {}, "Aviso"), modelos,
+        h("div", { class: "grid2" },
+          campo({ k: "activo", label: "Estado", type: "select", options: [["", "Apagado"], ["si", "Encendido: mostrar en el sitio"]] },
+            { get activo() { return a.activo ? "si" : ""; }, set activo(v) { a.activo = v === "si"; } }, pintar),
+          campo({ k: "nivel", label: "Tipo", type: "select", options: [["urgente", "Urgente (rojo)"], ["importante", "Importante (amarillo)"], ["info", "Informativo (azul)"]] }, a, sel()),
+          campo({ k: "titulo", label: "Título corto", placeholder: "Ej.: Suspensión de clases", max: 80, full: true }, a, pintar),
+          campo({ k: "texto", label: "Texto", type: "textarea", full: true, placeholder: "Ej.: Mañana martes 15 no habrá clases por corte de agua. Las actividades se retoman el miércoles." }, a, pintar),
+          campo({ k: "enlace", label: "Enlace (opcional)", placeholder: "https://… o noticia/?id=…", help: "Por ejemplo, la noticia con el detalle o un documento PDF." }, a, pintar),
+          campo({ k: "textoEnlace", label: "Texto del enlace", placeholder: "Más información", max: 40 }, a, pintar),
+          campo({ k: "desde", label: "Mostrar desde (opcional)", type: "datetime-local", help: "Para programarlo: aparece solo en esta fecha y hora (hora de Chile). Vacío: se muestra al publicar." }, a, pintar),
+          campo({ k: "hasta", label: "Mostrar hasta (opcional)", type: "datetime-local", help: "Pasada esta fecha y hora, el aviso se oculta solo. Vacío: se muestra hasta que lo apagues." }, a, pintar),
+          campo({ k: "notificar", label: "Notificación a la app", type: "select", options: [["si", "Sí: enviar notificación a los celulares"], ["no", "No: solo mostrarlo"]],
+            help: "Se envía una sola vez, al publicar un aviso encendido nuevo o con otro texto. Llega en uno o dos minutos." },
+            { get notificar() { return a.notificar === false ? "no" : "si"; }, set notificar(v) { if (v === "no") a.notificar = false; else delete a.notificar; } }, pintar))),
+      h("div", { class: "panel" }, h("h2", {}, "Vista previa"), vista, estado,
+        h("p", { class: "panel__help" }, "Recuerda presionar «" + textoGuardar() + "». Quien ya tenga el sitio abierto lo verá al recargar o al cambiar de página.")),
+      state.rol === "dueno" ? panelApp() : null);
+  }
 
   // App del colegio (/app/): dirección del servidor de notificaciones (solo el dueño; ver servidor/GUIA.md)
   function panelApp() {
@@ -4731,14 +5032,14 @@ Al final del chat, en 3 líneas, dime qué datos debería completar yo para que 
   function render() {
     const v = VISTAS[state.view];
     $("#viewTitle").textContent = v.titulo;
-    $("#sideActual").textContent = v.titulo;
+    $("#sideActual").textContent = v.menu || v.titulo;
     $("#viewHelp").textContent = v.ayuda + (state.rol === "trabajador" && state.view === "html"
       ? " Como administrador trabajador, tus cambios en el HTML quedan pendientes hasta que el dueño los apruebe." : "");
     $("#view").replaceChildren(v.render());
     document.querySelectorAll("#sideNav button").forEach((b) => b.classList.toggle("is-active", b.dataset.view === state.view));
     document.body.classList.toggle("is-wide", ["html", "css", "estilo"].includes(state.view));
     // Las cuentas con «Noticias con aprobación» no publican: envían cada noticia con su propio botón
-    $(".bar__actions").hidden = soloPropuestas() || (["html", "css", "pruebas"].includes(state.view) && !state.dirty);
+    $(".bar__actions").hidden = soloPropuestas() || ((["html", "css", "pruebas", "inicio"].includes(state.view) || (state.view === "aviso" && !avisoCompleto)) && !state.dirty);
   }
 
   /* ---------- Rol: qué secciones ve cada uno ---------- */
@@ -4830,13 +5131,14 @@ Al final del chat, en 3 líneas, dime qué datos debería completar yo para que 
       if (!u || !ROLES[u.rol]) throw new Error(`Tu cuenta de GitHub (@${yo.login}) no tiene acceso al panel. Pídele al administrador que te agregue en «Usuarios y permisos».`);
       Object.assign(state, { rol: u.rol, modo: "revision", nombre: u.nombre || "" });
     }
+    state.view = "inicio";
     aplicarRol();
     guardarSesion(recordar);
     $("#login").hidden = true;
     $("#app").hidden = false;
     setDirty(false);
     render();
-    contarPorAprobar().then((n) => { if (n) toast(n === 1 ? "Tienes 1 noticia por aprobar en «Noticias»." : `Tienes ${n} noticias por aprobar en «Noticias».`); });
+    contarPorAprobar().then((n) => { if (n && state.view !== "inicio") toast(n === 1 ? "Tienes 1 noticia por aprobar en «Noticias»." : `Tienes ${n} noticias por aprobar en «Noticias».`); });
     contarPruebas();
   }
 
@@ -4847,13 +5149,14 @@ Al final del chat, en 3 líneas, dime qué datos debería completar yo para que 
     Object.assign(state, { branch: "main", token: null, login: yo.correo, nombre: yo.nombre || "", cargo: yo.cargo || "", permisos: yo.permisos || [],
       modo: "correo", rol: (yo.permisos || []).includes("todo") ? "dueno" : "correo" });
     await cargarDatos();
+    state.view = "inicio";
     aplicarRol();
     guardarSesion(recordar);
     $("#login").hidden = true;
     $("#app").hidden = false;
     setDirty(false);
     render();
-    contarPruebas().then((r) => { if (r && r.n && state.view !== "pruebas") toast(r.utp ? `Hay ${r.n} ${r.n === 1 ? "prueba o guía" : "pruebas o guías"} por revisar en «Pruebas y guías».` : `Hay ${r.n} ${r.n === 1 ? "prueba o guía" : "pruebas o guías"} para imprimir en «Pruebas y guías».`); });
+    contarPruebas().then((r) => { if (r && r.n && !["pruebas", "inicio"].includes(state.view)) toast(r.utp ? `Hay ${r.n} ${r.n === 1 ? "prueba o guía" : "pruebas o guías"} por revisar en «Pruebas y guías».` : `Hay ${r.n} ${r.n === 1 ? "prueba o guía" : "pruebas o guías"} para imprimir en «Pruebas y guías».`); });
   }
 
   // Pestañas del ingreso (se recuerda la última usada en este equipo)
@@ -4970,6 +5273,7 @@ Al final del chat, en 3 líneas, dime qué datos debería completar yo para que 
     if (b.dataset.view === state.view) return menuMovil(false); // tocar la sección abierta solo cierra el menú en el celular
     if (editorSucio() && !confirm("Tienes cambios sin guardar en " + editor.archivo + ". ¿Descartarlos?")) return;
     editor.dirty = false; editor.archivo = null;
+    if (b.dataset.view !== state.view) { avisoRapido = null; avisoCompleto = false; }
     state.view = b.dataset.view; menuMovil(false); render();
     window.scrollTo(0, 0);
   });
