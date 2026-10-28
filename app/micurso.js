@@ -326,10 +326,12 @@
         <button type="button" class="btn btn--chico" data-mc="activarnotif">Activar avisos</button></div>`
       : estado === "bloqueadas" ? '<p class="pie-nota">Las notificaciones de la app están bloqueadas en este celular. Si quieres recibir los avisos de tus pruebas, actívalas en los ajustes del celular.</p>' : "";
   }
+  // Devuelve si este celular quedó unido al profesor (con un servidor antiguo, la ruta no existe)
   async function vincularNotif(forzar) {
     const ep = await APP.notificaciones.endpoint();
-    if (!ep || !sesion || sesion.rol !== "profe" || (!forzar && leer(NOTIF_PROFE) === ep)) return;
-    try { await pedir("/curso/notificaciones", { sesion: sesion.sesion, endpoint: ep }); guardar(NOTIF_PROFE, ep); } catch (e) { /* se intenta la próxima vez */ }
+    if (!ep || !sesion || sesion.rol !== "profe") return false;
+    if (!forzar && leer(NOTIF_PROFE) === ep) return true;
+    try { await pedir("/curso/notificaciones", { sesion: sesion.sesion, endpoint: ep }); guardar(NOTIF_PROFE, ep); return true; } catch (e) { return false; }
   }
 
   /* ---------- Fechas del curso en «Inicio» (estudiantes y apoderados) ---------- */
@@ -888,9 +890,10 @@
       trabajar(async () => {
         try { await APP.notificaciones.activar(); }
         catch (err) { throw new Error(err.message === "permiso" ? "No se dio permiso para mostrar notificaciones. Puedes activarlo en los ajustes del celular." : "No se pudieron activar los avisos. Revisa tu conexión e inténtalo de nuevo."); }
-        await vincularNotif(true);
+        const unido = await vincularNotif(true);
         render();
-        mensaje("Listo: te avisaremos en este celular cuando UTP revise tus pruebas.", "ok");
+        if (unido) mensaje("Listo: te avisaremos en este celular cuando UTP revise tus pruebas.", "ok");
+        else mensaje("Las notificaciones de la app quedaron activas, pero los avisos de pruebas aún no están disponibles en el servidor del colegio. Avísale al encargado web.");
       });
     }
     else if (a === "cambiarclave") { st.crearClave = true; st.msg = null; render(); }
