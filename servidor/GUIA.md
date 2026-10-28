@@ -209,6 +209,23 @@ y se borran 30 días después de la fecha de evaluación. Si el espacio de prueb
 
 El script de Google (`correo-contacto.gs`) no cambia en esta versión.
 
+## Invitar por correo a los profesores que aún no entran
+
+En el panel, «Mi curso (app)» → «Profesores» muestra quiénes ya entraron y quiénes no. Para los que aún no entran:
+
+- **«Invitar a los N»** les envía a todos un correo con lo que pueden hacer en «Mi curso» y un enlace que abre la app
+  en «Crear contraseña» con su correo ya escrito (por ejemplo `colegiosm.cl/app/#primeravez=nombre%40colegiosm.cl`).
+  Ahí tocan «Enviar código», escriben el código que les llega y crean su contraseña.
+- **«Invitar por correo»** o **«Reenviar invitación»** en cada profesor, para uno solo. Se ve la fecha de la última invitación.
+- **«Ver el correo que les llega»** muestra el texto antes de enviarlo.
+
+Lo pueden usar las cuentas con «Ver los cursos» o «Listas de Mi curso» (por ejemplo UTP). Si el profesor responde
+el correo, la respuesta le llega a quien envió la invitación. Para no repetir: a la misma persona, una invitación
+cada 10 minutos como máximo; el botón general se salta a quienes ya la recibieron en las últimas 24 horas; y en total,
+hasta 200 invitaciones por día (Google limita los correos diarios de cada cuenta). El correo sale por el mismo script
+de Google, como «mensaje»: **no hay que cambiar el script**. Cuando el profesor crea su contraseña, deja de aparecer
+como pendiente y su registro de invitación se borra solo.
+
 ## Cómo funciona y qué guarda
 - Para las notificaciones, el servidor guarda solo la «dirección de notificación» anónima que entrega cada celular (Google, Apple, etc.). No guarda nombres, correos ni teléfonos.
 - Si un profesor activa los avisos de sus pruebas, el servidor une esa dirección a su correo institucional, y guarda por

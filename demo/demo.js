@@ -16,7 +16,7 @@
   const DATOS = new URL("data/sitio.json", RAIZ).href;
   const TOKEN = "demo-sin-token-real";
   const CLAVE = "colegio-demo";
-  const VERSION = "2026-10-28";
+  const VERSION = "2026-10-28-invitar";
   const env = { CORREO_URL: "https://script.google.com/macros/s/demo/exec", CORREO_CLAVE: "demo", GITHUB_TOKEN: TOKEN, CLAVE_INSPECTORIA: "inspectoria-demo" };
   const CUENTAS_PANEL = [
     { correo: "utp@colegiosm.cl", nombre: "Carolina Díaz", cargo: "UTP primer ciclo", permisos: ["noticias", "cursos", "pruebas"] },
@@ -29,6 +29,11 @@
     { correo: "ana.rojas@colegiosm.cl", nombre: "Ana Rojas", cursos: ["5° básico A", "5° básico B", "6° básico A"] },
     { correo: "pedro.lagos@colegiosm.cl", nombre: "Pedro Lagos", cursos: ["3° básico A", "3° básico B"] },
     { correo: "marcela.tapia@colegiosm.cl", nombre: "Marcela Tapia", cursos: ["1° básico A", "2° básico A"] },
+  ];
+  // Profesores que aún no entran (para probar «Invitar por correo» en el panel)
+  const SIN_ENTRAR = [
+    { correo: "jorge.pinto@colegiosm.cl", nombre: "Jorge Pinto", cursos: ["4° básico A"] },
+    { correo: "sofia.mora@colegiosm.cl", nombre: "Sofía Mora", cursos: ["2° básico A", "2° básico B"] },
   ];
   const ESTUDIANTES = [
     { rut: "25111222-3", nombre: "Tomás Herrera Soto", curso: "5° básico A", correo: "herrera.soto.tomas@colegiosm.cl" },
@@ -215,7 +220,7 @@
     const db = env.DB;
     await llamar("/estado");
     const ins = (sql, ...a) => db.prepare(sql).bind(...a).run();
-    for (const p of PROFES) await ins("INSERT INTO profesores (correo, nombre, cursos) VALUES (?, ?, ?)", p.correo, p.nombre, JSON.stringify(p.cursos));
+    for (const p of PROFES.concat(SIN_ENTRAR)) await ins("INSERT INTO profesores (correo, nombre, cursos) VALUES (?, ?, ?)", p.correo, p.nombre, JSON.stringify(p.cursos));
     for (const f of CUENTAS_PANEL) await ins("INSERT INTO funcionarios (correo, nombre, cargo, permisos, creado) VALUES (?, ?, ?, ?, ?)", f.correo, f.nombre, f.cargo, JSON.stringify(f.permisos), new Date().toISOString());
     for (const e of ESTUDIANTES) await ins("INSERT INTO estudiantes (rut, nombre, curso, correo) VALUES (?, ?, ?, ?)", e.rut, e.nombre, e.curso, e.correo);
     const mat = { "1° básico A": 34, "1° básico B": 33, "2° básico A": 35, "2° básico B": 34, "3° básico A": 36, "3° básico B": 35, "4° básico A": 37, "4° básico B": 36, "5° básico A": 38, "5° básico B": 37, "6° básico A": 36, "6° básico B": 35 };

@@ -6,7 +6,7 @@
    ========================================================== */
 "use strict";
 
-const CACHE = "csm-app-v13";
+const CACHE = "csm-app-v14";
 const APP = ["./", "index.html", "app.css", "app.js", "micurso.js", "manifest.webmanifest", "icono-v2-192.png", "icono-v2-apple-180.png", "icono-v2-notificacion.png", "../js/horarios.js"];
 const DATOS = new URL("../data/sitio.json", self.location).pathname;
 
