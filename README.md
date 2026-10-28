@@ -42,3 +42,12 @@ Ver [SEGURIDAD.md](SEGURIDAD.md): qué protege el código y los pasos que debe h
 ## Departamentos
 
 `/departamentos/` muestra los departamentos académicos (cada uno con su página `/departamentos/?d=matematica`, con «Profesores» y «Actividades») y los equipos de apoyo. Los docentes se asignan con el campo «Departamentos» en «Docentes y personal»; las actividades son noticias con la etiqueta «Departamento». Al tocar a una persona se abre su ficha completa (título, postgrado, tema favorito y frase).
+
+## Modo demostración (copia de prueba)
+
+Para ver y probar la app (`/app/`) y el panel (`/admin/`) sin Cloudflare, `demo/demo.js` corre el mismo `servidor/notificaciones.js` dentro del navegador, con una base de datos SQLite local (`demo/vendor/sql-asm.js`, sql.js, licencia MIT) y datos inventados. Los correos, GitHub y las notificaciones se simulan: nada sale del navegador.
+
+- El botón «Demostración» (abajo a la izquierda) entra con las cuentas de prueba (profesora, estudiante, UTP, Directora, Inspectora, Impresiones, Sostenedora). La contraseña de todas es `colegio-demo`.
+- Los códigos que «llegan al correo» aparecen en ese mismo cuadro y se escriben solos.
+- Lo que se hace queda guardado solo en ese navegador. «Reiniciar demostración» lo borra.
+- En colegiosm.cl no hace nada. Al llevar cambios al sitio del colegio no hace falta copiar la carpeta `demo/`.
