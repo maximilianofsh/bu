@@ -672,7 +672,6 @@ body.is-wide .bar__help { max-width: none; }
 .mc-codigo__num { display: block; font-size: 1.6rem; letter-spacing: .12em; font-family: ui-monospace, monospace; color: var(--navy); margin: .2rem 0 .4rem; }
 
 /* Inicio: lo pendiente de cada cargo y atajos */
-.side__nav > button[hidden]:first-child + .side__group { margin-top: 0; }
 .ini__tarjetas { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1.8rem; }
 .ini__tarjeta { display: grid; align-content: start; gap: .35rem; background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 1.2rem 1.25rem; }
 .ini__tarjeta--urgente { border: 2px solid var(--gold); background: #fffaf0; }
@@ -732,3 +731,19 @@ body.is-wide .bar__help { max-width: none; }
 .av-notif strong { display: block; }
 .av-notif span { color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 @media (max-width: 900px) { .av-dos { grid-template-columns: 1fr; } }
+
+/* Menú por tarea: íconos, grupos plegables («Páginas del sitio», «Diseño») */
+.side__bloque { display: grid; gap: .25rem; }
+.side__bloque > p.side__group { margin-top: 1rem; }
+.side__nav > .side__bloque:first-child .side__group, .side__nav > button[hidden]:first-child + .side__bloque .side__group { margin-top: 0; }
+.side__nav button[data-view] { display: flex; align-items: center; gap: .6rem; }
+.side__icono { display: grid; place-items: center; flex: none; width: 1.15rem; height: 1.15rem; opacity: .75; }
+.side__icono svg { width: 100%; height: 100%; fill: currentColor; }
+.side__nav button.is-active .side__icono { opacity: 1; }
+.side__nav button .apr__badge { margin-left: auto; }
+.side__nav .side__plegar { display: flex; align-items: center; gap: .4rem; width: 100%; margin: 1rem 0 .3rem; padding: .25rem .8rem; border-radius: 8px; font: inherit; font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--gold); cursor: pointer; }
+.side__plegar::after { content: ""; width: .45rem; height: .45rem; margin-left: auto; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); transition: transform .2s; }
+.side__bloque.is-plegado .side__plegar::after { transform: rotate(-45deg); }
+.side__cuenta { letter-spacing: 0; font-weight: 600; color: rgba(255,255,255,.55); }
+.side__bloque.is-plegado button[data-view] { display: none; }
+@media (max-width: 860px) { .side__nav .side__plegar { margin: .9rem 0 .2rem; padding: .35rem .9rem; min-height: 0; } }

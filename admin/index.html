@@ -114,37 +114,50 @@
           <span class="sr-only">Abrir el menú de secciones</span>
         </button>
       </div>
+      <!-- Menú por tarea: cada cuenta ve solo lo que su cargo permite; los grupos plegables se abren con un toque -->
       <nav class="side__nav" id="sideNav">
         <button data-view="inicio" hidden>Inicio</button>
-        <p class="side__group">Contenido</p>
-        <button data-view="aviso">Aviso urgente</button>
-        <button data-view="directivos" class="is-active">Directivos</button>
-        <button data-view="portada">Portada del inicio</button>
-        <button data-view="pilares">Pilares</button>
-        <button data-view="departamentos">Departamentos</button>
-        <button data-view="personal">Docentes y personal</button>
-        <button data-view="noticias">Noticias</button>
-        <button data-view="eventos">Calendario escolar</button>
-        <button data-view="galeria">Galería de fotos</button>
-        <button data-view="horarios">Horarios</button>
-        <button data-view="organizaciones">CGPA y CEAL</button>
-        <button data-view="documentos">Documentos</button>
-        <button data-view="emergencia">Emergencias y tsunami</button>
-        <button data-view="redes">Redes sociales</button>
-        <button data-view="logo">Logo y lema</button>
-        <button data-view="colores">Colores</button>
-        <button data-view="usuarios">Usuarios y permisos</button>
-        <p class="side__group">Comunidad</p>
-        <button data-view="pruebas">Pruebas y guías</button>
-        <button data-view="mensajes">Mensajes de contacto</button>
-        <button data-view="micurso">Mi curso (app)</button>
-        <button data-view="estadisticas">Estadísticas de visitas</button>
-        <button data-view="respaldos">Copias de seguridad</button>
-        <button data-view="limpieza">Espacio y limpieza</button>
-        <p class="side__group">Editor de página</p>
-        <button data-view="html">HTML</button>
-        <button data-view="css">CSS</button>
-        <button data-view="estilo">Estilo visual</button>
+        <div class="side__bloque">
+          <p class="side__group">Día a día</p>
+          <button data-view="aviso">Aviso urgente</button>
+          <button data-view="noticias">Noticias</button>
+          <button data-view="pruebas">Pruebas y guías</button>
+          <button data-view="eventos">Calendario escolar</button>
+          <button data-view="mensajes">Mensajes de contacto</button>
+        </div>
+        <div class="side__bloque">
+          <p class="side__group">Comunidad</p>
+          <button data-view="micurso">Mi curso (app)</button>
+          <button data-view="galeria">Galería de fotos</button>
+        </div>
+        <div class="side__bloque" data-bloque="paginas">
+          <button type="button" class="side__group side__plegar" aria-expanded="true">Páginas del sitio <span class="side__cuenta"></span></button>
+          <button data-view="directivos" class="is-active">Directivos</button>
+          <button data-view="personal">Docentes y personal</button>
+          <button data-view="departamentos">Departamentos</button>
+          <button data-view="horarios">Horarios</button>
+          <button data-view="documentos">Documentos</button>
+          <button data-view="portada">Portada del inicio</button>
+          <button data-view="pilares">Pilares</button>
+          <button data-view="organizaciones">CGPA y CEAL</button>
+          <button data-view="emergencia">Emergencias y tsunami</button>
+          <button data-view="redes">Redes sociales</button>
+        </div>
+        <div class="side__bloque" data-bloque="diseno">
+          <button type="button" class="side__group side__plegar" aria-expanded="true">Diseño <span class="side__cuenta"></span></button>
+          <button data-view="logo">Logo y lema</button>
+          <button data-view="colores">Colores</button>
+          <button data-view="estilo">Estilo visual</button>
+          <button data-view="html">HTML</button>
+          <button data-view="css">CSS</button>
+        </div>
+        <div class="side__bloque">
+          <p class="side__group">Más</p>
+          <button data-view="estadisticas">Estadísticas de visitas</button>
+          <button data-view="usuarios">Usuarios y permisos</button>
+          <button data-view="respaldos">Copias de seguridad</button>
+          <button data-view="limpieza">Espacio y limpieza</button>
+        </div>
       </nav>
       <div class="side__foot">
         <p class="side__who" id="sessionInfo"></p>
