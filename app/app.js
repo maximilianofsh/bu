@@ -42,6 +42,14 @@
       history.replaceState(null, "", "#micurso");
       v = "micurso";
     }
+    // El enlace del correo de invitación (#primeravez=correo) abre «Mi curso» en «Crear contraseña» con el correo escrito
+    if (/^primeravez/.test(v)) {
+      let correo = "";
+      try { correo = decodeURIComponent(v.split("=")[1] || ""); } catch (e) { /* enlace incompleto */ }
+      if (window.MICURSO) MICURSO.pedirPrimeraVez(correo);
+      history.replaceState(null, "", "#micurso");
+      v = "micurso";
+    }
     if (!VISTAS.includes(v)) v = "avisos";
     VISTAS.forEach((x) => { $("vista-" + x).hidden = x !== v; });
     document.querySelectorAll(".tab").forEach((t) => {

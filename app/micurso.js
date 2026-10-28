@@ -76,6 +76,13 @@
     if (!sesion) { st = { ...st, quien: "profe", paso: "profe" }; st.msg = { texto: "Entra con tu correo institucional y se abrirá «Enviar prueba o guía».", tipo: "ok" }; }
   };
 
+  // Enlace del correo de invitación: la primera vez del profesor, con su correo ya escrito
+  const pedirPrimeraVez = (correo) => {
+    if (sesion) return;
+    st = { ...st, quien: "profe", paso: "idprofe", id: /^[^\s@]{1,64}@[^\s@]{3,60}$/.test(correo) ? correo.toLowerCase() : st.id };
+    st.msg = { texto: "¡Bienvenido/a! Toca «Enviar código» y revisa tu correo.", tipo: "ok" };
+  };
+
   // Trae quién es y sus fechas (y deja una copia para ver sin internet)
   let cargado = false;
   // Al abrir la app, las fechas del curso que se ven en «Inicio» se actualizan una vez
@@ -998,5 +1005,5 @@
     }
   });
 
-  window.MICURSO = { render, cargar, activo: () => !!sesion, pintarInicio, pedirImprimir, refrescar };
+  window.MICURSO = { render, cargar, activo: () => !!sesion, pintarInicio, pedirImprimir, pedirPrimeraVez, refrescar };
 })();

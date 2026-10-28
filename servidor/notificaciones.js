@@ -62,7 +62,8 @@
                        del estudiante; /curso/apoderado/correo { pase, correo } · /curso/apoderado/registrar { pase, correo, codigo }
                        · /curso/apoderado/agregar { sesion, pase } · /curso/apoderado/codigo { correo } · /curso/apoderado/entrar { correo, codigo }
      GET  /curso/listas (token del panel); POST /curso/estudiantes, /curso/profesores, /curso/anio, /curso/estudiante/borrar,
-                       /curso/codigo-apoderado { rut } (código del colegio, se ve una sola vez), /curso/apoderado/quitar { rut }
+                       /curso/codigo-apoderado { rut } (código del colegio, se ve una sola vez), /curso/apoderado/quitar { rut },
+                       /curso/invitar { correo, sitio, ver } (correo a un profesor que aún no entra; con «ver», solo el texto)
      POST /panel/codigo { correo } · /panel/verificar { correo, codigo } · /panel/entrar { correo, clave }
                        Panel con correo; con «Authorization: Panel <sesión>»: /panel/yo, /panel/clave, /panel/guardar,
                        /panel/github, /panel/borradores. Cuentas (dueño o «todo»): /panel/cuentas, /panel/cuenta,
@@ -76,7 +77,7 @@
    ========================================================== */
 
 // Versión de este código (se ve en /estado para saber si ya se pegó la última en Cloudflare)
-const VERSION = "2026-10-28-avisos-profes";
+const VERSION = "2026-10-28-invitar-profes";
 // Sitio del colegio: de aquí se lee el aviso
 const SITIO = "https://colegiosm.cl/";
 // Páginas que pueden usar este servidor
@@ -129,6 +130,7 @@ async function preparar(db) {
     db.prepare("CREATE TABLE IF NOT EXISTS subs_profes (endpoint TEXT PRIMARY KEY, correo TEXT NOT NULL, t TEXT)"),
     db.prepare("CREATE TABLE IF NOT EXISTS notif_personales (id INTEGER PRIMARY KEY AUTOINCREMENT, endpoint TEXT NOT NULL, titulo TEXT, cuerpo TEXT, url TEXT, t INTEGER NOT NULL)"),
     db.prepare("CREATE INDEX IF NOT EXISTS notif_personales_endpoint ON notif_personales (endpoint)"),
+    db.prepare("CREATE TABLE IF NOT EXISTS invitaciones_profes (correo TEXT PRIMARY KEY, t INTEGER NOT NULL, n INTEGER NOT NULL DEFAULT 1)"),
     db.prepare("CREATE TABLE IF NOT EXISTS fechas_curso (id INTEGER PRIMARY KEY AUTOINCREMENT, curso TEXT NOT NULL, fecha TEXT NOT NULL, fin TEXT, hora TEXT, titulo TEXT NOT NULL, tipo TEXT, descripcion TEXT, autor TEXT, creado TEXT)"),
   ]);
 }
@@ -1653,17 +1655,72 @@ async function rutaCurso(db, env, req, url) {
   return { error: "No encontrado", estado: 404 };
 }
 
+// Invitación por correo a un profesor que aún no entra a «Mi curso»: qué puede hacer y cómo entrar la primera vez.
+// El enlace abre la app en «Crear contraseña» con su correo ya escrito. Sale por el script de Google (tipo «mensaje»),
+// así que no hace falta cambiar el script. Con «ver» solo devuelve el texto, para mostrarlo antes de enviar.
+const INVITACIONES_DIA = 200;
+function textoInvitacion(p, sitio) {
+  const cursos = JSON.parse(p.cursos || "[]");
+  const enlace = sitio + "app/#primeravez=" + encodeURIComponent(p.correo);
+  return {
+    asunto: "Tu acceso a «Mi curso» en la app del Colegio San Martín",
+    cuerpo:
+      "Hola" + (p.nombre ? " " + p.nombre : "") + ":\n\n" +
+      "Ya tienes acceso a «Mi curso», en la app del Colegio San Martín" + (cursos.length ? ", para " + cursos.join(", ") : "") + ".\n\n" +
+      "LO QUE PUEDES HACER\n\n" +
+      "  • Enviar pruebas y guías a imprimir: subes el archivo, UTP lo revisa y se imprime con las copias de cada curso.\n" +
+      "  • Avisar a tus cursos las fechas de pruebas, entregas y salidas: las ven los estudiantes y apoderados en la app.\n" +
+      "  • Recibir un aviso en el celular cuando UTP apruebe, devuelva o imprima tu prueba.\n\n" +
+      "CÓMO ENTRAR LA PRIMERA VEZ (2 minutos)\n\n" +
+      "  1. Abre este enlace, en el celular o en el computador:\n" +
+      "     " + enlace + "\n" +
+      "  2. Revisa que esté tu correo (" + p.correo + ") y toca «Enviar código».\n" +
+      "  3. Te llegará otro correo con un código de 6 números. Escríbelo en la app.\n" +
+      "  4. Crea tu contraseña. Se guarda cifrada: nadie más puede verla.\n\n" +
+      "Después entras con tu correo y tu contraseña: app → «Mi curso» → «Soy profesor o profesora».\n" +
+      "En el computador también puedes entrar directo en " + sitio.replace(/^https?:\/\//, "") + "imprimir\n" +
+      "En el celular puedes dejar la app en la pantalla de inicio: ábrela en el navegador y elige «Agregar a pantalla de inicio».\n\n" +
+      "Si tienes dudas, responde este correo.\n\n" +
+      "Colegio San Martín",
+  };
+}
+async function invitarProfe(db, env, req, d) {
+  const correo = normalizarCorreo(d.correo);
+  const p = correo && await db.prepare("SELECT correo, nombre, cursos, hash FROM profesores WHERE correo = ?").bind(correo).first();
+  if (!p) return { error: "Ese correo no está en la lista de profesores.", estado: 404 };
+  if (p.hash) return { error: `${p.nombre || p.correo} ya entró a «Mi curso»: no necesita la invitación.`, estado: 409 };
+  // El enlace apunta al mismo sitio desde donde se usa el panel (colegiosm.cl)
+  const origen = req.headers.get("Origin") || SITIO.slice(0, -1);
+  const sitio = String(d.sitio || "");
+  const base = sitio.startsWith(origen + "/") && /^[^?#\s]*\/$/.test(sitio) && sitio.length < 200 ? sitio : origen + "/";
+  const t = textoInvitacion(p, base);
+  if (d.ver) return t;
+  if (!env.CORREO_URL || !env.CORREO_CLAVE) return { error: "Falta activar el envío de correos (ver servidor/GUIA.md).", estado: 503 };
+  const antes = await db.prepare("SELECT t FROM invitaciones_profes WHERE correo = ?").bind(correo).first();
+  if (antes && Date.now() - antes.t < 10 * 60000) return { error: `A ${p.nombre || p.correo} ya le llegó la invitación hace unos minutos.`, estado: 429 };
+  const hoy = await db.prepare("SELECT COUNT(*) AS n FROM invitaciones_profes WHERE t > ?").bind(Date.now() - 864e5).first();
+  if (hoy.n >= INVITACIONES_DIA) return { error: `Ya se enviaron ${INVITACIONES_DIA} invitaciones en las últimas 24 horas. Sigue mañana.`, estado: 429 };
+  // Si la persona responde, la respuesta le llega a quien envió la invitación
+  const f = /^Panel\s/.test(req.headers.get("Authorization") || "") ? await funcionarioDe(db, req) : null;
+  if (!(await llamarCorreo(db, env, { tipo: "mensaje", para: correo, asunto: t.asunto, cuerpo: t.cuerpo, responder: f ? f.correo : "" }))) {
+    return { error: "No se pudo enviar el correo. Inténtalo en unos minutos; si sigue igual, avisa al encargado web.", estado: 502 };
+  }
+  await db.prepare("INSERT INTO invitaciones_profes (correo, t, n) VALUES (?1, ?2, 1) ON CONFLICT(correo) DO UPDATE SET t = ?2, n = n + 1").bind(correo, Date.now()).run();
+  return { ok: true, nombre: p.nombre || p.correo };
+}
+
 // Panel (dueño o administrador): listas, cierre de año
 async function rutaCursoPanel(db, env, req, url) {
   if (url.pathname === "/curso/listas" && req.method === "GET") {
     const est = (await db.prepare(`SELECT e.rut, e.nombre, e.curso, e.correo, a.correo AS apoderado, c.vence AS codigo
       FROM estudiantes e LEFT JOIN apoderados a ON a.rut = e.rut LEFT JOIN codigos_colegio c ON c.rut = e.rut AND c.vence > ? ORDER BY e.curso, e.nombre`).bind(Date.now()).all()).results;
-    const pro = (await db.prepare("SELECT correo, nombre, cursos, hash FROM profesores ORDER BY nombre").all()).results
-      .map((p) => ({ correo: p.correo, nombre: p.nombre, cursos: JSON.parse(p.cursos || "[]"), activo: !!p.hash }));
+    const pro = (await db.prepare("SELECT p.correo, p.nombre, p.cursos, p.hash, i.t AS invitado, i.n AS invitaciones FROM profesores p LEFT JOIN invitaciones_profes i ON i.correo = p.correo ORDER BY p.nombre").all()).results
+      .map((p) => ({ correo: p.correo, nombre: p.nombre, cursos: JSON.parse(p.cursos || "[]"), activo: !!p.hash, invitado: p.hash ? null : p.invitado || null, invitaciones: p.invitaciones || 0 }));
     const fechas = (await db.prepare("SELECT curso, COUNT(*) AS n FROM fechas_curso GROUP BY curso").all()).results;
     return { estudiantes: est, profesores: pro, fechas, correo: !!(env.CORREO_URL && env.CORREO_CLAVE) };
   }
   const d = await req.json().catch(() => ({}));
+  if (url.pathname === "/curso/invitar") return invitarProfe(db, env, req, d);
   const cursosValidos = Array.isArray(d.cursos) ? d.cursos.map(String) : [];
   if (url.pathname === "/curso/estudiantes") {
     const lista = Array.isArray(d.lista) ? d.lista : [];
@@ -2181,9 +2238,9 @@ export default {
       }
       if (url.pathname.startsWith("/curso/")) {
         if (!origen) return respuesta({ error: "Origen no permitido" }, "", 403);
-        const panel = ["/curso/listas", "/curso/calendario", "/curso/estudiantes", "/curso/profesores", "/curso/anio", "/curso/estudiante/borrar", "/curso/codigo-apoderado", "/curso/apoderado/quitar"].includes(url.pathname);
-        // Ver los cursos y dar códigos a apoderados: permiso «cursos» o «listas». Cambiar las listas: solo «listas».
-        const soloVer = ["/curso/listas", "/curso/calendario", "/curso/codigo-apoderado", "/curso/apoderado/quitar"].includes(url.pathname);
+        const panel = ["/curso/listas", "/curso/calendario", "/curso/estudiantes", "/curso/profesores", "/curso/anio", "/curso/estudiante/borrar", "/curso/codigo-apoderado", "/curso/apoderado/quitar", "/curso/invitar"].includes(url.pathname);
+        // Ver los cursos, dar códigos a apoderados e invitar profesores: permiso «cursos» o «listas». Cambiar las listas: solo «listas».
+        const soloVer = ["/curso/listas", "/curso/calendario", "/curso/codigo-apoderado", "/curso/apoderado/quitar", "/curso/invitar"].includes(url.pathname);
         if (panel && !(await (soloVer ? puedePanel(db, req, "cursos", "listas") : puedePanel(db, req, "listas")))) return respuesta({ error: "Tu cuenta no puede usar esta parte de «Mi curso»." }, origen, 403);
         if (!panel && req.method !== "POST") return respuesta({ error: "No encontrado" }, origen, 404);
         const { estado, ...r } = panel ? await rutaCursoPanel(db, env, req, url) : await rutaCurso(db, env, req, url);
@@ -2237,6 +2294,7 @@ export default {
         env.DB.prepare("DELETE FROM visitas WHERE dia < ?").bind(new Date(Date.now() - 400 * 864e5).toISOString().slice(0, 10)),
         env.DB.prepare("DELETE FROM notif_personales WHERE t < ?").bind(Date.now() - 3 * 864e5),
         env.DB.prepare("DELETE FROM subs_profes WHERE endpoint NOT IN (SELECT endpoint FROM subs)"),
+        env.DB.prepare("DELETE FROM invitaciones_profes WHERE correo NOT IN (SELECT correo FROM profesores WHERE hash IS NULL)"),
         env.DB.prepare("DELETE FROM mensajes WHERE fecha < ?").bind(new Date(Date.now() - 365 * 864e5).toISOString()),
         env.DB.prepare("DELETE FROM asignaciones WHERE mensaje NOT IN (SELECT id FROM mensajes)"),
         env.DB.prepare("DELETE FROM registro_panel WHERE t < ?").bind(new Date(Date.now() - 365 * 864e5).toISOString()),

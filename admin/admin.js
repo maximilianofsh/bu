@@ -3098,6 +3098,29 @@ Si todo no cabe en una imagen, haz 2 o 3 imágenes con el mismo estilo (un carru
           h("div", { class: "checks" }, cajas.map(({ c, input }) => h("label", { class: "check" }, input, " ", c))),
           h("div", { class: "mc-acc" }, guardarBtn, h("button", { type: "button", class: "btn btn--ghost btn--sm", onclick: () => { profeEditado = null; pintar(); } }, "Cancelar")));
       };
+      // Invitación por correo a los profesores que aún no entran: el servidor arma el texto y lo envía uno por uno
+      let muestra = null;
+      const sitio = new URL("../", location.href).href;
+      const fechaCorta = (t) => new Date(t).toLocaleDateString("es-CL", { day: "numeric", month: "short" });
+      const invitar = async (lista, estado) => {
+        if (lista.length > 1 && !confirm(`¿Enviar la invitación por correo a ${lista.length} profesores? A cada uno le llega un enlace a la app con su correo ya escrito y los pasos para crear su contraseña.`)) return;
+        const botones = [...caja.querySelectorAll("[data-invitar]")];
+        botones.forEach((b) => { b.disabled = true; });
+        let hechos = 0;
+        const errores = [];
+        for (const p of lista) {
+          if (estado) estado.textContent = `Enviando ${hechos + errores.length + 1} de ${lista.length}…`;
+          try { await pedir("/curso/invitar", { correo: p.correo, sitio }); hechos++; }
+          catch (e) {
+            errores.push(`${p.nombre || p.correo}: ${e.message}`);
+            // Sin correo o con el límite del día, no tiene sentido seguir
+            if (/activar el envío|últimas 24 horas|No se pudo enviar/.test(e.message)) break;
+          }
+        }
+        if (hechos) toast(lista.length === 1 ? `Invitación enviada a ${lista[0].nombre || lista[0].correo}.` : `Listo: ${hechos} ${hechos === 1 ? "invitación enviada" : "invitaciones enviadas"}.`, "ok");
+        if (errores.length) toast((hechos ? "Algunas no se enviaron. " : "") + errores.slice(0, 3).join(" · ") + (errores.length > 3 ? ` · y ${errores.length - 3} más` : ""), "error");
+        cargar();
+      };
       const pintar = () => {
         const est = j.estudiantes, pro = j.profesores;
         // Las cuentas con «Ver los cursos» solo miran; las listas las cambia quien tiene «Listas de Mi curso»
@@ -3107,6 +3130,30 @@ Si todo no cabe en una imagen, haz 2 o 3 imágenes con el mismo estilo (un carru
         const fechas = Object.fromEntries(j.fechas.map((f) => [f.curso, f.n]));
         const correo = j.correo ? null : h("div", { class: "panel est__aviso" }, h("strong", {}, "Falta activar el envío de correos. "),
           "Sin él no llegan los códigos para entrar. Sigue la sección «Mi curso» de servidor/GUIA.md: el mismo script de Google del formulario de Contacto envía los códigos.");
+        // Con un servidor antiguo (sin invitaciones) no se muestran los botones
+        const conInvitar = !!j.correo && pro.some((p) => "invitado" in p);
+        const cajaInvitar = () => {
+          const pendientes = pro.filter((p) => !p.activo);
+          if (!conInvitar || !pendientes.length) return "";
+          const objetivo = pendientes.filter((p) => !p.invitado || Date.now() - p.invitado > 864e5);
+          const recientes = pendientes.length - objetivo.length;
+          const estado = h("p", { class: "mc-inv__estado", role: "status" });
+          const n = objetivo.length;
+          return h("div", { class: "mc-inv" },
+            h("strong", {}, `${pendientes.length} ${pendientes.length === 1 ? "profesor aún no entra" : "profesores aún no entran"} a «Mi curso»`),
+            h("p", {}, "Envíales un correo con un enlace que abre la app con su correo ya escrito y los pasos para crear su contraseña."
+              + (recientes ? ` ${recientes === 1 ? "Uno ya la recibió" : recientes + " ya la recibieron"} en las últimas 24 horas.` : "")),
+            h("div", { class: "mc-acc" },
+              n ? h("button", { type: "button", class: "btn btn--primary btn--sm", "data-invitar": "", onclick: () => invitar(objetivo, estado) },
+                n === 1 ? `Invitar a ${objetivo[0].nombre || objetivo[0].correo}` : recientes ? `Invitar a los ${n} que no la han recibido` : `Invitar a los ${n}`) : "",
+              h("button", { type: "button", class: "btn btn--ghost btn--sm", onclick: async () => {
+                if (muestra) { muestra = null; return pintar(); }
+                try { muestra = await pedir("/curso/invitar", { correo: pendientes[0].correo, sitio, ver: true }); muestra.para = pendientes[0].nombre || pendientes[0].correo; pintar(); }
+                catch (e) { toast(e.message, "error"); }
+              } }, muestra ? "Ocultar el correo" : "Ver el correo que les llega")),
+            estado,
+            muestra ? h("div", { class: "mc-inv__correo" }, h("small", {}, `Ejemplo para ${muestra.para}`), h("strong", {}, muestra.asunto), h("pre", {}, muestra.cuerpo)) : "");
+        };
         const buscar = h("input", { type: "search", class: "mc-buscar", placeholder: "Buscar por nombre, RUT o correo", value: filtro, oninput: (e) => { filtro = e.target.value; pintarLista(); } });
         const listaEst = h("div", { class: "mc-lista" });
         const pintarLista = () => {
@@ -3160,11 +3207,13 @@ Si todo no cabe en una imagen, haz 2 o 3 imágenes con el mismo estilo (un carru
             est.length ? buscar : "", listaEst),
           h("div", { class: "panel" }, h("h2", {}, `Profesores (${pro.length})`),
             edita ? h("p", { class: "panel__help" }, "Agrégalos y edita sus cursos aquí mismo, o sube la lista en Excel (columnas: Nombre, Correo institucional y Cursos separados por coma, o «todos»). La primera vez entran con un código que llega a su correo y crean su contraseña.") : "",
+            cajaInvitar(),
             edita && profeEditado && profeEditado.antes === "" ? formProfe() : "",
             pro.length ? h("div", { class: "cuentas" }, pro.map((p) => edita && profeEditado && profeEditado.antes === p.correo ? formProfe() : h("div", { class: "cuentas__fila" },
               h("div", {}, h("strong", {}, p.nombre || p.correo), h("small", {}, `${p.correo} · ${p.cursos.join(", ") || "sin cursos"}`)),
               h("div", { class: "mc-prof__der" },
-                h("span", { class: "mc-estado" + (p.activo ? " is-ok" : "") }, p.activo ? "Ya entró" : "Aún no entra"),
+                h("span", { class: "mc-estado" + (p.activo ? " is-ok" : "") }, p.activo ? "Ya entró" : p.invitado ? `Aún no entra · invitado el ${fechaCorta(p.invitado)}` : "Aún no entra"),
+                !p.activo && conInvitar ? h("button", { type: "button", class: "btn btn--ghost btn--sm", "data-invitar": "", onclick: () => invitar([p]) }, p.invitado ? "Reenviar invitación" : "Invitar por correo") : "",
                 edita ? h("button", { type: "button", class: "btn btn--ghost btn--sm", onclick: () => { profeEditado = { antes: p.correo, nombre: p.nombre || "", correo: p.correo, cursos: p.cursos.slice() }; pintar(); } }, "Editar") : "",
                 edita ? h("button", { type: "button", class: "btn btn--ghost btn--sm btn--danger", onclick: () => quitarProfe(p) }, "Quitar") : "")))) : "",
             !edita ? "" : h("div", { class: "mc-acc" },
