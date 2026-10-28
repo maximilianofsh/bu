@@ -140,8 +140,8 @@ button, select { font: inherit; color: inherit; }
 .pie-acceso { justify-self: center; border: 0; background: none; padding: .4rem .8rem; font-size: .75rem; color: var(--suave); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .insp { display: grid; gap: .9rem; }
 .insp h2 { font-family: var(--serif); font-size: 1.15rem; color: var(--primario); }
-.campo { display: grid; gap: .3rem; font-size: .85rem; font-weight: 600; color: var(--suave); }
-.campo input, .campo textarea { width: 100%; font: inherit; font-size: 1.05rem; font-weight: 400; color: var(--tinta); padding: .75rem .9rem; border: 1px solid var(--linea); border-radius: 12px; background: var(--papel); }
+.campo { display: grid; gap: .3rem; min-width: 0; font-size: .85rem; font-weight: 600; color: var(--suave); }
+.campo input, .campo textarea { width: 100%; min-width: 0; font: inherit; font-size: 1.05rem; font-weight: 400; color: var(--tinta); padding: .75rem .9rem; border: 1px solid var(--linea); border-radius: 12px; background: var(--papel); }
 .campo textarea { min-height: 7.5rem; resize: vertical; line-height: 1.45; }
 .campo input:focus, .campo textarea:focus { outline: 3px solid color-mix(in srgb, var(--acento) 60%, transparent); border-color: var(--acento); }
 .niveles { display: grid; grid-template-columns: repeat(3, 1fr); gap: .4rem; }
@@ -174,7 +174,8 @@ button, select { font: inherit; color: inherit; }
 .mc p { color: var(--suave); }
 .mc__opciones { display: grid; gap: .6rem; margin-top: .3rem; }
 .mc__codigo { font-size: 1.6rem; letter-spacing: .4em; text-align: center; font-weight: 700; }
-.mc__dos { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+.mc__dos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
+@media (max-width: 430px) { .mc__dos { grid-template-columns: minmax(0, 1fr); } }
 .mc__quien { display: flex; justify-content: space-between; align-items: center; gap: .8rem; margin-bottom: 1rem; }
 .mc__quien small { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--suave); }
 .mc__quien strong { display: block; font-family: var(--serif); font-size: 1.3rem; color: var(--primario); }
@@ -189,25 +190,8 @@ button, select { font: inherit; color: inherit; }
 .mc__pestanas { display: grid; grid-template-columns: 1fr 1fr; gap: .35rem; background: var(--papel); border: 1px solid var(--linea); border-radius: 14px; padding: .3rem; margin-bottom: 1rem; }
 .mc__pestanas button { border: 0; background: none; padding: .6rem .4rem; border-radius: 10px; font-weight: 600; font-size: .9rem; color: var(--suave); cursor: pointer; }
 .mc__pestanas button[aria-selected="true"] { background: var(--primario); color: #fff; }
-.mc__intro { margin: -.4rem 0 .4rem; }
-.mc__estado { display: inline-block; font-size: .7rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: .15rem .55rem; border-radius: 999px; background: #efe9f9; color: #5a3596; }
-.mc__estado--devuelta { background: #fdecea; color: #b3261e; }
-.mc__estado--aprobada { background: #e5f4ea; color: #1d6b3f; }
-.mc__estado--impresa { background: var(--fondo); color: var(--suave); }
-.mc__envio .evento__desc { color: var(--suave); word-break: break-word; }
 .mc__motivo { font-size: .88rem; margin-top: .4rem; padding: .55rem .7rem; border-radius: 10px; background: #fdecea; color: #7a1a14 !important; white-space: pre-line; }
-.mc__nota { font-size: .82rem; margin-top: -.4rem; }
-.mc__cursos { border: 0; padding: 0; margin: 0; min-width: 0; }
-.mc__cursos legend { padding: 0; margin-bottom: .35rem; }
-.mc__cursos details { margin-top: .4rem; }
-.mc__cursos summary { cursor: pointer; font-weight: 600; color: var(--secundario); padding: .3rem 0; }
-.mc__grilla { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .4rem; }
-.mc__curso { display: flex; align-items: center; gap: .5rem; padding: .6rem .7rem; border: 2px solid var(--linea); border-radius: 12px; background: var(--papel); font-weight: 600; font-size: .9rem; color: var(--tinta); cursor: pointer; }
-.mc__curso input { width: 1.15rem; height: 1.15rem; accent-color: var(--primario); flex: none; margin: 0; }
-.mc__curso:has(input:checked) { border-color: var(--primario); background: color-mix(in srgb, var(--acento) 18%, var(--papel)); }
-.mc__copias { display: grid; gap: .4rem; padding: .75rem .9rem; border-radius: 12px; background: var(--fondo); border: 1px solid var(--linea); }
-.mc__copias p { font-size: .92rem; color: var(--tinta); }
-.mc__copias .mc__ojo { color: #8a5a00; font-weight: 600; }
+.mc__ojo { color: #8a5a00 !important; font-weight: 600; font-size: .9rem; }
 .campo input[type="file"] { font-size: .9rem; padding: .6rem; }
 
 /* «Mi curso» → apoderados */
@@ -215,3 +199,84 @@ button, select { font: inherit; color: inherit; }
 .mc__hijos { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); }
 .mc__hijos button { display: grid; line-height: 1.2; }
 .mc__hijos small { font-size: .72rem; font-weight: 500; opacity: .85; }
+
+/* Mi curso, profesor: inicio con sus dos tareas como botones grandes y el avance de cada envío */
+.mc-acciones { display: grid; gap: .65rem; margin-bottom: 1.3rem; }
+.mc-accion { display: flex; align-items: center; gap: .9rem; width: 100%; padding: 1rem 1.05rem; border: 0; border-radius: 18px; background: var(--primario); color: #fff; text-align: left; box-shadow: var(--sombra); cursor: pointer; }
+.mc-accion--suave { background: var(--papel); color: var(--primario); border: 1px solid var(--linea); }
+.mc-accion svg { width: 2.4rem; height: 2.4rem; flex: none; padding: .45rem; border-radius: 12px; fill: currentColor; background: rgba(255, 255, 255, .14); }
+.mc-accion--suave svg { background: color-mix(in srgb, var(--acento) 25%, var(--papel)); }
+.mc-accion strong { display: block; font-size: 1.08rem; line-height: 1.25; }
+.mc-accion small { display: block; margin-top: .15rem; font-size: .85rem; opacity: .85; }
+.mc-titulo { font-family: var(--serif); font-size: 1.15rem; color: var(--primario); margin: .4rem 0 .6rem; }
+.mc-envio { background: var(--papel); border: 1px solid var(--linea); border-radius: 14px; padding: .85rem .95rem; margin-bottom: .6rem; }
+.mc-envio h3 { font-size: 1rem; margin: .1rem 0 0; color: var(--tinta); }
+.mc-envio p { margin: .15rem 0 0; font-size: .86rem; color: var(--suave); }
+.mc-envio__estado { font-size: .85rem; font-weight: 700; color: #8a5a00; }
+.mc-envio--devuelta .mc-envio__estado { color: #b3261e; }
+.mc-envio--aprobada .mc-envio__estado, .mc-envio--impresa .mc-envio__estado { color: #1d6b3f; }
+.mc-envio .acciones { margin-top: .4rem; }
+.mc-avance { display: grid; grid-template-columns: repeat(4, 1fr); gap: .25rem; margin: .6rem 0 .2rem; }
+.mc-avance i { height: 6px; border-radius: 9px; background: var(--linea); }
+.mc-avance .on { background: #2e8b57; }
+.mc-avance .ahora { background: var(--acento); }
+.mc-avance .mal { background: #c0392b; }
+.mc-avance__txt { display: grid; grid-template-columns: repeat(4, 1fr); font-size: .7rem; color: var(--suave); }
+.mc-avance__txt span:nth-child(2), .mc-avance__txt span:nth-child(3) { text-align: center; }
+.mc-avance__txt span:last-child { text-align: right; }
+.btn--chico { padding: .55rem 1.05rem; font-size: .92rem; }
+
+/* Enviar prueba o guía: pasos, archivo y preguntas que se responden con un toque */
+.mc-pasos { display: flex; flex-wrap: wrap; gap: .3rem .9rem; margin: 0; padding: 0; list-style: none; font-size: .82rem; font-weight: 600; color: var(--suave); }
+.mc-pasos li { display: flex; align-items: center; gap: .35rem; }
+.mc-pasos b { display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--linea); color: var(--tinta); font-size: .75rem; }
+.mc-pasos .on { color: var(--primario); }
+.mc-pasos .on b { background: var(--primario); color: #fff; }
+.mc-pasos .listo b { background: #2e8b57; color: #fff; }
+.mc-zona { position: relative; display: grid; justify-items: center; gap: .4rem; padding: 1.6rem 1rem 1.1rem; border: 2px dashed var(--acento); border-radius: 18px; background: color-mix(in srgb, var(--acento) 12%, var(--papel)); color: var(--primario); text-align: center; cursor: pointer; }
+.mc-zona svg { width: 3rem; height: 3rem; fill: currentColor; }
+.mc-zona strong { font-size: 1.12rem; }
+.mc-zona small { color: var(--suave); font-size: .86rem; }
+.mc-zona .btn { margin-top: .5rem; pointer-events: none; }
+.mc-zona.encima { background: color-mix(in srgb, var(--acento) 30%, var(--papel)); }
+.mc-zona:focus-within, .mc-archivo__cambiar:focus-within { outline: 3px solid color-mix(in srgb, var(--acento) 70%, transparent); outline-offset: 2px; }
+.mc-oculto { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.mc-archivo { display: flex; align-items: center; gap: .7rem; padding: .75rem .85rem; border-radius: 14px; background: color-mix(in srgb, #2e8b57 9%, var(--papel)); border: 1px solid color-mix(in srgb, #2e8b57 35%, var(--linea)); }
+.mc-archivo--antes { background: var(--papel); border-color: var(--linea); }
+.mc-archivo svg { width: 2rem; height: 2rem; flex: none; fill: #2e8b57; }
+.mc-archivo--antes svg { fill: var(--secundario); }
+.mc-archivo div { flex: 1; min-width: 0; }
+.mc-archivo strong { display: block; font-size: .95rem; color: var(--tinta); overflow-wrap: anywhere; }
+.mc-archivo small { color: var(--suave); font-size: .82rem; }
+.mc-archivo button, .mc-archivo__cambiar { position: relative; flex: none; border: 0; background: none; padding: .4rem 0; font-weight: 600; font-size: .92rem; color: var(--secundario); cursor: pointer; }
+.mc-grupo { display: grid; gap: .45rem; min-width: 0; margin: 0; padding: 0; border: 0; }
+.mc-pregunta { padding: 0; margin-top: .3rem; font-size: 1rem; font-weight: 700; color: var(--tinta); }
+.mc-pregunta small { display: block; font-size: .8rem; font-weight: 400; color: var(--suave); }
+.mc .mc-sub { font-size: .85rem; }
+.mc-seg { display: grid; grid-template-columns: 1fr 1fr; gap: .45rem; }
+.mc-chips { display: flex; flex-wrap: wrap; gap: .45rem; }
+.mc-chip { border: 2px solid var(--linea); border-radius: 999px; padding: .55rem .95rem; background: var(--papel); font-weight: 600; font-size: .95rem; line-height: 1.2; color: var(--tinta); cursor: pointer; }
+.mc-seg .mc-chip { border-radius: 14px; padding: .8rem; font-size: 1.02rem; }
+.mc-chip.on { border-color: var(--primario); background: var(--primario); color: #fff; }
+.mc-chip--mas { border-style: dashed; color: var(--suave); }
+.mc-chip--mas.on { border-style: solid; }
+.mc-chip small { display: block; font-size: .75rem; font-weight: 500; opacity: .85; }
+.mc-chip--fecha { min-width: 4.4rem; padding: .45rem .7rem; border-radius: 14px; text-align: center; }
+.mc-accion:focus-visible, .mc-chip:focus-visible { outline: 3px solid color-mix(in srgb, var(--acento) 70%, transparent); outline-offset: 2px; }
+.mc-resumen { display: grid; gap: .4rem; padding: .85rem 1rem; border-radius: 14px; background: color-mix(in srgb, var(--acento) 16%, var(--papel)); border: 1px solid color-mix(in srgb, var(--acento) 45%, var(--linea)); }
+.mc .mc-resumen p { color: var(--tinta); font-size: .95rem; }
+.mc-resumen strong { color: var(--primario); }
+
+/* Envío listo: confirmación y lo que sigue */
+.mc-ok { display: grid; justify-items: center; gap: .4rem; text-align: center; }
+.mc-ok__circulo { display: grid; place-items: center; width: 4.4rem; height: 4.4rem; border-radius: 50%; background: #2e8b57; }
+.mc-ok__circulo svg { width: 2.5rem; height: 2.5rem; fill: #fff; }
+.mc-linea { display: grid; margin: .4rem 0; padding: 0; list-style: none; }
+.mc-linea li { position: relative; display: grid; grid-template-columns: 1.8rem 1fr; gap: .65rem; padding-bottom: .75rem; }
+.mc-linea li::before { content: ""; position: absolute; left: .85rem; top: 1.8rem; bottom: 0; width: 2px; background: var(--linea); }
+.mc-linea li:last-child::before { display: none; }
+.mc-linea b { position: relative; display: grid; place-items: center; width: 1.8rem; height: 1.8rem; border-radius: 50%; background: var(--linea); color: var(--suave); font-size: .8rem; }
+.mc-linea .on b { background: #2e8b57; color: #fff; }
+.mc-linea .ahora b { background: var(--acento); color: var(--primario); }
+.mc-linea strong { display: block; color: var(--tinta); }
+.mc-linea small { font-size: .85rem; color: var(--suave); }

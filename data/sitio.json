@@ -3934,7 +3934,7 @@
     "notificar": true
   },
   "app": {
-    "servidor": "https://avisos-colegio.colegiosmiqq.workers.dev"
+    "servidor": ""
   },
   "emergencia": {
     "mapas": [

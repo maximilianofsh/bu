@@ -1,0 +1,21 @@
+/* Cuadro «Modo demostración» (solo en la copia de prueba; ver demo/demo.js) */
+.demo { position: fixed; left: 12px; bottom: calc(84px + env(safe-area-inset-bottom, 0px)); z-index: 9999; font: 14px/1.45 "Inter", system-ui, sans-serif; color: #1d2433; }
+.demo__boton { border: 0; border-radius: 999px; padding: .5rem .95rem; background: #1d2433; color: #fff; font: inherit; font-weight: 700; box-shadow: 0 6px 18px rgba(0, 0, 0, .25); cursor: pointer; }
+.demo__boton::before { content: ""; display: inline-block; width: .55rem; height: .55rem; margin-right: .45rem; border-radius: 50%; background: #e0b45c; }
+.demo__caja { position: absolute; left: 0; bottom: calc(100% + 8px); width: min(340px, calc(100vw - 24px)); max-height: min(70vh, 560px); overflow: auto; padding: 1rem; border-radius: 16px; background: #fff; border: 1px solid #e2ded2; box-shadow: 0 14px 40px rgba(0, 0, 0, .25); }
+.demo__cab { display: flex; justify-content: space-between; align-items: center; }
+.demo__cab strong { font-size: 1rem; }
+.demo__cerrar { border: 0; background: none; font-size: 1.4rem; line-height: 1; cursor: pointer; color: #5b6577; }
+.demo p { margin: .4rem 0; color: #5b6577; }
+.demo .demo__sub { margin-top: .9rem; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #8a6a1f; }
+.demo ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .4rem; }
+.demo__cuentas li { display: flex; align-items: center; gap: .6rem; padding: .5rem .6rem; border: 1px solid #e2ded2; border-radius: 10px; }
+.demo__cuentas span { flex: 1; min-width: 0; }
+.demo__cuentas b, .demo__correos b { display: block; }
+.demo__cuentas small { display: block; color: #5b6577; overflow-wrap: anywhere; }
+.demo__cuentas button, .demo__reiniciar { border: 1px solid #1d2433; border-radius: 999px; padding: .35rem .8rem; background: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+.demo__cuentas button:hover { background: #1d2433; color: #fff; }
+.demo__correos li { padding: .4rem .6rem; border-radius: 8px; background: #f4f2ec; font-size: .85rem; overflow-wrap: anywhere; }
+.demo code { padding: .05rem .35rem; border-radius: 6px; background: #f3ead3; font-weight: 700; }
+.demo__reiniciar { margin-top: .9rem; border-color: #b3261e; color: #b3261e; }
+.demo button:focus-visible { outline: 3px solid #e0b45c; outline-offset: 2px; }

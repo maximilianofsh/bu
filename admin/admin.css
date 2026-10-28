@@ -670,3 +670,65 @@ body.is-wide .bar__help { max-width: none; }
 .mc-codigo { margin-top: .6rem; padding: .7rem .9rem; border: 1px solid var(--gold); border-radius: 10px; background: #fffaf0; }
 .mc-codigo p { margin: 0 0 .3rem; font-size: .88rem; }
 .mc-codigo__num { display: block; font-size: 1.6rem; letter-spacing: .12em; font-family: ui-monospace, monospace; color: var(--navy); margin: .2rem 0 .4rem; }
+
+/* Inicio: lo pendiente de cada cargo y atajos */
+.side__nav > button[hidden]:first-child + .side__group { margin-top: 0; }
+.ini__tarjetas { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1.8rem; }
+.ini__tarjeta { display: grid; align-content: start; gap: .35rem; background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 1.2rem 1.25rem; }
+.ini__tarjeta--urgente { border: 2px solid var(--gold); background: #fffaf0; }
+.ini__tarjeta--alerta { border: 2px solid #e2a33b; background: #fff6e2; }
+.ini__n { font-family: "Fraunces", Georgia, serif; font-size: 2.3rem; line-height: 1; color: var(--navy); font-variant-numeric: tabular-nums; }
+.ini__tarjeta--ok .ini__n { color: var(--ok); }
+.ini__tarjeta--alerta .ini__n { color: #a35a00; }
+.ini__tarjeta strong { font-size: 1.05rem; }
+.ini__tarjeta p { margin: 0; color: var(--muted); font-size: .9rem; }
+.ini__tarjeta .btn { justify-self: start; margin-top: .5rem; }
+.ini__titulo { font-size: 1.2rem; margin: 0 0 .8rem; }
+.ini__atajos { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: .8rem; }
+.ini__atajo { display: flex; align-items: center; gap: .8rem; padding: .9rem 1rem; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); color: var(--navy); font-weight: 600; text-align: left; }
+.ini__atajo:hover { border-color: var(--navy); }
+.ini__ico { display: grid; place-items: center; flex: none; width: 2.2rem; height: 2.2rem; border-radius: 10px; background: #f3ead3; }
+.ini__ico svg { width: 1.3rem; height: 1.3rem; fill: var(--navy); }
+
+/* Aviso urgente: estado, modelos y publicación en dos pasos */
+.av { display: grid; gap: 1rem; }
+.av-estado { display: grid; gap: .8rem; border-radius: 16px; padding: 1.1rem 1.25rem; background: var(--paper); border: 2px solid var(--line); }
+.av-estado--ok { grid-template-columns: auto 1fr; align-items: center; background: #eaf5ee; border: 1px solid #bfe0cb; }
+.av-estado--ok b { display: grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 50%; background: var(--ok); color: #fff; font-size: 1.1rem; }
+.av-estado--urgente { border-color: #b3261e; }
+.av-estado--importante { border-color: #e2a33b; }
+.av-estado--info { border-color: #1c4f8a; }
+.av-estado__cab strong { display: block; font-size: 1.08rem; }
+.av-estado__cab span { color: var(--muted); font-size: .92rem; }
+.av-acciones { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.av-apagar { background: var(--danger); color: #fff; }
+.av-apagar:hover:not(:disabled) { background: #8f1d17; }
+.av-modelos { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+.av-modelo { display: grid; justify-items: start; gap: .45rem; padding: 1.25rem; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); text-align: left; }
+.av-modelo:hover { border-color: var(--navy); }
+.av-modelo__ico { display: grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 12px; }
+.av-modelo__ico svg { width: 1.5rem; height: 1.5rem; fill: #fff; }
+.av-modelo strong { font-size: 1.1rem; color: var(--ink); }
+.av-modelo span:last-child { color: var(--muted); font-size: .88rem; }
+.av-dos { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1.4rem; align-items: start; }
+.av-dos .panel { display: grid; gap: 1rem; margin: 0; }
+.av-dos .panel h2 { margin: 0; }
+.av-previa { display: grid; gap: .5rem; }
+.av-previa h2 { font-size: 1.15rem; }
+.av-previa .panel__help { margin: .4rem 0 0; }
+.av-campos { display: grid; gap: .9rem; }
+.av-campos input, .av-campos textarea, .av-mas input, .av-mas select { font: inherit; font-size: 1rem; padding: .65rem .8rem; border: 1px solid var(--line); border-radius: 10px; background: #fbfaf6; color: var(--ink); width: 100%; }
+.av-campos textarea { min-height: 6.5rem; resize: vertical; }
+.av-etq { font-size: .85rem; font-weight: 600; color: var(--navy); }
+.av-chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+.av-switch { display: flex; align-items: center; gap: .6rem; font-weight: 600; cursor: pointer; }
+.av-switch input { width: 1.2rem; height: 1.2rem; accent-color: var(--ok); }
+.av-mas summary { cursor: pointer; font-weight: 600; color: var(--navy-2); }
+.av-mas .grid2 { margin: .8rem 0 0; }
+.av-resumen { margin: 0; padding: .7rem .9rem; border-radius: 10px; background: #f4f1e8; color: var(--ink); font-size: .92rem; }
+.av-publicar { font-size: 1.02rem; padding: .8rem 1.6rem; }
+.av-notif { display: flex; gap: .7rem; align-items: flex-start; max-width: 400px; padding: .75rem .9rem; border-radius: 16px; background: #eef0f3; font-size: .88rem; }
+.av-notif i { flex: none; width: 2.1rem; height: 2.1rem; border-radius: 9px; background: #3b0d18; }
+.av-notif strong { display: block; }
+.av-notif span { color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+@media (max-width: 900px) { .av-dos { grid-template-columns: 1fr; } }

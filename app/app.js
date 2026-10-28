@@ -524,6 +524,9 @@
   // Lo que usa «Mi curso»: el servidor y elegir el curso del horario al entrar un apoderado
   window.APP = {
     servidor: () => servidor(),
+    // Para sugerir fechas de evaluación: filas del horario de un curso y fechas del calendario escolar
+    horario: (nombre) => (((datos && datos.horarios && datos.horarios.cursos) || []).find((x) => x.nombre === nombre) || {}).filas || [],
+    eventos: () => (datos && datos.eventos) || [],
     elegirCurso: (nombre) => {
       if (leer("csm-app-curso") || !datos) return;
       const hs = (datos.horarios && datos.horarios.cursos) || [];

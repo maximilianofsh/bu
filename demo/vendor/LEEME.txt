@@ -1,0 +1,2 @@
+sql.js 1.10.3 (MIT), versión asm.js con memoria ampliable (dist/sql-asm-memory-growth.js).
+SQLite en el navegador para el modo demostración (demo/demo.js). No se usa en colegiosm.cl.
