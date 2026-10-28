@@ -5036,21 +5036,86 @@ Al final del chat, en 3 líneas, dime qué datos debería completar yo para que 
     $("#viewHelp").textContent = v.ayuda + (state.rol === "trabajador" && state.view === "html"
       ? " Como administrador trabajador, tus cambios en el HTML quedan pendientes hasta que el dueño los apruebe." : "");
     $("#view").replaceChildren(v.render());
-    document.querySelectorAll("#sideNav button").forEach((b) => b.classList.toggle("is-active", b.dataset.view === state.view));
+    document.querySelectorAll("#sideNav button[data-view]").forEach((b) => b.classList.toggle("is-active", b.dataset.view === state.view));
+    plegarMenu();
     document.body.classList.toggle("is-wide", ["html", "css", "estilo"].includes(state.view));
     // Las cuentas con «Noticias con aprobación» no publican: envían cada noticia con su propio botón
     $(".bar__actions").hidden = soloPropuestas() || ((["html", "css", "pruebas", "inicio"].includes(state.view) || (state.view === "aviso" && !avisoCompleto)) && !state.dirty);
   }
 
+  /* ---------- Menú: íconos, grupos plegables y números de pendientes ---------- */
+  const ICONOS_MENU = {
+    inicio: "M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z",
+    aviso: "M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z",
+    noticias: "M20 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1Zm-9 14H6v-2h5v2Zm7-4H6v-2h12v2Zm0-4H6V7h12v2Z",
+    pruebas: "M19 8H5a3 3 0 0 0-3 3v6h4v4h12v-4h4v-6a3 3 0 0 0-3-3Zm-3 11H8v-5h8v5Zm3-7a1 1 0 1 1 0-2 1 1 0 0 1 0 2ZM18 3H6v4h12V3Z",
+    eventos: "M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 16H5V9h14v11ZM7 11h5v5H7v-5Z",
+    mensajes: "M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z",
+    micurso: "M12 3 1 9l11 6 9-4.91V17h2V9L12 3Zm-6.82 9.5L5 16.18 12 20l7-3.82v-3.68L12 16.5l-6.82-4Z",
+    galeria: "M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2ZM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5Z",
+    directivos: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5Z",
+    personal: "M16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 2c-2.7 0-8 1.3-8 4v2h16v-2c0-2.7-5.3-4-8-4Zm8 0c-.3 0-.7 0-1.1.1A4.2 4.2 0 0 1 17 17v2h7v-2c0-2.7-5.3-4-8-4Z",
+    departamentos: "M12 7V3H2v18h20V7H12ZM6 19H4v-2h2v2Zm0-4H4v-2h2v2Zm0-4H4V9h2v2Zm0-4H4V5h2v2Zm4 12H8v-2h2v2Zm0-4H8v-2h2v2Zm0-4H8V9h2v2Zm0-4H8V5h2v2Zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10Z",
+    horarios: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm.75-13h-1.5v6l5.2 3.12.75-1.23-4.45-2.64V7Z",
+    documentos: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm-1 7V3.5L18.5 9H13Z",
+    portada: "M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm0 4v10h16V8H4Z",
+    pilares: "M3 7 12 2l9 5v2H3V7Zm2 4h3v7H5v-7Zm5.5 0h3v7h-3v-7Zm5.5 0h3v7h-3v-7ZM3 20h18v2H3v-2Z",
+    organizaciones: "M16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 2c-2.7 0-8 1.3-8 4v2h16v-2c0-2.7-5.3-4-8-4Z",
+    emergencia: "M1 21h22L12 2 1 21Zm12-3h-2v-2h2v2Zm0-4h-2v-4h2v4Z",
+    redes: "M18 16a3 3 0 0 0-2.4 1.2l-7-3.6a3 3 0 0 0 0-1.2l7-3.6A3 3 0 1 0 15 7c0 .2 0 .4.1.6l-7 3.6a3 3 0 1 0 0 3.6l7 3.6A3 3 0 1 0 18 16Z",
+    logo: "M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3Z",
+    colores: "M12 3a9 9 0 0 0 0 18c.8 0 1.5-.7 1.5-1.5 0-.4-.1-.7-.4-1-.2-.3-.4-.6-.4-1 0-.8.7-1.5 1.5-1.5H16a5 5 0 0 0 5-5c0-4.4-4-8-9-8ZM6.5 12a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm3-4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm3 4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z",
+    estilo: "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25ZM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83Z",
+    html: "M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4Zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4Z",
+    css: "M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4Zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4Z",
+    estadisticas: "M5 9.2h3V19H5V9.2ZM10.6 5h2.8v14h-2.8V5Zm5.6 8H19v6h-2.8v-6Z",
+    usuarios: "M12.65 10A6 6 0 1 0 7 18a6 6 0 0 0 5.65-4H17v4h4v-4h2v-4H12.65ZM7 14a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z",
+    respaldos: "M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A6 6 0 0 0 6 20h13a5 5 0 0 0 .35-9.96Z",
+    limpieza: "M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z",
+  };
+  document.querySelectorAll("#sideNav button[data-view]").forEach((b) => {
+    if (ICONOS_MENU[b.dataset.view]) b.prepend(h("span", { class: "side__icono", "aria-hidden": "true", html: `<svg viewBox="0 0 24 24"><path d="${ICONOS_MENU[b.dataset.view]}"/></svg>` }));
+  });
+  // Grupos plegados (se recuerda en este equipo): las páginas del sitio y el diseño, que se tocan pocas veces
+  const PLEGADOS_KEY = STORE_KEY + "-plegados";
+  const plegados = new Set((() => { try { return JSON.parse(localStorage.getItem(PLEGADOS_KEY) || "null") || ["paginas", "diseno"]; } catch (e) { return ["paginas", "diseno"]; } })());
+  function plegarMenu() {
+    document.querySelectorAll("#sideNav .side__bloque[data-bloque]").forEach((g) => {
+      const visibles = [...g.querySelectorAll("button[data-view]")].filter((b) => !b.hidden);
+      const plegado = plegados.has(g.dataset.bloque) && !visibles.some((b) => b.dataset.view === state.view);
+      g.classList.toggle("is-plegado", plegado);
+      const boton = g.querySelector(".side__plegar");
+      boton.setAttribute("aria-expanded", String(!plegado));
+      boton.querySelector(".side__cuenta").textContent = plegado ? String(visibles.length) : "";
+    });
+  }
+  // Número en el menú (pendientes de una sección)
+  function ponerNumero(vista, n, que) {
+    const b = $(`.side__nav button[data-view=${vista}]`);
+    if (!b) return;
+    b.querySelector(".apr__badge")?.remove();
+    if (n) b.append(h("span", { class: "apr__badge", title: n + que }, String(n)));
+  }
+  // Mensajes de contacto sin leer (o asignados y sin atender)
+  async function contarMensajes() {
+    const s = servidorApp();
+    if (!s || !puede("mensajes")) return;
+    try {
+      const r = await fetch(s + "/mensajes", { cache: "no-store", headers: credencial() });
+      if (!r.ok) return;
+      const j = await r.json();
+      ponerNumero("mensajes", (j.mensajes || []).filter((m) => (j.todos ? !m.leido : !m.miAtendido)).length, j.todos ? " sin leer" : " por atender");
+    } catch (e) { /* sin servidor */ }
+  }
+
   /* ---------- Rol: qué secciones ve cada uno ---------- */
   function aplicarRol() {
     document.querySelectorAll("#sideNav button[data-view]").forEach((b) => { b.hidden = !puede(b.dataset.view); });
-    document.querySelectorAll("#sideNav .side__group").forEach((g) => {
-      let n = g.nextElementSibling, alguno = false;
-      while (n && !n.classList.contains("side__group")) { if (!n.hidden) alguno = true; n = n.nextElementSibling; }
-      g.hidden = !alguno;
-    });
+    document.querySelectorAll("#sideNav .side__bloque").forEach((g) => { g.hidden = ![...g.querySelectorAll("button[data-view]")].some((b) => !b.hidden); });
+    // «Descargar respaldo» solo para quien administra todo el sitio
+    $("#exportBtn").hidden = !["dueno", "trabajador"].includes(state.rol);
     if (!puede(state.view)) state.view = state.rol === "utp" ? "noticias" : ([...document.querySelectorAll("#sideNav button[data-view]")].find((b) => !b.hidden) || { dataset: { view: "estadisticas" } }).dataset.view;
+    plegarMenu();
     $("#saveBtn").textContent = textoGuardar();
     $("#sessionInfo").textContent = state.modo === "correo"
       ? `${state.nombre || state.login} · ${state.cargo || (state.permisos.includes("todo") ? "Control total" : "Cuenta del colegio")}`
@@ -5140,6 +5205,7 @@ Al final del chat, en 3 líneas, dime qué datos debería completar yo para que 
     render();
     contarPorAprobar().then((n) => { if (n && state.view !== "inicio") toast(n === 1 ? "Tienes 1 noticia por aprobar en «Noticias»." : `Tienes ${n} noticias por aprobar en «Noticias».`); });
     contarPruebas();
+    contarMensajes();
   }
 
   // Ingreso con el correo del colegio: el servidor del colegio revisa la cuenta y sus permisos
@@ -5156,6 +5222,7 @@ Al final del chat, en 3 líneas, dime qué datos debería completar yo para que 
     $("#app").hidden = false;
     setDirty(false);
     render();
+    contarMensajes();
     contarPruebas().then((r) => { if (r && r.n && !["pruebas", "inicio"].includes(state.view)) toast(r.utp ? `Hay ${r.n} ${r.n === 1 ? "prueba o guía" : "pruebas o guías"} por revisar en «Pruebas y guías».` : `Hay ${r.n} ${r.n === 1 ? "prueba o guía" : "pruebas o guías"} para imprimir en «Pruebas y guías».`); });
   }
 
@@ -5268,8 +5335,16 @@ Al final del chat, en 3 líneas, dime qué datos debería completar yo para que 
   });
 
   $("#sideNav").addEventListener("click", (e) => {
+    const g = e.target.closest(".side__plegar");
+    if (g) {
+      const k = g.parentElement.dataset.bloque;
+      if (plegados.has(k)) plegados.delete(k); else plegados.add(k);
+      try { localStorage.setItem(PLEGADOS_KEY, JSON.stringify([...plegados])); } catch (err) { /* sin almacenamiento */ }
+      return plegarMenu();
+    }
     const b = e.target.closest("button[data-view]");
     if (!b) return;
+    if (state.view === "mensajes" && b.dataset.view !== "mensajes") contarMensajes();
     if (b.dataset.view === state.view) return menuMovil(false); // tocar la sección abierta solo cierra el menú en el celular
     if (editorSucio() && !confirm("Tienes cambios sin guardar en " + editor.archivo + ". ¿Descartarlos?")) return;
     editor.dirty = false; editor.archivo = null;

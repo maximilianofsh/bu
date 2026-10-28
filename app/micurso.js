@@ -395,14 +395,15 @@
     }
     return { total, alumnos, faltan, electivo: a.electivo };
   };
-  // Próximas clases de la asignatura en el curso, según el horario (sin feriados ni vacaciones del calendario)
+  // Próximas clases de la asignatura en el curso, según el horario (sin feriados ni vacaciones del calendario);
+  // sin asignatura, los próximos días hábiles
   const nombreCelda = (x) => (/^Taller/i.test(x) ? x : x.split(" · ")[0]);
+  const partesCelda = (celda) => String(celda || "").split(/\s*\|\s*/).map((x) => nombreCelda(x.trim()));
+  const horarioDe = (curso) => (window.APP && APP.horario ? APP.horario(curso) : []);
+  const etiquetaFecha = (f) => { const [, m, d] = f.split("-").map(Number); return `${DIAS_SEM[diaSemana(f)].slice(0, 3)}<small>${d} ${MESES[m - 1].slice(0, 3)}</small>`; };
   function clasesDe(curso, asignatura) {
-    const filas = window.APP && APP.horario ? APP.horario(curso) : [];
-    const dias = new Set();
-    filas.forEach((f) => (f.celdas || []).forEach((celda, i) => {
-      if (String(celda || "").split(/\s*\|\s*/).map((x) => nombreCelda(x.trim())).includes(asignatura)) dias.add(i + 1);
-    }));
+    const dias = new Set(asignatura ? [] : [1, 2, 3, 4, 5]);
+    if (asignatura) horarioDe(curso).forEach((f) => (f.celdas || []).forEach((celda, i) => { if (partesCelda(celda).includes(asignatura)) dias.add(i + 1); }));
     if (!dias.size) return [];
     const libres = new Set();
     (window.APP && APP.eventos ? APP.eventos() : []).forEach((e) => {
@@ -491,7 +492,6 @@
     const verOtros = p.verOtrosCursos || p.cursos.some((x) => otros.includes(x)) || !mios.length;
     const sugeridas = p.cursos.length && p.asignatura ? clasesDe(p.cursos[0], p.asignatura) : [];
     const fechaOtra = !sugeridas.length || p.otraFecha || (p.fecha && !sugeridas.includes(p.fecha));
-    const etiquetaFecha = (f) => { const [, m, d] = f.split("-").map(Number); return `${DIAS_SEM[diaSemana(f)].slice(0, 3)}<small>${d} ${MESES[m - 1].slice(0, 3)}</small>`; };
     c.innerHTML = `<form class="tarjeta mc" id="mcPrueba" novalidate>
         <h2>${p.id ? (p.estado === "devuelta" ? "Corregir y reenviar" : "Cambiar envío") : "Enviar prueba o guía"}</h2>
         ${p.id ? "" : pasosHtml(2)}
@@ -667,23 +667,84 @@
     if (b) b.textContent = p.id ? "Reenviar a UTP" : "Enviar a UTP";
   }
 
+  /* ---------- Avisar una fecha al curso ----------
+     Tipo, curso, asignatura y día se eligen con un toque; el título se escribe solo y el día se sugiere
+     con el horario. Hora, detalle y fecha de término quedan detrás de un enlace. */
+  const asignaturasDelCurso = (curso) => {
+    const n = new Set();
+    horarioDe(curso).forEach((f) => (f.celdas || []).forEach((celda) => partesCelda(celda).forEach((a) => { if (a && !/^(recreo|colaci[oó]n|almuerzo)$/i.test(a)) n.add(a); })));
+    return [...n].sort((a, b) => a.localeCompare(b, "es"));
+  };
+  // Hora en que empieza la clase de esa asignatura ese día (para que el aviso diga «a las 08:00»)
+  const horaDe = (curso, asignatura, fecha) => {
+    const i = diaSemana(fecha) - 1;
+    const fila = horarioDe(curso).find((f) => partesCelda((f.celdas || [])[i]).includes(asignatura));
+    return fila ? (/^\d{1,2}:\d{2}/.exec(fila.hora || "") || [""])[0] : "";
+  };
+  const tituloFecha = (f) => (f.tipo === "reunion" ? "Reunión de apoderados" : f.tipo === "otro" ? ""
+    : TIPOS[f.tipo] + (f.asignatura && f.tipo !== "salida" ? " de " + f.asignatura : ""));
+  const nuevaFecha = (curso) => ({ curso, tipo: "prueba", asignatura: "", titulo: "", fecha: "", fin: "", hora: "", descripcion: "", tocado: false, horaTocada: false });
+  const resumenFecha = () => {
+    const f = st.editando;
+    return f.fecha ? `<p>Se publicará en <strong>${esc(f.curso)}</strong> para el <strong>${esc(fechaCorta(f.fecha))}${f.hora ? " · " + esc(f.hora) : ""}</strong>. La verán sus estudiantes y apoderados en la app.</p>`
+      : "<p>Elige el día para publicarla.</p>";
+  };
+
   function renderFormFecha(c, cursos) {
     const f = st.editando;
-    c.innerHTML = `<form class="tarjeta mc" id="mcFecha">
-        <h2>${f.id ? "Editar fecha" : "Nueva fecha"}</h2>
-        <label class="campo">Curso<select id="fCurso">${cursos.map((x) => `<option${x === f.curso ? " selected" : ""}>${esc(x)}</option>`).join("")}</select></label>
-        <label class="campo">Tipo<select id="fTipo">${Object.entries(TIPOS).map(([k, t]) => `<option value="${k}"${k === f.tipo ? " selected" : ""}>${t}</option>`).join("")}</select></label>
-        <label class="campo">Título<input id="fTitulo" maxlength="120" value="${esc(f.titulo)}" placeholder="Ej.: Prueba de Matemática, unidad 3" required></label>
-        <div class="mc__dos">
-          <label class="campo">Fecha<input id="fFecha" type="date" value="${esc(f.fecha)}" required></label>
-          <label class="campo">Hasta (opcional)<input id="fFin" type="date" value="${esc(f.fin || "")}"></label>
-        </div>
-        <label class="campo">Hora (opcional)<input id="fHora" maxlength="30" value="${esc(f.hora || "")}" placeholder="Ej.: 08:00 o 2° bloque"></label>
-        <label class="campo">Detalle (opcional)<textarea id="fDesc" maxlength="800" placeholder="Contenidos, materiales, qué traer…">${esc(f.descripcion || "")}</textarea></label>
+    if (!cursos.includes(f.curso)) f.curso = cursos[0];
+    if (!f.tocado) f.titulo = tituloFecha(f);
+    const todas = asignaturasDelCurso(f.curso);
+    if (f.asignatura && !todas.includes(f.asignatura)) f.asignatura = "";
+    const propias = (pr && !pr.error ? asignaturasUsadas() : []).filter((n) => todas.includes(n));
+    const verTodas = f.verOtrasAsig || !propias.length || (f.asignatura && !propias.includes(f.asignatura));
+    const asigVer = verTodas ? propias.concat(todas.filter((n) => !propias.includes(n))) : propias;
+    const sugeridas = clasesDe(f.curso, f.asignatura);
+    const fechaOtra = !sugeridas.length || f.otraFecha || (f.fecha && !sugeridas.includes(f.fecha));
+    if (!f.horaTocada) f.hora = f.asignatura && f.fecha ? horaDe(f.curso, f.asignatura, f.fecha) : "";
+    c.innerHTML = `<form class="tarjeta mc" id="mcFecha" novalidate>
+        <h2>${f.id ? "Editar fecha" : "Avisar una fecha al curso"}</h2>
+        <fieldset class="mc-grupo"><legend class="mc-pregunta">¿Qué es?</legend>
+          <div class="mc-chips">${Object.entries(TIPOS).map(([k, x]) => chip(`data-ftipo="${k}"`, f.tipo === k, x)).join("")}</div></fieldset>
+        ${cursos.length > 1 ? `<fieldset class="mc-grupo"><legend class="mc-pregunta">¿Para qué curso?</legend>
+          <div class="mc-chips">${cursos.map((x) => chip(`data-fcurso="${esc(x)}"`, f.curso === x, esc(x))).join("")}</div></fieldset>` : ""}
+        ${todas.length ? `<fieldset class="mc-grupo"><legend class="mc-pregunta">Asignatura<small>Opcional: escribe el título y sugiere el día</small></legend>
+          <div class="mc-chips">${asigVer.map((n) => chip(`data-fasig="${esc(n)}"`, f.asignatura === n, esc(n))).join("")}
+            ${!verTodas ? chip('data-mc="fotrasasig"', false, "Otra", " mc-chip--mas") : ""}</div></fieldset>` : ""}
+        <label class="campo">Título<input id="fTitulo" maxlength="120" value="${esc(f.titulo)}" placeholder="Ej.: Prueba de Matemática, unidad 3"></label>
+        <fieldset class="mc-grupo"><legend class="mc-pregunta">¿Cuándo?<small>${f.asignatura ? `Próximas clases de ${esc(f.asignatura)} en ${esc(f.curso)}` : "Próximos días de clases"}</small></legend>
+          ${sugeridas.length ? `<div class="mc-chips">${sugeridas.map((x) => chip(`data-ffecha="${x}"`, f.fecha === x && !fechaOtra, etiquetaFecha(x), " mc-chip--fecha")).join("")}
+            ${chip('data-mc="fotrafecha"', fechaOtra, "Otra<small>fecha</small>", " mc-chip--fecha mc-chip--mas")}</div>` : ""}
+          ${fechaOtra ? `<label class="campo">${sugeridas.length ? "Otra fecha" : "Fecha"}<input id="fFecha" type="date" value="${esc(f.fecha)}"></label>` : ""}
+        </fieldset>
+        ${f.verMas ? `<div class="mc-grupo">
+            <label class="campo">Hora (opcional)<input id="fHora" maxlength="30" value="${esc(f.hora)}" placeholder="Ej.: 08:00 o 2° bloque"></label>
+            <label class="campo">Hasta (opcional, si dura varios días)<input id="fFin" type="date" value="${esc(f.fin || "")}"></label>
+            <label class="campo">Detalle (opcional)<textarea id="fDesc" maxlength="800" placeholder="Contenidos, materiales, qué traer…">${esc(f.descripcion || "")}</textarea></label>
+          </div>` : '<button type="button" class="btn-texto" data-mc="fmas">＋ Agregar hora, detalle o fecha de término</button>'}
+        <div class="mc-resumen" id="fResumen" aria-live="polite">${resumenFecha()}</div>
         <div id="mcMsg">${msgHtml()}</div>
-        <button class="btn btn--grande"${st.ocupado ? " disabled" : ""}>${f.id ? "Guardar cambios" : "Publicar en el curso"}</button>
+        <button class="btn btn--grande"${st.ocupado ? " disabled" : ""}>${f.id ? "Guardar cambios" : "Publicar en " + esc(f.curso)}</button>
         <button type="button" class="btn-texto" data-mc="cancelar">Cancelar</button>
       </form>`;
+  }
+  // Botones del formulario de la fecha
+  function elegirEnFecha(b, a) {
+    const f = st.editando, d = b.dataset;
+    if (a === "fotrasasig") f.verOtrasAsig = true;
+    else if (a === "fotrafecha") f.otraFecha = true;
+    else if (a === "fmas") f.verMas = true;
+    else if (d.ftipo) f.tipo = d.ftipo;
+    else if (d.fcurso) { f.curso = d.fcurso; if (f.otraFecha !== true) f.fecha = ""; }
+    else if (d.fasig) { f.asignatura = f.asignatura === d.fasig ? "" : d.fasig; if (!f.otraFecha) f.fecha = ""; }
+    else if (d.ffecha) { f.fecha = d.ffecha; f.otraFecha = false; }
+    else return;
+    st.msg = null;
+    render();
+    const k = ["ftipo", "fcurso", "fasig", "ffecha"].find((x) => d[x] != null);
+    const foco = a === "fotrafecha" ? $("fFecha") : a === "fmas" ? $("fHora")
+      : document.querySelector(a ? `#micurso [data-mc="${a}"]` : `#micurso [data-${k}="${CSS.escape(d[k])}"]`);
+    if (foco) foco.focus({ preventScroll: true });
   }
 
   /* ---------- Acciones ---------- */
@@ -738,7 +799,7 @@
   };
 
   document.addEventListener("click", (e) => {
-    const b = e.target.closest("#micurso [data-mc], #micurso [data-editar], #micurso [data-borrar], #micurso [data-corregir], #micurso [data-retirar], #micurso [data-hijo], #micurso [data-reusar], #mcPrueba [data-tipo], #mcPrueba [data-curso], #mcPrueba [data-asig], #mcPrueba [data-fecha], #mcPrueba [data-indic]");
+    const b = e.target.closest("#micurso [data-mc], #micurso [data-editar], #micurso [data-borrar], #micurso [data-corregir], #micurso [data-retirar], #micurso [data-hijo], #micurso [data-reusar], #mcPrueba [data-tipo], #mcPrueba [data-curso], #mcPrueba [data-asig], #mcPrueba [data-fecha], #mcPrueba [data-indic], #mcFecha [data-ftipo], #mcFecha [data-fcurso], #mcFecha [data-fasig], #mcFecha [data-ffecha]");
     if (!b) return;
     if (b.dataset.hijo) {
       st.hijo = +b.dataset.hijo; guardar("csm-app-micurso-hijo", String(st.hijo));
@@ -760,7 +821,7 @@
     else if (a === "reenviar") trabajar(pedirCodigo);
     else if (a === "salir") { if (confirm("¿Cerrar «Mi curso» en este celular?")) salir(); }
     else if (a === "pasadas") { st.verPasadas = !st.verPasadas; render(); }
-    else if (a === "nueva") { const cs = info.yo.cursos || []; st.editando = { curso: st.filtro || cs[0], tipo: "prueba", titulo: "", fecha: hoy(), fin: "", hora: "", descripcion: "" }; st.msg = null; render(); window.scrollTo(0, 0); }
+    else if (a === "nueva") { const cs = info.yo.cursos || []; st.editando = nuevaFecha(st.filtro || cs[0]); st.msg = null; render(); window.scrollTo(0, 0); }
     else if (a === "cancelar") { st.editando = null; st.msg = null; render(); }
     else if (a === "cambiarclave") { st.crearClave = true; st.msg = null; render(); }
     else if (a === "recargarpruebas") { pr = null; render(); }
@@ -775,20 +836,37 @@
       if (!p || !confirm(`¿Retirar la ${TIPOS_PRUEBA[p.tipo].toLowerCase()} de ${p.asignatura} (${p.cursos.join(", ")})? UTP ya no la verá.`)) return;
       trabajar(async () => { await pedir("/pruebas/retirar", { sesion: sesion.sesion, id: p.id }); pr.mias = pr.mias.filter((x) => x.id !== p.id); render(); mensaje("Envío retirado.", "ok"); });
     }
-    else if (b.dataset.editar) { const f = info.fechas.find((x) => String(x.id) === b.dataset.editar); if (f) { st.editando = { ...f }; st.msg = null; render(); window.scrollTo(0, 0); } }
+    else if (b.dataset.editar) {
+      const f = info.fechas.find((x) => String(x.id) === b.dataset.editar);
+      if (f) { st.editando = { ...nuevaFecha(f.curso), ...f, fin: f.fin || "", hora: f.hora || "", descripcion: f.descripcion || "", tocado: true, horaTocada: true, verMas: !!(f.fin || f.hora || f.descripcion) }; st.msg = null; render(); window.scrollTo(0, 0); }
+    }
     else if (b.dataset.borrar) {
       const f = info.fechas.find((x) => String(x.id) === b.dataset.borrar);
       if (!f || !confirm(`¿Borrar «${f.titulo}» de ${f.curso}?`)) return;
       trabajar(async () => { await pedir("/curso/fecha/borrar", { sesion: sesion.sesion, id: f.id }); await cargar(); mensaje("Fecha borrada.", "ok"); });
     }
+    else if (st.editando && (a || b.closest("#mcFecha"))) elegirEnFecha(b, a);
     else if (st.prueba && (a || b.closest("#mcPrueba"))) elegirEnPrueba(b, a);
   });
   document.addEventListener("change", (e) => {
     if (e.target.id === "mcFiltro") { st.filtro = e.target.value; render(); }
     else if (e.target.id === "pArchivo") elegirArchivo((e.target.files || [])[0]);
+    else if (e.target.id === "fFecha" && st.editando) {
+      const f = st.editando;
+      f.fecha = e.target.value; f.otraFecha = true;
+      if (!f.horaTocada) f.hora = f.asignatura && f.fecha ? horaDe(f.curso, f.asignatura, f.fecha) : "";
+      const r = $("fResumen"); if (r) r.innerHTML = resumenFecha();
+    }
+    else if (e.target.id === "fFin" && st.editando) st.editando.fin = e.target.value;
     else if (e.target.id === "pFecha" && st.prueba) { st.prueba.fecha = e.target.value; st.prueba.otraFecha = true; const r = $("mcResumen"); if (r) r.innerHTML = resumenHtml(); }
   });
-  document.addEventListener("input", (e) => { if (e.target.id === "pOtraIndic" && st.prueba) st.prueba.otraIndic = e.target.value; });
+  document.addEventListener("input", (e) => {
+    const id = e.target.id, f = st.editando;
+    if (id === "pOtraIndic" && st.prueba) st.prueba.otraIndic = e.target.value;
+    else if (f && id === "fTitulo") { f.titulo = e.target.value; f.tocado = true; }
+    else if (f && id === "fHora") { f.hora = e.target.value; f.horaTocada = true; const r = $("fResumen"); if (r) r.innerHTML = resumenFecha(); }
+    else if (f && id === "fDesc") f.descripcion = e.target.value;
+  });
   // En el computador, el archivo también se puede arrastrar a la zona
   document.addEventListener("dragover", (e) => { const z = e.target.closest && e.target.closest("#mcZona"); if (z) { e.preventDefault(); z.classList.add("encima"); } });
   document.addEventListener("dragleave", (e) => { const z = e.target.closest && e.target.closest("#mcZona"); if (z) z.classList.remove("encima"); });
@@ -835,9 +913,11 @@
     } else if (f.id === "mcPrueba") {
       enviarPrueba();
     } else if (f.id === "mcFecha") {
-      const datos = { id: st.editando.id, curso: $("fCurso").value, tipo: $("fTipo").value, titulo: $("fTitulo").value.trim(), fecha: $("fFecha").value,
-        fin: $("fFin").value, hora: $("fHora").value.trim(), descripcion: $("fDesc").value.trim() };
-      st.editando = datos;
+      const e2 = st.editando;
+      const datos = { id: e2.id, curso: e2.curso, tipo: e2.tipo, titulo: String(e2.titulo || "").trim(), fecha: e2.fecha,
+        fin: e2.fin || "", hora: String(e2.hora || "").trim(), descripcion: String(e2.descripcion || "").trim() };
+      if (!datos.titulo) return mensaje("Escribe un título.");
+      if (!datos.fecha) return mensaje("Elige el día.");
       trabajar(async () => {
         await pedir("/curso/fecha", { sesion: sesion.sesion, fecha: datos });
         st.editando = null; await cargar(); mensaje(datos.id ? "Cambios guardados." : `Fecha publicada en ${datos.curso}.`, "ok");
