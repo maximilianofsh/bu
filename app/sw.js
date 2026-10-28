@@ -6,8 +6,8 @@
    ========================================================== */
 "use strict";
 
-const CACHE = "csm-app-v14";
-const APP = ["./", "index.html", "app.css", "app.js", "micurso.js", "manifest.webmanifest", "icono-v2-192.png", "icono-v2-apple-180.png", "icono-v2-notificacion.png", "../js/horarios.js"];
+const CACHE = "csm-app-v15";
+const APP = ["./", "index.html", "app.css", "app.js", "micurso.js", "manifest.webmanifest", "icono-v2-192.png", "icono-v2-apple-180.png", "icono-v3-notificacion-96.png", "icono-v3-notificacion-color-192.png", "../js/horarios.js"];
 const DATOS = new URL("../data/sitio.json", self.location).pathname;
 
 self.addEventListener("install", (e) => {
@@ -95,7 +95,7 @@ self.addEventListener("push", (e) => {
       const prueba = await (await caches.open(CACHE_PRUEBA)).match(PRUEBA);
       if (prueba && Date.now() - +(await prueba.text()) < 120000) {
         await (await caches.open(CACHE_PRUEBA)).delete(PRUEBA);
-        return self.registration.showNotification("Prueba recibida ✓", { body: "Las notificaciones del colegio funcionan en este celular.", icon: "icono-v2-192.png", badge: "icono-v2-notificacion.png", tag: "prueba" });
+        return self.registration.showNotification("Prueba recibida ✓", { body: "Las notificaciones del colegio funcionan en este celular.", icon: "icono-v3-notificacion-color-192.png", badge: "icono-v3-notificacion-96.png", tag: "prueba" });
       }
       const res = await conLimite(redPrimero(new Request(DATOS)), 5000);
       const datos = await res.json();
@@ -109,7 +109,7 @@ self.addEventListener("push", (e) => {
           const r = sub && await conLimite(fetch(servidor + "/notif/personal", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ endpoint: sub.endpoint }) }), 3000);
           const m = r && r.ok ? (await r.json()).mensaje : null;
           if (m && m.titulo) {
-            return self.registration.showNotification(m.titulo, { body: m.cuerpo || "", icon: "icono-v2-192.png", badge: "icono-v2-notificacion.png",
+            return self.registration.showNotification(m.titulo, { body: m.cuerpo || "", icon: "icono-v3-notificacion-color-192.png", badge: "icono-v3-notificacion-96.png",
               tag: "personal-" + Date.now(), data: { url: m.url || "./#micurso" } });
           }
         } catch (err) { /* sigue con el aviso del colegio */ }
@@ -138,8 +138,8 @@ self.addEventListener("push", (e) => {
     } catch (err) { /* sin conexión: aviso genérico */ }
     await self.registration.showNotification(titulo, {
       body: cuerpo,
-      icon: "icono-v2-192.png",
-      badge: "icono-v2-notificacion.png",
+      icon: "icono-v3-notificacion-color-192.png",
+      badge: "icono-v3-notificacion-96.png",
       tag,
       renotify: true,
       requireInteraction: tag === "aviso",
