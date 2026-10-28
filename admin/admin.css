@@ -747,3 +747,42 @@ body.is-wide .bar__help { max-width: none; }
 .side__cuenta { letter-spacing: 0; font-weight: 600; color: rgba(255,255,255,.55); }
 .side__bloque.is-plegado button[data-view] { display: none; }
 @media (max-width: 860px) { .side__nav .side__plegar { margin: .9rem 0 .2rem; padding: .35rem .9rem; min-height: 0; } }
+
+/* Para imprimir: grupos por urgencia, copias en grande e indicaciones a la vista */
+.imp__grupo { display: grid; gap: .6rem; margin-top: 1rem; }
+.imp__grupo h3 { margin: 0; font-family: "Inter", system-ui, sans-serif; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.imp__grupo.is-urgente h3 { color: #a35a00; }
+.imp { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 1rem; align-items: center; padding: 1rem 1.1rem; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); }
+.imp__grupo.is-urgente .imp { border-color: #e2a33b; background: #fffaf0; }
+.imp__copias { display: grid; justify-items: center; min-width: 4.5rem; line-height: 1; }
+.imp__copias strong { font-family: "Fraunces", Georgia, serif; font-size: 2.1rem; color: var(--navy); font-variant-numeric: tabular-nums; }
+.imp__copias span { margin-top: .2rem; font-size: .72rem; color: var(--muted); }
+.imp__info { display: grid; gap: .2rem; min-width: 0; }
+.imp__info > strong { font-size: 1.02rem; }
+.imp__info > span { color: var(--muted); font-size: .88rem; overflow-wrap: anywhere; }
+.imp__indic { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .15rem; }
+.imp__indic span { padding: .12rem .55rem; border-radius: 999px; background: #f3ead3; color: #5a4200; font-size: .8rem; font-weight: 600; }
+.imp__archivo { font-size: .8rem !important; }
+.imp__acc { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .4rem; }
+@media (max-width: 700px) {
+  .imp { grid-template-columns: auto minmax(0, 1fr); }
+  .imp__acc { grid-column: 1 / -1; justify-content: flex-start; }
+}
+
+/* Celular: barra de abajo con las secciones principales de cada cargo */
+.abajo { display: none; }
+@media (max-width: 860px) {
+  body.con-barra { --abajo: calc(60px + env(safe-area-inset-bottom, 0px)); }
+  .abajo:not([hidden]) { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); padding: .25rem 8px env(safe-area-inset-bottom, 0px); background: #fff; border-top: 1px solid var(--line); box-shadow: 0 -6px 20px rgba(11,31,58,.08); }
+  .abajo button { position: relative; display: grid; justify-items: center; align-content: center; gap: .1rem; min-height: 54px; padding: .2rem 0; border: 0; background: none; font: inherit; font-size: .72rem; font-weight: 600; color: var(--muted); }
+  .abajo button.is-active { color: var(--navy); }
+  .abajo__ico { display: grid; place-items: center; width: 2.8rem; height: 1.75rem; border-radius: 999px; }
+  .abajo button.is-active .abajo__ico { background: #f3ead3; }
+  .abajo__ico svg { width: 1.3rem; height: 1.3rem; fill: currentColor; }
+  .abajo__n { position: absolute; top: .15rem; left: calc(50% + .45rem); min-width: 1.2rem; padding: 0 .3rem; border-radius: 999px; background: var(--gold); color: #1d1300; font-size: .66rem; font-weight: 800; line-height: 1.2rem; text-align: center; }
+  body.con-barra .main { padding-bottom: calc(6rem + var(--abajo)); }
+  body.con-barra .bar__actions { bottom: var(--abajo); padding-bottom: .7rem; }
+  body.con-barra .side.is-open .side__foot { bottom: var(--abajo); }
+  body.con-barra .side.is-open .side__nav { bottom: calc(144px + var(--abajo)); }
+  body.con-barra .toast { bottom: calc(84px + var(--abajo)); }
+}

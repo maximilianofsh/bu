@@ -36,6 +36,12 @@
   /* ---------- Pestañas ---------- */
   const VISTAS = ["avisos", "horarios", "calendario", "micurso", "inspectoria"];
   const mostrarVista = (v) => {
+    // colegiosm.cl/imprimir llega aquí: abre «Mi curso» y, al entrar el profesor, «Enviar prueba o guía»
+    if (v === "imprimir") {
+      if (window.MICURSO) MICURSO.pedirImprimir();
+      history.replaceState(null, "", "#micurso");
+      v = "micurso";
+    }
     if (!VISTAS.includes(v)) v = "avisos";
     VISTAS.forEach((x) => { $("vista-" + x).hidden = x !== v; });
     document.querySelectorAll(".tab").forEach((t) => {
@@ -56,8 +62,12 @@
     mostrarVista(t.dataset.vista);
   });
   window.addEventListener("hashchange", () => mostrarVista(location.hash.slice(1)));
-  // Inspectoría ahora es una app aparte (/inspectoria/); quien ya entró aquí conserva su pestaña «Publicar»
-  document.querySelector("[data-ir-insp]").addEventListener("click", () => { location.href = "../inspectoria/"; });
+  // Inspectoría usa su propia app (/inspectoria/); quien ya entró aquí conserva su pestaña «Publicar»
+  // Botones que llevan a otra pestaña (por ejemplo, «Ver horario completo»)
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-ir-vista]");
+    if (b) document.querySelector(`.tab[data-vista="${b.dataset.irVista}"]`).click();
+  });
 
   /* ---------- Colores del panel ---------- */
   const aplicarColores = (c) => {
@@ -79,15 +89,18 @@
     $("puntoAviso").hidden = true;
   };
 
+  // Con aviso, va arriba de todo; sin aviso, la tarjeta «Sin avisos» va después del día del curso
   const renderAviso = (a) => {
     const caja = $("avisoActual");
     a = avisoVigente(a);
     if (!a) {
-      caja.innerHTML = `<div class="tarjeta sin-aviso"><span class="sin-aviso__ico" aria-hidden="true">✓</span>
+      caja.innerHTML = "";
+      $("sinAviso").innerHTML = `<div class="tarjeta sin-aviso"><span class="sin-aviso__ico" aria-hidden="true">✓</span>
         <div><strong>Sin avisos por ahora</strong><p>Si hay una emergencia o un cambio en la jornada, aparecerá aquí.</p></div></div>`;
       $("puntoAviso").hidden = true;
       return;
     }
+    $("sinAviso").innerHTML = "";
     const nivel = ["urgente", "importante", "info"].includes(a.nivel) ? a.nivel : "urgente";
     const enlace = asset(a.enlace);
     caja.innerHTML = `<article class="alerta alerta--${nivel}" role="${nivel === "urgente" ? "alert" : "status"}">
@@ -169,6 +182,62 @@
   if (new Date().getDay() === 0 || new Date().getDay() === 6) dia = 0;
   const horaPartes = (t) => String(t || "").split(/\s*[-–—]\s*|\s+a\s+/).filter(Boolean);
   const minutos = (t) => { const m = /(\d{1,2})[:.](\d{2})/.exec(t || ""); return m ? +m[1] * 60 + +m[2] : null; };
+  const desdeDe = (it) => horaPartes(it.ini)[0] || it.ini;
+  const hastaDe = (it) => { const y = horaPartes(it.fin); return y[y.length - 1] || it.fin; };
+  // Bloques de un día, con los iguales seguidos juntos (por ejemplo, un bloque doble)
+  const bloquesDel = (hor, d) => {
+    const items = [];
+    (hor.filas || []).forEach((f) => {
+      const p = H.pausa(f);
+      const txt = p || String((f.celdas || [])[d] || "").trim();
+      const ult = items[items.length - 1];
+      if (ult && txt && !p && !ult.pausa && H.norm(ult.txt) === H.norm(txt)) { ult.fin = f.hora; return; }
+      items.push({ txt, pausa: !!p, ini: f.hora, fin: f.hora });
+    });
+    while (items.length && (items[0].pausa || !items[0].txt)) items.shift();
+    while (items.length && (items[items.length - 1].pausa || !items[items.length - 1].txt)) items.pop();
+    return items;
+  };
+  const nombreBloque = (txt) => { const e = H.electivos(txt); return e ? e.map((x) => x.asignatura).join(" / ") : H.partes(txt).asignatura; };
+
+  /* ---------- Inicio: el día del curso guardado en este celular ----------
+     Hoy hasta que terminan las clases; después, el fin de semana o en feriados, el próximo día con clases. */
+  const diaLibre = (f) => eventosValidos().some((e) => /^(feriado|vacaciones)$/.test(e.tipo) && e.fecha <= f && fin(e) >= f);
+  const renderHoy = () => {
+    const caja = $("hoyCurso");
+    const hs = (datos.horarios && datos.horarios.cursos) || [];
+    const hor = hs.find((x) => x.nombre === leer("csm-app-curso"));
+    if (!hs.length) { caja.innerHTML = ""; return; }
+    if (!hor) {
+      caja.innerHTML = `<div class="tarjeta hoy-elegir"><strong>Las clases de tu curso, de un vistazo</strong>
+        <p>Elige el curso y aquí verás cada día qué clases tiene y cuál está ahora.</p>
+        <div class="acciones"><button type="button" class="btn" data-ir-vista="horarios">Elegir curso</button></div></div>`;
+      return;
+    }
+    const ahora = new Date();
+    const ahoraMin = ahora.getHours() * 60 + ahora.getMinutes();
+    const t = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
+    let items = [], cuando = "";
+    for (let i = 0; i < 21 && !items.length; i++, t.setDate(t.getDate() + 1)) {
+      const d = t.getDay() - 1;
+      if (d < 0 || d > 4 || diaLibre(iso(t))) continue;
+      const its = bloquesDel(hor, d).filter((x) => x.txt);
+      if (!its.length) continue;
+      if (i === 0 && minutos(hastaDe(its[its.length - 1])) != null && ahoraMin >= minutos(hastaDe(its[its.length - 1]))) continue;
+      items = its;
+      cuando = i === 0 ? "Hoy" : i === 1 ? "Mañana" : `${DIAS_SEM[t.getDay()][0].toUpperCase() + DIAS_SEM[t.getDay()].slice(1)} ${t.getDate()}`;
+    }
+    if (!items.length) { caja.innerHTML = ""; return; }
+    const esAhora = (it) => { const a = minutos(desdeDe(it)), b = minutos(hastaDe(it)); return cuando === "Hoy" && a != null && b != null && ahoraMin >= a && ahoraMin < b; };
+    const actual = items.find(esAhora);
+    const titulo = actual ? `Ahora: ${nombreBloque(actual.txt)}` : cuando === "Hoy" ? "Las clases de hoy" : `Las clases ${cuando === "Mañana" ? "de mañana" : "del " + cuando.toLowerCase()}`;
+    caja.innerHTML = `<section class="hoy" aria-label="Clases de ${esc(hor.nombre)}">
+        <small>${esc(cuando)} en ${esc(hor.nombre)}</small><h2>${esc(titulo)}</h2>
+        <ol>${items.filter((it) => !it.pausa).map((it) => `<li${esAhora(it) ? ' class="es-ahora"' : ""}><span>${esc(desdeDe(it))} – ${esc(hastaDe(it))}</span><strong>${esc(nombreBloque(it.txt))}</strong>${esAhora(it) ? "<em>Ahora</em>" : ""}</li>`).join("")}</ol>
+        <button type="button" class="btn-texto" data-ir-vista="horarios">Ver horario completo →</button>
+      </section>`;
+  };
+  setInterval(() => { if (datos && !$("vista-avisos").hidden) renderHoy(); }, 60000);
 
   const renderHorario = () => {
     const hs = (datos.horarios && datos.horarios.cursos) || [];
@@ -191,19 +260,8 @@
       $("bloques").innerHTML = '<li class="vacio">Elige el curso para ver su horario. Quedará guardado en este celular.</li>';
       return;
     }
-    // Junta los bloques iguales seguidos (por ejemplo, un bloque doble)
-    const items = [];
-    (hor.filas || []).forEach((f) => {
-      const p = H.pausa(f);
-      const txt = p || String((f.celdas || [])[dia] || "").trim();
-      const ult = items[items.length - 1];
-      if (ult && txt && !p && !ult.pausa && H.norm(ult.txt) === H.norm(txt)) { ult.fin = f.hora; return; }
-      items.push({ txt, pausa: !!p, ini: f.hora, fin: f.hora });
-    });
-    while (items.length && (items[0].pausa || !items[0].txt)) items.shift();
-    while (items.length && (items[items.length - 1].pausa || !items[items.length - 1].txt)) items.pop();
-    const desde = (it) => horaPartes(it.ini)[0] || it.ini;
-    const hasta = (it) => { const y = horaPartes(it.fin); return y[y.length - 1] || it.fin; };
+    const items = bloquesDel(hor, dia);
+    const desde = desdeDe, hasta = hastaDe;
     // Bloque que está ocurriendo ahora (solo si se mira el día de hoy)
     const ahoraMin = new Date().getHours() * 60 + new Date().getMinutes();
     const esHoy = new Date().getDay() - 1 === dia;
@@ -228,6 +286,7 @@
     const hs = (datos.horarios && datos.horarios.cursos) || [];
     if (hs[+e.target.value] && e.target.value !== "") guardar("csm-app-curso", hs[+e.target.value].nombre);
     renderHorario();
+    renderHoy();
   });
   $("dias").addEventListener("click", (e) => {
     const b = e.target.closest("[data-dia]");
@@ -274,6 +333,20 @@
     const reg = await navigator.serviceWorker.ready;
     return reg.pushManager.getSubscription();
   };
+  const conTiempo = (p, ms) => Promise.race([p, new Promise((ok) => setTimeout(() => ok(null), ms))]);
+  // Pide permiso, suscribe este celular y lo registra en el servidor del colegio
+  const activarNotificaciones = async () => {
+    if ((await Notification.requestPermission()) !== "granted") throw new Error("permiso");
+    const r = await fetch(servidor() + "/clave");
+    if (!r.ok) throw new Error("clave");
+    const clave = deB64((await r.json()).clave);
+    const reg = await navigator.serviceWorker.ready;
+    let sub = await reg.pushManager.getSubscription();
+    if (sub) await sub.unsubscribe();
+    sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: clave });
+    await avisarServidor("/suscribir", sub);
+    guardar("csm-app-notif-sync", String(Date.now()));
+  };
   let ocupadoNotif = false;
   const renderNotif = async (mensaje) => {
     const caja = $("notificaciones");
@@ -304,7 +377,7 @@
     }
     caja.classList.remove("notif--ok");
     caja.innerHTML = `${titulo}<p>Recibe una notificación si hay una emergencia, una suspensión de clases o si hay que retirar antes a los estudiantes. También te recordamos la tarde anterior las fechas importantes del calendario.</p>${extra}
-      <div class="acciones"><button type="button" class="btn" data-notif="si">Activar notificaciones</button></div>`;
+      <div class="acciones"><button type="button" class="btn btn--grande" data-notif="si">Activar notificaciones</button></div>`;
   };
   $("notificaciones").addEventListener("click", async (e) => {
     const b = e.target.closest("[data-notif]");
@@ -316,7 +389,7 @@
         const sub = await suscripcion();
         if (!sub) throw new Error("sin-sub");
         // El trabajador reconoce la prueba y muestra «Prueba recibida»
-        await (await caches.open("csm-app-v5")).put(new URL("__prueba", location.href).pathname, new Response(String(Date.now())));
+        await (await caches.open("csm-prueba")).put(new URL("__prueba", location.href).pathname, new Response(String(Date.now())));
         const r = await fetch(servidor() + "/probar", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ endpoint: sub.endpoint }) });
         const j = await r.json().catch(() => ({}));
         if (r.status === 404 && j.error) throw new Error("msg:" + j.error);
@@ -325,16 +398,7 @@
           : `El servicio de notificaciones respondió ${j.estado || r.status}${j.detalle ? ` (${j.detalle})` : ""}. Envía una captura de este mensaje a quien administra el sitio.`));
         error = "ok:Prueba enviada. Debería llegar en unos segundos. Si no llega, revisa que las notificaciones de esta app estén permitidas en Ajustes.";
       } else if (b.dataset.notif === "si") {
-        if ((await Notification.requestPermission()) !== "granted") throw new Error("permiso");
-        const r = await fetch(servidor() + "/clave");
-        if (!r.ok) throw new Error("clave");
-        const clave = deB64((await r.json()).clave);
-        const reg = await navigator.serviceWorker.ready;
-        let sub = await reg.pushManager.getSubscription();
-        if (sub) await sub.unsubscribe();
-        sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: clave });
-        await avisarServidor("/suscribir", sub);
-        guardar("csm-app-notif-sync", String(Date.now()));
+        await activarNotificaciones();
       } else {
         const sub = await suscripcion();
         if (sub) { await avisarServidor("/baja", sub).catch(() => {}); await sub.unsubscribe(); }
@@ -512,6 +576,8 @@
   const pintarTodo = () => {
     aplicarColores(datos.colores);
     renderAviso(datos.aviso);
+    renderHoy();
+    if (window.MICURSO) { MICURSO.pintarInicio(); MICURSO.refrescar(); }
     renderProximos();
     renderCalendario();
     renderHorario();
@@ -534,6 +600,14 @@
       guardar("csm-app-curso", nombre);
       $("curso").innerHTML = "";
       renderHorario();
+      renderHoy();
+    },
+    // Notificaciones de este celular, para que «Mi curso» avise a los profesores cuando UTP revisa sus pruebas
+    notificaciones: {
+      estado: async () => (!servidor() ? "sin-servidor" : !soportaPush ? "no-soporta" : Notification.permission === "denied" ? "bloqueadas"
+        : Notification.permission === "granted" && (await conTiempo(suscripcion(), 3000).catch(() => null)) ? "activas" : "inactivas"),
+      endpoint: async () => { const s = await conTiempo(suscripcion(), 3000).catch(() => null); return s ? s.endpoint : null; },
+      activar: async () => { await activarNotificaciones(); renderNotif(); const s = await suscripcion(); return s && s.endpoint; },
     },
   };
   const cargar = async () => {

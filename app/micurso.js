@@ -59,18 +59,38 @@
     if (!y.apoderado) return { nombre: y.nombre, curso: y.curso };
     return y.hijos[Math.min(st.hijo, y.hijos.length - 1)] || y.hijos[0];
   };
-  const salir = () => { sesion = null; info = null; pr = null; guardar(CLAVE, null); guardar(CACHE, null); st = { ...st, paso: "inicio", editando: null, crearClave: false, prueba: null, enviada: null }; render(); };
+  const NOTIF_PROFE = "csm-app-profe-notif";
+  const salir = () => {
+    // El profesor deja de recibir en este celular los avisos de sus pruebas
+    const ep = leer(NOTIF_PROFE);
+    if (ep && sesion && sesion.rol === "profe") pedir("/curso/notificaciones", { sesion: sesion.sesion, endpoint: ep, activar: false }).catch(() => {});
+    guardar(NOTIF_PROFE, null);
+    sesion = null; info = null; pr = null; guardar(CLAVE, null); guardar(CACHE, null);
+    st = { ...st, paso: "inicio", editando: null, crearClave: false, prueba: null, enviada: null };
+    render(); pintarInicio();
+  };
+  // colegiosm.cl/imprimir: al entrar el profesor, se abre «Enviar prueba o guía»
+  let irImprimir = false;
+  const pedirImprimir = () => {
+    irImprimir = true;
+    if (!sesion) { st = { ...st, quien: "profe", paso: "profe" }; st.msg = { texto: "Entra con tu correo institucional y se abrirá «Enviar prueba o guía».", tipo: "ok" }; }
+  };
 
   // Trae quién es y sus fechas (y deja una copia para ver sin internet)
+  let cargado = false;
+  // Al abrir la app, las fechas del curso que se ven en «Inicio» se actualizan una vez
+  const refrescar = () => { if (sesion && !cargado && servidor()) cargar(); };
   async function cargar() {
     if (!sesion) return;
     try {
       const [yo, f] = await Promise.all([pedir("/curso/yo", { sesion: sesion.sesion }), pedir("/curso/fechas", { sesion: sesion.sesion })]);
       info = { yo, fechas: f.fechas || [], t: Date.now() };
+      cargado = true;
       guardar(CACHE, JSON.stringify(info));
       // El horario de la app queda en el curso del estudiante
       if (yo.rol === "familia" && window.APP && APP.elegirCurso) APP.elegirCurso(hijoActual().curso);
       if (yo.rol === "profe" && !yo.conClave) st.crearClave = true;
+      pintarInicio();
     } catch (e) {
       if (e.salir) { salir(); mensaje("Tu sesión venció o ya no estás en la lista del colegio. Vuelve a entrar."); return; }
       if (!info) mensaje(e.message === "Failed to fetch" ? "Sin conexión. Inténtalo cuando tengas internet." : e.message);
@@ -269,6 +289,7 @@
   function renderProfe(c) {
     const yo = info.yo;
     const cursos = yo.cursos || [];
+    if (irImprimir && !st.crearClave) { irImprimir = false; st.editando = null; st.enviada = null; if (!st.prueba) st.prueba = nuevaPrueba(); st.msg = null; }
     if (st.editando) return renderFormFecha(c, cursos);
     if (st.prueba) return renderFormPrueba(c);
     if (st.enviada) return renderEnviada(c);
@@ -281,13 +302,53 @@
       <div class="mc-acciones">
         <button type="button" class="mc-accion" data-mc="nuevaprueba">${ICONO.impresora}<span><strong>Enviar prueba o guía a imprimir</strong><small>Sube el archivo y UTP la revisa</small></span></button>
         ${cursos.length ? `<button type="button" class="mc-accion mc-accion--suave" data-mc="nueva">${ICONO.calendario}<span><strong>Avisar una fecha al curso</strong><small>Prueba, entrega, salida o reunión</small></span></button>` : ""}
+        <p class="pie-nota mc-atajo">En el computador, entra directo a <b>${esc(new URL("../imprimir/", location.href).href.replace(/^https?:\/\//, "").replace(/\/$/, ""))}</b></p>
       </div>
+      <div id="mcNotif"></div>
       <h2 class="mc-titulo">Mis pruebas y guías</h2>
       ${htmlEnvios()}
       <h2 class="mc-titulo">Fechas de tus cursos</h2>
       ${cursos.length ? `${cursos.length > 1 ? `<label class="selector"><span>Ver</span><select id="mcFiltro"><option value="">Todos mis cursos</option>${cursos.map((x) => `<option${x === st.filtro ? " selected" : ""}>${esc(x)}</option>`).join("")}</select></label>` : ""}
       <div class="eventos">${lista(fechas, true)}</div>` : '<p class="tarjeta">Aún no tienes cursos asignados. Pídele a UTP que te agregue en la lista de profesores.</p>'}
       <div class="insp__pie"><button type="button" class="btn-texto" data-mc="cambiarclave">Cambiar mi contraseña</button></div>${actualizado()}`;
+    pintarNotifProfe();
+  }
+
+  // Avisos de las pruebas en este celular: se ofrece activarlos; si ya están activos, el celular queda unido al profesor
+  async function pintarNotifProfe() {
+    if (!window.APP || !APP.notificaciones) return;
+    const estado = await APP.notificaciones.estado();
+    const caja = $("mcNotif");
+    if (!caja) return;
+    if (estado === "activas") { caja.innerHTML = ""; vincularNotif(false); return; }
+    caja.innerHTML = estado === "inactivas" ? `<div class="tarjeta mc-notif"><div><strong>Entérate al tiro</strong>
+        <p>Recibe un aviso en este celular cuando UTP apruebe, devuelva o imprima tus pruebas.</p></div>
+        <button type="button" class="btn btn--chico" data-mc="activarnotif">Activar avisos</button></div>`
+      : estado === "bloqueadas" ? '<p class="pie-nota">Las notificaciones de la app están bloqueadas en este celular. Si quieres recibir los avisos de tus pruebas, actívalas en los ajustes del celular.</p>' : "";
+  }
+  async function vincularNotif(forzar) {
+    const ep = await APP.notificaciones.endpoint();
+    if (!ep || !sesion || sesion.rol !== "profe" || (!forzar && leer(NOTIF_PROFE) === ep)) return;
+    try { await pedir("/curso/notificaciones", { sesion: sesion.sesion, endpoint: ep }); guardar(NOTIF_PROFE, ep); } catch (e) { /* se intenta la próxima vez */ }
+  }
+
+  /* ---------- Fechas del curso en «Inicio» (estudiantes y apoderados) ---------- */
+  function pintarInicio() {
+    const c = $("inicioCurso");
+    if (!c) return;
+    if (!servidor()) { c.innerHTML = ""; return; }
+    if (!sesion) {
+      c.innerHTML = `<div class="tarjeta mc-invita"><strong>Pruebas y fechas de tu curso</strong>
+        <p>Los profesores publican aquí sus pruebas, entregas y salidas. Entra una vez con el correo institucional del estudiante.</p>
+        <div class="acciones"><button type="button" class="btn-texto" data-ir-vista="micurso">Entrar en «Mi curso» →</button></div></div>`;
+      return;
+    }
+    if (!info || info.yo.rol !== "familia") { c.innerHTML = ""; return; }
+    const h = hijoActual();
+    const prox = info.fechas.filter((e) => e.curso === h.curso && fin(e) >= hoy()).sort((a, b) => a.fecha.localeCompare(b.fecha)).slice(0, 3);
+    c.innerHTML = `<h2 class="subtitulo">Próximas fechas de ${esc(h.curso)}</h2>
+      <div class="eventos">${prox.map((e) => tarjeta(e, false)).join("") || '<p class="vacio">Los profesores aún no publican fechas próximas.</p>'}</div>
+      <button type="button" class="btn-texto" data-ir-vista="micurso">Ver todo en «Mi curso» →</button>`;
   }
 
   /* ---------- Pruebas y guías para imprimir ---------- */
@@ -804,7 +865,7 @@
     if (b.dataset.hijo) {
       st.hijo = +b.dataset.hijo; guardar("csm-app-micurso-hijo", String(st.hijo));
       if (window.APP && APP.elegirCurso) APP.elegirCurso(hijoActual().curso);
-      render(); return;
+      render(); pintarInicio(); return;
     }
     const a = b.dataset.mc;
     if (a === "familia") { st = { ...st, quien: "familia", paso: "id", msg: null }; render(); }
@@ -823,6 +884,15 @@
     else if (a === "pasadas") { st.verPasadas = !st.verPasadas; render(); }
     else if (a === "nueva") { const cs = info.yo.cursos || []; st.editando = nuevaFecha(st.filtro || cs[0]); st.msg = null; render(); window.scrollTo(0, 0); }
     else if (a === "cancelar") { st.editando = null; st.msg = null; render(); }
+    else if (a === "activarnotif") {
+      trabajar(async () => {
+        try { await APP.notificaciones.activar(); }
+        catch (err) { throw new Error(err.message === "permiso" ? "No se dio permiso para mostrar notificaciones. Puedes activarlo en los ajustes del celular." : "No se pudieron activar los avisos. Revisa tu conexión e inténtalo de nuevo."); }
+        await vincularNotif(true);
+        render();
+        mensaje("Listo: te avisaremos en este celular cuando UTP revise tus pruebas.", "ok");
+      });
+    }
     else if (a === "cambiarclave") { st.crearClave = true; st.msg = null; render(); }
     else if (a === "recargarpruebas") { pr = null; render(); }
     else if (a === "viejas") { st.verViejas = !st.verViejas; render(); }
@@ -925,5 +995,5 @@
     }
   });
 
-  window.MICURSO = { render, cargar, activo: () => !!sesion };
+  window.MICURSO = { render, cargar, activo: () => !!sesion, pintarInicio, pedirImprimir, refrescar };
 })();

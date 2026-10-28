@@ -37,21 +37,24 @@
     <img class="barra__logo" src="icono-v2-192.png" alt="" width="36" height="36">
     <div class="barra__texto">
       <strong>Colegio San Martín</strong>
-      <span id="barraTitulo">Avisos</span>
+      <span id="barraTitulo">Inicio</span>
     </div>
     <span class="barra__red" id="sinRed" hidden>Sin conexión</span>
   </header>
 
   <main class="contenido">
-    <!-- Avisos: la alerta que se activa en el panel (sección «Aviso urgente») -->
-    <section class="vista" id="vista-avisos" data-titulo="Avisos">
+    <!-- Inicio: el aviso urgente (si hay uno, arriba de todo), el día del curso guardado en el celular,
+         las fechas de «Mi curso», las del colegio y las alertas -->
+    <section class="vista" id="vista-avisos" data-titulo="Inicio">
       <div id="instalar" class="tarjeta instalar" hidden></div>
       <div id="avisoActual"></div>
-      <div id="notificaciones" class="tarjeta notif" hidden></div>
-      <h2 class="subtitulo">Próximos días</h2>
+      <div id="hoyCurso"></div>
+      <div id="sinAviso"></div>
+      <div id="inicioCurso"></div>
+      <h2 class="subtitulo">Próximos días en el colegio</h2>
       <div id="proximos" class="eventos"></div>
+      <div id="notificaciones" class="tarjeta notif" hidden></div>
       <p class="pie-nota" id="actualizado"></p>
-      <button type="button" class="pie-acceso" data-ir-insp>Acceso Inspectoría</button>
     </section>
 
     <!-- Horarios de cada curso -->
@@ -82,8 +85,8 @@
 
   <nav class="tabs" aria-label="Secciones">
     <button type="button" class="tab is-active" data-vista="avisos">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg>
-      <span>Avisos</span><i class="tab__punto" id="puntoAviso" hidden></i>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>Inicio</span><i class="tab__punto" id="puntoAviso" hidden></i>
     </button>
     <button type="button" class="tab" data-vista="horarios">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm.75-13h-1.5v6l5.2 3.12.75-1.23-4.45-2.64V7Z"/></svg>
